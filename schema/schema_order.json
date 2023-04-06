@@ -1,0 +1,658 @@
+{
+    "type": "object",
+    "properties": {
+        "customer_reference": {
+            "type": "string",
+            "description": "Internal shipment reference"
+        },
+        "collection_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date when goods are ready for collection. Can be today or in the future"
+        },
+        "collection_time_from": {
+            "type": "string",
+            "pattern": "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+            "description": "Must be before collection time to. Cannot be less than current local time if collection date is set to today"
+        },
+        "collection_time_to": {
+            "type": "string",
+            "pattern": "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+            "description": "Must be after collection time from"
+        },
+        "delivery_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Desired delivery date. Must be equal to the collection date or later"
+        },
+        "delivery_time_from": {
+            "type": "string",
+            "pattern": "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+            "description": "Must be before delivery time to. If collection and delivery dates match then must be after collection time to"
+        },
+        "delivery_time_to": {
+            "type": "string",
+            "pattern": "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+            "description": "Must be after delivery time from"
+        },
+        "collection_company_name": {
+            "type": "string",
+            "description": "The name of the company the goods are collected from"
+        },
+        "collection_address_row_1": {
+            "type": "string",
+            "description": "Street, house number"
+        },
+        "collection_address_row_2": {
+            "type": "string",
+            "description": "County, building, unit"
+        },
+        "collection_postcode": {
+            "type": "string",
+            "minLength": 3,
+            "description": "ZIP or postal code. May contain both numbers and letters. Should not include the country code."
+        },
+        "collection_city": {
+            "type": "string",
+            "description": "City, district, suburb, town or village"
+        },
+        "collection_country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "Two-letter country code (ISO 3166-1 alpha-2)"
+        },
+        "collection_contact_name": {
+            "type": "string",
+            "description": "The name of the person that the driver can contact"
+        },
+        "collection_contact_phone": {
+            "type": "string",
+            "description": "The phone number of the person that the driver can contact"
+        },
+        "collection_contact_email": {
+            "type": "string",
+            "description": "The email of the person that the carrier can contact"
+        },
+        "collection_comment": {
+            "type": "string",
+            "description": "Additional collection related information. (e.g., \"Code to enter the gate is 1234\")"
+        },
+        "delivery_company_name": {
+            "type": "string",
+            "description": "The name of the company the goods are delivered to"
+        },
+        "delivery_address_row_1": {
+            "type": "string",
+            "description": "Street, house number"
+        },
+        "delivery_address_row_2": {
+            "type": "string",
+            "description": "County, building, unit"
+        },
+        "delivery_postcode": {
+            "type": "string",
+            "minLength": 3,
+            "description": "ZIP or postal code. May contain both numbers and letters. Should not include the country code."
+        },
+        "delivery_city": {
+            "type": "string",
+            "description": "City, district, suburb, town or village"
+        },
+        "delivery_country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "Two-letter country code (ISO 3166-1 alpha-2)"
+        },
+        "delivery_contact_name": {
+            "type": "string",
+            "description": "The name of the person that the driver can contact"
+        },
+        "delivery_contact_phone": {
+            "type": "string",
+            "description": "The phone number of the person that the driver can contact"
+        },
+        "delivery_contact_email": {
+            "type": "string",
+            "description": "The email of the person that the carrier can contact"
+        },
+        "delivery_comment": {
+            "type": "string",
+            "description": "Additional delivery related information. (e.g., \"Code to enter the gate is 1234\")"
+        },
+        "goods_value": {
+            "type": "number",
+            "description": "The monetary value of the goods"
+        },
+        "goods_value_currency": {
+            "type": "string",
+            "default": "EUR",
+            "description": "Three-letter currency code (ISO 4217)"
+        },
+        "frigo": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the goods are temperature sensitive"
+        },
+        "temp_min": {
+            "type": "integer",
+            "description": "Minimum temperature limit"
+        },
+        "temp_max": {
+            "type": "integer",
+            "description": "Maximum temperature limit"
+        },
+        "incoterm_code": {
+            "type": "string",
+            "description": "International Commercial Terms are a series of pre-defined commercial terms published by the International Chamber of Commerce (ICC) relating to international commercial law",
+            "enum": [
+                "EXW",
+                "FCA",
+                "CPT",
+                "CIP",
+                "DAT",
+                "DPU",
+                "DAP",
+                "DDP",
+                "FAS",
+                "FOB",
+                "CFR",
+                "CIF"
+            ]
+        },
+        "incoterm_city": {
+            "type": "string",
+            "description": "Incoterm city"
+        },
+        "customer_remark": {
+            "type": "string",
+            "description": "Important additional information for the carrier"
+        },
+        "collection_with_tail_lift": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the collection should be performed with a tail-lift truck"
+        },
+        "collection_prenotification": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the driver should call the collection contact before loading"
+        },
+        "delivery_with_tail_lift": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the delivery should be performed with a tail-lift truck"
+        },
+        "delivery_prenotification": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the driver should call the delivery contact before loading"
+        },
+        "delivery_return_document": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the customer expects signed documents to be returned"
+        },
+        "delivery_to_private_person": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the goods will be delivered to a private person instead of a company"
+        },
+        "documents_attributes": {
+            "type": "array",
+            "minItems": 0,
+            "description": "Array of files that will be attached to the shipment",
+            "items": {
+                "type": "object",
+                "required": [
+                    "category",
+                    "filename",
+                    "annex"
+                ],
+                "properties": {
+                    "category": {
+                        "type": "string",
+                        "description": "Type of the document selected from the predefined document types",
+                        "enum": [
+                            "goods_invoice",
+                            "package_list",
+                            "cmr",
+                            "waybill",
+                            "bol",
+                            "transportation_invoice",
+                            "pod",
+                            "labels",
+                            "other"
+                        ]
+                    },
+                    "filename": {
+                        "type": "string",
+                        "description": "File name with extension"
+                    },
+                    "annex": {
+                        "type": "string",
+                        "description": "File content in Base64 encoded string"
+                    }
+                }
+            }
+        },
+        "rows_attributes": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Array of goods rows, with each row consisting of the following 7 (or less) key-value pairs and an array of ADR rows (not required)",
+            "items": {
+                "type": "object",
+                "required": [
+                    "quantity",
+                    "package_type",
+                    "weight",
+                    "description"
+                ],
+                "properties": {
+                    "quantity": {
+                        "type": "integer",
+                        "description": "Number of packages"
+                    },
+                    "package_type": {
+                        "type": "string",
+                        "description": "Type of the package selected from the predefined package types",
+                        "enum": [
+                            "EUR",
+                            "CTN",
+                            "FIN",
+                            "HPL",
+                            "QPL",
+                            "LOAD",
+                            "PLD",
+                            "PXL",
+                            "PLL",
+                            "TBE",
+                            "CLL",
+                            "RLL",
+                            "20DC",
+                            "40DC",
+                            "40HC"
+                        ]
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "description": "Total weight in kilograms of the goods described in the row. If there are 5 EUR pallets, 100kg each, then the weight is 500 kg"
+                    },
+                    "length": {
+                        "type": "integer",
+                        "description": "Package length in cm"
+                    },
+                    "width": {
+                        "type": "integer",
+                        "description": "Package width in cm"
+                    },
+                    "height": {
+                        "type": "integer",
+                        "description": "Package height in cm"
+                    },
+                    "cbm": {
+                        "type": "number",
+                        "description": "Row volume in cubic meters"
+                    },
+                    "ldm": {
+                        "type": "number",
+                        "description": "Row area in loading meters (ex.: 1 EUR pallet = 0.4 LDM)"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the goods in this row"
+                    },
+                    "adr_rows_attributes": {
+                        "type": "array",
+                        "description": "Array of dangerous goods rows that are included in this goods row, with each row consisting of the following 5 (or less) key-value pairs",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "adr_un": {
+                                    "type": "string",
+                                    "pattern": ".{3,4}",
+                                    "description": "Four-digit UN number that identifies hazardous materials, and articles"
+                                },
+                                "adr_group": {
+                                    "type": "string",
+                                    "description": "I - high danger, II - medium danger, III - low danger"
+                                },
+                                "adr_class": {
+                                    "type": "string",
+                                    "description": "1 - Explosives, 2 - Gases, 3 - Flammable liquids, 4 - Flammable solids"
+                                },
+                                "adr_neq": {
+                                    "type": "string",
+                                    "description": "The weight or volume of the dangerous goods contained in a package excluding the weight or volume of any packaging material; or the weight of an unpackaged article of dangerous goods"
+                                },
+                                "adr_description": {
+                                    "type": "string",
+                                    "description": "Description of the dangerous goods"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "offer": {
+            "type": "object",
+            "required": [
+                "total_price"
+            ],
+            "properties": {
+                "total_price": {
+                    "type": "number",
+                    "description": "Price for the shipment that has been previously agreed upon with carrier"
+                },
+                "currency": {
+                    "type": "string",
+                    "description": "Currency of agreed price. Defaults to user's company's currency if not provided"
+                }
+            }
+        },
+        "options": {
+            "type": "object",
+            "properties": {
+                "label_format": {
+                    "type": "string",
+                    "description": "The response includes a link to the goods labels. The link will be empty until the shipment is booked in Cargoson. You can choose the format of those labels with this option. \n\n**a4** => up to four A6 labels per one A4 page. \n\n**label_printer** => one label per page in the size of 4x6 inches (10.16 x 15.24 cm, which is close to the A6 format.)\n",
+                    "enum": [
+                        "label_printer",
+                        "a4"
+                    ],
+                    "default": "label_printer"
+                },
+                "direct_booking_service_id": {
+                    "type": "integer",
+                    "description": "If you wish to submit the booking immediately, you can enter the ID of the desired carrier's service. You can request the service IDs from Cargoson support.\n"
+                },
+                "create_incomplete_shipment": {
+                    "type": "boolean",
+                    "default": true,
+                    "description": "Indicates if you want the shipment to be saved for later editing even if booking itself fails"
+                },
+                "automated_booking": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indicates if you want the shipment to be automatically booked based on rules defined in Cargoson by the user"
+                },
+                "save_collection_address": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indicates if you want to save the collection address in Cargoson's address book for later use"
+                },
+                "save_delivery_address": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indicates if you want to save the delivery address in Cargoson's address book for later use"
+                },
+                "parcel_machine_reference": {
+                    "type": "string",
+                    "description": "If ```direct_booking_service_id``` was defined, and the service id is for a parcel machine service, you can define the desired parcel machine here. If the service is a parcel machine service but this element is not defined, the closest parcel machine to the delivery address will be selected. You can request the desired parcel machine references from Cargoson support. Do not use if the ```direct_booking_service_id``` was not used or is not a parcel machine service ID:\n"
+                }
+            }
+        },
+        "declaration_attributes": {
+            "type": "object",
+            "description": "If the shipment requires a customs declaration, these fields should be filled",
+            "required": [
+                "declaration_items_attributes"
+            ],
+            "properties": {
+                "invoice_reference": {
+                    "type": "string",
+                    "description": "Invoice reference.  \n\nACL - Parent Shipment ID for BBX  \nCID - Customer Identifier  \nCN - Contract Number  \nCU - Consignor reference number  \nITN - US Export declaration reference ID  \nMRN - Movement Reference number  \nUCN - Unique reference of a consignment (UCRN)  \nOID - Order Number  \nPON - Purchase Order Number  \nRMA - RMA Number  \nAAM - AWB Ref #  \nABT - Goods Declaration number  \nADA - Buyer Reference number  \nAES - AES Post Clearance  \nAFD - 1496 Item number  \nANT - Consignee Reference number  \nBKN - Booking Number  \nBOL - Bill of Lading Number  \nCDN - Customs Declaration number  \nCOD - Cash On Delivery  \nDSC - Weltpaket Reference  \nFF - Freight forwarder's reference number  \nFN - Freight bill number  \nFTR - Post Clearance Exemption US  \nHWB - Shipment Identifiers  \nIBC - Inbound center reference number  \nIPP - Insurance Policy Provider  \nLLR - Load list reference  \nMAB - Master Airwaybill Number  \nMWB - MAWB Reference number  \nOBC - Outbound center reference number  \nPD - Vendor Reference Number  \nPRN - Pickup request number  \nRTL - Return Leg waybill number  \nSID - Shipment ID 15 Digit CODA  \nSS - Seller Reference number  \nSWN - Original Waybill number (Return)\n",
+                    "enum": [
+                        "ACL",
+                        "CID",
+                        "CN",
+                        "CU",
+                        "ITN",
+                        "MRN",
+                        "UCN",
+                        "OID",
+                        "PON",
+                        "RMA",
+                        "AAM",
+                        "ABT",
+                        "ADA",
+                        "AES",
+                        "AFD",
+                        "ANT",
+                        "BKN",
+                        "BOL",
+                        "CDN",
+                        "COD",
+                        "DSC",
+                        "FF",
+                        "FN",
+                        "FTR",
+                        "HWB",
+                        "IBC",
+                        "IPP",
+                        "LLR",
+                        "MAB",
+                        "MWB",
+                        "OBC",
+                        "PD",
+                        "PRN",
+                        "RTL",
+                        "SID",
+                        "SS",
+                        "SWN"
+                    ]
+                },
+                "invoice_reference_text": {
+                    "type": "string",
+                    "description": "Invoice reference number"
+                },
+                "currency": {
+                    "type": "string",
+                    "description": "Currency for all values in declaration. ISO 4217"
+                },
+                "remark": {
+                    "type": "string",
+                    "description": "Remarks for declaration"
+                },
+                "declaration_text": {
+                    "type": "string",
+                    "description": "Field to explicity state that the information declared is correct"
+                },
+                "declaration_items_attributes": {
+                    "type": "array",
+                    "description": "Goods to be declared",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "required": [
+                            "quantity",
+                            "unit_of_measure",
+                            "hs_code",
+                            "net_weight",
+                            "gross_weight",
+                            "origin_country",
+                            "value",
+                            "description"
+                        ],
+                        "properties": {
+                            "quantity": {
+                                "type": "integer",
+                                "description": "Number of goods"
+                            },
+                            "unit_of_measure": {
+                                "type": "string",
+                                "description": "Unit of measure of stated quanity. (Usually Pieces)   \nBOX: Boxes  \n2GM: Centigram  \n2M: Centimeters  \n2M3: Cubic Centimeters  \n3M3: Cubic Feet  \nM3: Cubic Meters  \nDPR: Dozen Pairs  \nDOZ: Dozen  \n2NO: Each  \nPCS: Pieces  \nGM: Grams  \nGRS: Gross  \nKG: Kilograms  \nL: Liters  \nM: Meters  \n3GM: Milligrams  \n3L: Milliliters  \nX: No Unit Required  \nNO: Number  \n2KG: Ounces  \nPRS: Pairs  \n2L: Gallons  \n3KG: Pounds  \nCM2: Square Centimeters  \n2M2: Square Feet  \n3M2: Square Inches  \nM2: Square Meters  \n4M2: Square Yards  \n3M: Yards\n",
+                                "enum": [
+                                    "BOX",
+                                    "2GM",
+                                    "2M",
+                                    "2M3",
+                                    "3M3",
+                                    "M3",
+                                    "DPR",
+                                    "DOZ",
+                                    "2NO",
+                                    "PCS",
+                                    "GM",
+                                    "GRS",
+                                    "KG",
+                                    "L",
+                                    "M",
+                                    "3GM",
+                                    "3L",
+                                    "X",
+                                    false,
+                                    "2KG",
+                                    "PRS",
+                                    "2L",
+                                    "3KG",
+                                    "CM2",
+                                    "2M2",
+                                    "3M2",
+                                    "M2",
+                                    "4M2",
+                                    "3M"
+                                ]
+                            },
+                            "hs_code": {
+                                "type": "string",
+                                "description": "TARIC (10 digits), Combined Nomenclature (8 digits) or Harmonised System code (6 digits) for goods"
+                            },
+                            "origin_country": {
+                                "type": "string",
+                                "description": "Country of Origin/Manufacture. ISO 3166-2"
+                            },
+                            "net_weight": {
+                                "type": "number",
+                                "description": "Net weight of goods (kg) PER ITEM"
+                            },
+                            "gross_weight": {
+                                "type": "number",
+                                "description": "Gross weight of goods (kg) PER ITEM"
+                            },
+                            "value": {
+                                "type": "number",
+                                "description": "Value of goods PER ITEM"
+                            },
+                            "description": {
+                                "type": "string",
+                                "description": "Description of the goods, as descriptive as possible"
+                            }
+                        }
+                    }
+                },
+                "declaration_charges_attributes": {
+                    "type": "array",
+                    "description": "Charges",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "category": {
+                                "type": "string",
+                                "description": "Charge type  \n  \nADMIN: Administration fee  \nDELIV: Delivery fee  \nDOCUM: Documentation fee  \nEXPED: Expedite fee  \nEXCHA: Export fee  \nFRCST: Freight cost  \nSSRGE: Fuel surcharge  \nLOGST: Logistic fee  \nSOTHR: Other fee  \nSPKGN: Packaging/packing fee  \nPICUP: Pickup fee  \nHRCRG: Handling fee  \nVATCR: VAT fee  \nINSCH: Insurance cost  \nREVCH: Reverse charge\n",
+                                "enum": [
+                                    "ADMIN",
+                                    "DELIV",
+                                    "DOCUM",
+                                    "EXPED",
+                                    "EXCHA",
+                                    "FRCST",
+                                    "SSRGE",
+                                    "LOGST",
+                                    "SOTHR",
+                                    "SPKGN",
+                                    "PICUP",
+                                    "HRCRG",
+                                    "VATCR",
+                                    "INSCH",
+                                    "REVCH"
+                                ]
+                            },
+                            "value": {
+                                "type": "number",
+                                "description": "Charge value"
+                            }
+                        }
+                    }
+                },
+                "declaration_documents_attributes": {
+                    "type": "array",
+                    "description": "Document references related to declaration. These files should be included in the ```documents_attributes```",
+                    "minItems": 1,
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "category": {
+                                "type": "string",
+                                "description": "Document type  \n  \n972: T2LF Dispense Paiement Droits  \nAHC: Analysis and Health Certificate  \nATA: ATA Carnet  \nATR: Preference Certificate ATR  \nCHD: CHED-D (Common Health Entry Document for Feed and Food of Non-Animal Origin)  \nCHP: CHED-P (Common Health Entry Document for Products)  \nCIT: CITES Certificate  \nCOO: Generic Certificate of Origin  \nDEX: Duty Exemption Certificate  \nEU1: Preference Certificate EUR1  \nEU2: Preferential Declaration of Origin on the Invoice - EUR2  \nEUS: End Use Authorization  \nFMA: Certificate of Origin (Form A)  \nPHY: Phytosanitary Certificate  \nVET: Veterinary Entry Document  \nVEX: VAT Exemption Certificate  \nCRL: Control Document  \nCSD: Consolidated Customs Entry  \nPPY: Proof Of Payment  \nCI2: Export-only Invoice  \nCIV: Customs Invoice Value  \nDOV: Invoice  \nINV: Commercial Invoice  \nPFI: Pro-Forma  \nALC: Agricultural License  \nHLC: Health Products RegulatoryAuthority (HPRA) Licensing Requirements  \nJLC: Justice License  \nLIC: Specific Export Licenses  \nLNP: License or Permit  \nPLI: Permits & Licenses  \nDLI: Driver's License  \nNID: National Identity Card  \nPAS: Passport  \nCHA: Power of Attorney  \nCPA: Consignee Power of Attorney  \nPOA: Power of Attorney (Customer-based)  \nBEX: Branch Letter of Exemption  \nDGD: Dangerous Goods Declaration  \nIPA: Intellectual Property Authorization  \nT2M: T2M Transport Accompanying Document  \nTAD: TAD Transport Accompanying Document T1  \nTCS: Transportation Charges Statement  \nROD: Receipt on Delivery  \nEXL: DCE Export of Customs Data  \nHWB: House Waybill  \nELP: Export Licenses and Permits\n",
+                                "enum": [
+                                    "CIV",
+                                    "DOV",
+                                    "INV",
+                                    "ATR",
+                                    "CHD",
+                                    "CHP",
+                                    "CIT",
+                                    "COO",
+                                    "DEX",
+                                    "EU1",
+                                    "EU2",
+                                    "EUS",
+                                    "FMA",
+                                    "PHY",
+                                    "VET",
+                                    "VEX",
+                                    "CRL",
+                                    "CSD",
+                                    "PPY",
+                                    "CI2",
+                                    "972",
+                                    "AHC",
+                                    "ATA",
+                                    "PFI",
+                                    "ALC",
+                                    "HLC",
+                                    "JLC",
+                                    "LIC",
+                                    "LNP",
+                                    "PLI",
+                                    "DLI",
+                                    "NID",
+                                    "PAS",
+                                    "CHA",
+                                    "CPA",
+                                    "POA",
+                                    "BEX",
+                                    "DGD",
+                                    "IPA",
+                                    "T2M",
+                                    "TAD",
+                                    "TCS",
+                                    "ROD",
+                                    "EXL",
+                                    "HWB",
+                                    "ELP"
+                                ]
+                            },
+                            "document_id": {
+                                "type": "string",
+                                "description": "Document reference number/ID"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "collection_date",
+        "collection_postcode",
+        "collection_country",
+        "delivery_postcode",
+        "delivery_country",
+        "rows_attributes"
+    ]
+}

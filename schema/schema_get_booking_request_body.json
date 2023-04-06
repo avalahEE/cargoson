@@ -1,0 +1,57 @@
+{
+    "type": "object",
+    "description": "Request body for defining different options for fetching a booking",
+    "properties": {
+        "options": {
+            "type": "object",
+            "description": "Object that holds different options for fetching data about the booking",
+            "properties": {
+                "label_format": {
+                    "type": "string",
+                    "description": "The response includes a link to the goods labels. You can choose the format of those labels with this option. \n\n```a4``` => up to four A6 labels per one A4 page. \n\n```label_printer``` => one label per page in the size of 4x6 inches (10.16 x 15.24 cm, which is close to the A6 format.)\n",
+                    "enum": [
+                        "label_printer",
+                        "a4"
+                    ],
+                    "default": "label_printer"
+                },
+                "include_associations": {
+                    "type": "object",
+                    "description": "Object that holds options for which attribute groups to fetch. By default, these additional attributes are all disabled. Enable only what you need, since every additional step will make the request a bit slower.",
+                    "properties": {
+                        "offer": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Indicates whether you want to receive information about the selected offer (price, service, carrier etc)."
+                        },
+                        "carrier": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Indicates whether you want to receive information about the selected carrier."
+                        },
+                        "consignor": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Indicates whether you want to receive information about the consignor (sender)."
+                        },
+                        "consignee": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Indicates whether you want to receive information about the consignee (receiver)."
+                        },
+                        "rows": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Indicates whether you want to receive information about the goods rows."
+                        },
+                        "declaration": {
+                            "type": "boolean",
+                            "default": false,
+                            "description": "Indicates whether you want to receive information about the declaration."
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

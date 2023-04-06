@@ -1,0 +1,114 @@
+{
+    "type": "object",
+    "example": {
+        "status": 200,
+        "object": {
+            "distances": {
+                "coordinates": {
+                    "collection": [
+                        "59.4211, 24.69927"
+                    ],
+                    "delivery": [
+                        "50.62627, 3.06691"
+                    ]
+                },
+                "road": 2358.67,
+                "sea": {
+                    "ship": 1880,
+                    "truck": 65
+                },
+                "gcd": 1680
+            },
+            "co2e_kg": {
+                "road": "220.54",
+                "sea": "37.78",
+                "air": "2449.5",
+                "rail": "99.49"
+            }
+        }
+    },
+    "properties": {
+        "status": {
+            "type": "integer",
+            "description": "Status code"
+        },
+        "object": {
+            "type": "object",
+            "description": "an object containing shipment coordinates and co2e emissions",
+            "properties": {
+                "distances": {
+                    "type": "object",
+                    "description": "an object containing shipment coordinates and distances",
+                    "properties": {
+                        "coordinates": {
+                            "type": "object",
+                            "description": "an object containing collection and delivery coordinates",
+                            "properties": {
+                                "collection": {
+                                    "type": "array",
+                                    "description": "Collection coordinates",
+                                    "items": {
+                                        "type": "number",
+                                        "description": "Latitude and longitude"
+                                    }
+                                },
+                                "delivery": {
+                                    "type": "array",
+                                    "description": "Delivery coordinates",
+                                    "items": {
+                                        "type": "number",
+                                        "description": "Latitude and longitude"
+                                    }
+                                }
+                            }
+                        },
+                        "road": {
+                            "type": "number",
+                            "description": "Road distance"
+                        },
+                        "sea": {
+                            "type": "object",
+                            "description": "Sea distance",
+                            "properties": {
+                                "ship": {
+                                    "type": "number",
+                                    "description": "Ship distance"
+                                },
+                                "truck": {
+                                    "type": "number",
+                                    "description": "Truck distance"
+                                }
+                            }
+                        },
+                        "gcd": {
+                            "type": "number",
+                            "description": "Great Circle distance"
+                        }
+                    }
+                },
+                "co2e_kg": {
+                    "type": "object",
+                    "description": "Expected CO2e emissions for different freight types",
+                    "properties": {
+                        "road": {
+                            "type": "string",
+                            "description": "Road CO2e emissions in kg"
+                        },
+                        "sea": {
+                            "type": "string",
+                            "description": "Sea CO2e emissions in kg"
+                        },
+                        "air": {
+                            "type": "string",
+                            "description": "Air CO2e emissions in kg"
+                        },
+                        "rail": {
+                            "type": "string",
+                            "description": "Rail CO2e emissions in kg"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "type": "array",
+    "example": [
+        {
+            "id": 53,
+            "reference": "EE90045",
+            "name": "Automaat Valga Rimi",
+            "carrier_name": "DPD Eesti AS",
+            "carrier_id": 10,
+            "carrier_reg_no": "10092256",
+            "address_row_1": "Riia 18",
+            "city": "Valga",
+            "postcode": "68203",
+            "country": "EE"
+        },
+        {
+            "id": 2354,
+            "reference": "96118",
+            "name": "Antsla Coop Konsumi pakiautomaat",
+            "carrier_name": "Eesti Post AS",
+            "carrier_id": 267,
+            "carrier_reg_no": "10328799",
+            "address_row_1": "F. R. Kreutzwaldi tn 4a",
+            "city": "Antsla vald",
+            "postcode": "66404",
+            "country": "EE"
+        }
+    ],
+    "description": "an array containing objects of the found parcel machines",
+    "items": {
+        "type": "object",
+        "description": "A parcel machine object detailing information about the parcel machine, such as its name, location, references and info about its carrier",
+        "properties": {
+            "id": {
+                "type": "integer",
+                "description": "The numeric ID of this parcel machine"
+            },
+            "reference": {
+                "type": "string",
+                "description": "The reference of this parcel machine (as referenced to by the carrier)"
+            },
+            "name": {
+                "type": "string",
+                "description": "The name of this parcel machine"
+            },
+            "carrier_name": {
+                "type": "string",
+                "description": "The name of the carrier of this parcel machine"
+            },
+            "carrier_id": {
+                "type": "integer",
+                "description": "The numeric ID of the carrier of this parcel machine"
+            },
+            "carrier_reg_no": {
+                "type": "string",
+                "description": "The business registration number of the carrier of this parcel machine"
+            },
+            "address_row_1": {
+                "type": "string",
+                "description": "The street address of this parcel machine"
+            },
+            "city": {
+                "type": "string",
+                "description": "The name of the city of this parcel machine"
+            },
+            "postcode": {
+                "type": "string",
+                "description": "The postcode of this parcel machine"
+            },
+            "country": {
+                "type": "string",
+                "description": "The two-letter country code (ISO 3166-1 alpha-2) of this parcel machine"
+            }
+        }
+    }
+}

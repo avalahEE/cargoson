@@ -1,0 +1,148 @@
+{
+    "type": "object",
+    "description": "the shipment for which the prices are requested",
+    "properties": {
+        "collection_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date when goods are ready for collection. Can be today or in the future"
+        },
+        "collection_postcode": {
+            "type": "string",
+            "minLength": 3,
+            "description": "ZIP or postal code. May contain both numbers and letters. Should not include the country code."
+        },
+        "collection_country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "Two-letter country code (ISO 3166-1 alpha-2)"
+        },
+        "delivery_postcode": {
+            "type": "string",
+            "minLength": 3,
+            "description": "ZIP or postal code. May contain both numbers and letters. Should not include the country code."
+        },
+        "delivery_country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "Two-letter country code (ISO 3166-1 alpha-2)"
+        },
+        "frigo": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the goods are temperature sensitive"
+        },
+        "adr": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the shipment is hazardous (ADR). The shipment is hazardous if any of its goods contain hazardous goods"
+        },
+        "collection_prenotification": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the driver should call the collection contact before loading"
+        },
+        "collection_with_tail_lift": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the collection should be performed with a tail-lift truck"
+        },
+        "delivery_prenotification": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the driver should call the delivery contact before loading"
+        },
+        "delivery_with_tail_lift": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the delivery should be performed with a tail-lift truck"
+        },
+        "delivery_return_document": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the customer expects signed documents to be returned"
+        },
+        "delivery_to_private_person": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the goods will be delivered to a private person instead of a company"
+        },
+        "rows_attributes": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Array of goods rows, with each row consisting of the following 7 (or less) key-value pairs",
+            "items": {
+                "type": "object",
+                "required": [
+                    "quantity",
+                    "package_type",
+                    "weight"
+                ],
+                "properties": {
+                    "quantity": {
+                        "type": "integer",
+                        "description": "Number of packages"
+                    },
+                    "package_type": {
+                        "type": "string",
+                        "description": "Type of the package selected from the predefined package types",
+                        "enum": [
+                            "EUR",
+                            "CTN",
+                            "FIN",
+                            "HPL",
+                            "QPL",
+                            "LOAD",
+                            "PLD",
+                            "PXL",
+                            "PLL",
+                            "TBE",
+                            "CLL",
+                            "RLL",
+                            "20DC",
+                            "40DC",
+                            "40HC"
+                        ]
+                    },
+                    "weight": {
+                        "type": "integer",
+                        "description": "Total weight in kilograms of the goods described in the row. If there are 5 EUR pallets, 100kg each, then the weight is 500 kg"
+                    },
+                    "length": {
+                        "type": "integer",
+                        "description": "Package length in cm"
+                    },
+                    "width": {
+                        "type": "integer",
+                        "description": "Package width in cm"
+                    },
+                    "height": {
+                        "type": "integer",
+                        "description": "Package height in cm"
+                    },
+                    "cbm": {
+                        "type": "number",
+                        "description": "Row volume in cubic meters"
+                    },
+                    "ldm": {
+                        "type": "number",
+                        "description": "Row area in loading metres (ex.: 1 EUR pallet = 0.4 LDM)"
+                    },
+                    "description": {
+                        "type": "string",
+                        "description": "Description of the goods in this row"
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "collection_date",
+        "collection_postcode",
+        "collection_country",
+        "delivery_postcode",
+        "delivery_country"
+    ]
+}

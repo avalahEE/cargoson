@@ -1,0 +1,2188 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Cargoson API v1",
+    "version": "v1",
+    "description": "Cargoson API can be used to exchange shipment information with Cargoson via REST API.\n\nCargoson API uses API keys to authenticate requests. You can request an API key by writing to us at support@cargoson.com.\n    \nAll API requests must be made over HTTPS. Calls made over plain HTTP will fail. API requests without authentication will also fail.\n",
+    "contact": {
+      "name": "Cargoson",
+      "email": "support@cargoson.com",
+      "url": "https://www.cargoson.com"
+    }
+  },
+  "paths": {
+    "/queries": {
+      "post": {
+        "summary": "Create a query or booking",
+        "operationId": "createQuery",
+        "description": "This endpoint is used to create a new query in Cargoson. \n\nIf a ```direct_booking_service_id``` is provided, a booking will be created as well.  ```parcel_machine_reference``` can be also be provided alongside the service id, if it is a parcel machine service. \n\nIf ```automated_booking``` option is provided, the service will be automatically chosen based on user-defined rules and a booking will be created.\n",
+        "tags": [
+          "Shipments"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/json",
+              "enum": [
+                "application/json"
+              ]
+            },
+            "required": true,
+            "description": "The API can read JSON messages. The value should be application/json"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api.v1",
+              "enum": [
+                "application/vnd.api.v1"
+              ]
+            },
+            "description": "This header is for defining the API version. The value should be application/vnd.api.v1",
+            "required": true
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Query created, and the created query is found in the response body. \n\nYou can find the label and tracking URLs in the elements ```label_url``` and ```tracking_url```, respectively. When visiting these URLs the user will not see any content until the shipment is booked in Cargoson.\n",
+            "content": {}
+          },
+          "422": {
+            "description": "Couldn't (fully) complete request due to some issue in the input data. You can find the error messages in the ```errors``` array.\n\nIf you included the option to immediately book the shipment to a specific carrier's service (options/direct_booking_service_id), it is possible that the shipment was created but it couldn't be booked to the requested service. When this happens, you will see the created query elements, along with a ```\"query_status\": \"created\"``` and a ```\"booking_status\": \"failed\"```. The error messages will be included in the ```errors``` array.\n",
+            "content": {}
+          },
+          "403": {
+            "description": "The API key does not have enough privileges to complete this operation.",
+            "content": {}
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              },
+              "examples": {
+                "MinimumQuery": {
+                  "value": {
+                    "collection_date": "2023-08-29",
+                    "collection_postcode": "12345",
+                    "collection_country": "EE",
+                    "delivery_postcode": "54321",
+                    "delivery_country": "LV",
+                    "rows_attributes": [
+                      {
+                        "quantity": 1,
+                        "package_type": "EUR",
+                        "weight": 100,
+                        "description": "Goods on EUR pallet"
+                      }
+                    ]
+                  }
+                },
+                "MinimumBooking": {
+                  "value": {
+                    "collection_date": "2023-08-29",
+                    "collection_country": "EE",
+                    "collection_postcode": "12345",
+                    "collection_address_row_1": "Kuldnoka 4",
+                    "collection_city": "Tallinn",
+                    "collection_company_name": "Demo OÜ",
+                    "collection_contact_name": "Peeter Kurvits",
+                    "collection_contact_phone": "+37255551234",
+                    "delivery_country": "LV",
+                    "delivery_postcode": "54321",
+                    "delivery_address_row_1": "Kuldnoka 5",
+                    "delivery_city": "Riga",
+                    "delivery_company_name": "Demo Latvia OÜ",
+                    "delivery_contact_name": "Johannes Kurvits",
+                    "delivery_contact_phone": "+37212345555",
+                    "rows_attributes": [
+                      {
+                        "quantity": 1,
+                        "package_type": "EUR",
+                        "weight": 100,
+                        "description": "Goods on EUR pallet"
+                      }
+                    ],
+                    "options": {
+                      "direct_booking_service_id": 1234
+                    }
+                  }
+                },
+                "FullBooking": {
+                  "value": {
+                    "customer_reference": "test-customer-ref-123",
+                    "collection_date": "2023-08-29",
+                    "collection_time_from": "15:00",
+                    "collection_time_to": "19:00",
+                    "collection_country": "EE",
+                    "collection_postcode": "12345",
+                    "collection_address_row_1": "Kuldnoka 4",
+                    "collection_address_row_2": "Harjumaa",
+                    "collection_city": "Tallinn",
+                    "collection_company_name": "Demo OÜ",
+                    "collection_contact_name": "Peeter Kurvits",
+                    "collection_contact_email": "hello@cargoson.com",
+                    "collection_contact_phone": "+37255551234",
+                    "collection_comment": "Collection comment example",
+                    "collection_with_tail_lift": true,
+                    "collection_prenotification": true,
+                    "delivery_date": "2023-09-15",
+                    "delivery_time_from": "08:00",
+                    "delivery_time_to": "12:00",
+                    "delivery_country": "LV",
+                    "delivery_postcode": "54321",
+                    "delivery_address_row_1": "Kuldnoka 5",
+                    "delivery_address_row_2": "Uks 2",
+                    "delivery_city": "Riga",
+                    "delivery_company_name": "Demo Latvia OÜ",
+                    "delivery_contact_name": "Johannes Kurvits",
+                    "delivery_contact_email": "support@cargoson.com",
+                    "delivery_contact_phone": "+37212345555",
+                    "delivery_comment": "Delivery comment example",
+                    "delivery_with_tail_lift": true,
+                    "delivery_prenotification": true,
+                    "delivery_return_document": true,
+                    "delivery_to_private_person": true,
+                    "goods_value": 13.5,
+                    "goods_value_currency": "EUR",
+                    "frigo": true,
+                    "temp_min": -10,
+                    "temp_max": 5,
+                    "incoterm_code": "DAP",
+                    "incoterm_city": "Riga",
+                    "customer_remark": "Customer remark example",
+                    "documents_attributes": [
+                      {
+                        "category": "package_list",
+                        "filename": "package-list.pdf",
+                        "annex": "JVBERi0xLjMKJcTl8uXrp/Og0MTGCjMgMCBvYmoKPDwgL0ZpbHRlciAvRmxhdGVEZWNvZGUgL0xlbmd0aCAyNjcgPj4Kc3RyZWFtCngBjVDLTsMwELz7K+aYHEhsp5GdK1VBQhyoZIkD4oDSB1WTQuoi8fmsE69DxQUl0Y4zO7M7HrDGAKPptUWjlMKipk8V0tpmgfMWzzihvPcKe49ySbX1UOPj21FoJHrUuhKGUBfQbNZdWXd4xy6Y6GAiQQbkrIPzAFk0xlbSSiIkbuZjWM5I0fa4dVB6oqnWoG1dj9K5sI/b4QXZMg9SjewjJ0eqp1gvb8wccnHFbJk4M0DUPCVNy9SRwWHsEcl/HzWsfYznqQ+ZZ+ElxyvcA1ZuvPo5579jV02MrVPsu3naFL/jcSkdYuwvZj4ZpF66s0mdcm/4D8eKdiL7Tj39X6M0tPgddv0DoDx9jQplbmRzdHJlYW0KZW5kb2JqCjEgMCBvYmoKPDwgL1R5cGUgL1BhZ2UgL1BhcmVudCAyIDAgUiAvUmVzb3VyY2VzIDQgMCBSIC9Db250ZW50cyAzIDAgUiAvTWVkaWFCb3ggWzAgMCA1OTUgODQyXQo+PgplbmRvYmoKNCAwIG9iago8PCAvUHJvY1NldCBbIC9QREYgL1RleHQgXSAvQ29sb3JTcGFjZSA8PCAvQ3MxIDUgMCBSIC9DczIgNiAwIFIgPj4gL0V4dEdTdGF0ZQo8PCAvR3MxIDkgMCBSIC9HczIgMTAgMCBSID4+IC9Gb250IDw8IC9UVDEgNyAwIFIgL1RUMiA4IDAgUiA+PiA+PgplbmRvYmoKOSAwIG9iago8PCAvVHlwZSAvRXh0R1N0YXRlIC9BQVBMOkFBIGZhbHNlID4+CmVuZG9iagoxMCAwIG9iago8PCAvVHlwZSAvRXh0R1N0YXRlIC9BQVBMOkFBIHRydWUgPj4KZW5kb2JqCjExIDAgb2JqCjw8IC9OIDMgL0FsdGVybmF0ZSAvRGV2aWNlUkdCIC9MZW5ndGggMjYxMiAvRmlsdGVyIC9GbGF0ZURlY29kZSA+PgpzdHJlYW0KeAGdlndUU9kWh8+9N73QEiIgJfQaegkg0jtIFQRRiUmAUAKGhCZ2RAVGFBEpVmRUwAFHhyJjRRQLg4Ji1wnyEFDGwVFEReXdjGsJ7601896a/cdZ39nnt9fZZ+9917oAUPyCBMJ0WAGANKFYFO7rwVwSE8vE9wIYEAEOWAHA4WZmBEf4RALU/L09mZmoSMaz9u4ugGS72yy/UCZz1v9/kSI3QyQGAApF1TY8fiYX5QKUU7PFGTL/BMr0lSkyhjEyFqEJoqwi48SvbPan5iu7yZiXJuShGlnOGbw0noy7UN6aJeGjjAShXJgl4GejfAdlvVRJmgDl9yjT0/icTAAwFJlfzOcmoWyJMkUUGe6J8gIACJTEObxyDov5OWieAHimZ+SKBIlJYqYR15hp5ejIZvrxs1P5YjErlMNN4Yh4TM/0tAyOMBeAr2+WRQElWW2ZaJHtrRzt7VnW5mj5v9nfHn5T/T3IevtV8Sbsz55BjJ5Z32zsrC+9FgD2JFqbHbO+lVUAtG0GQOXhrE/vIADyBQC03pzzHoZsXpLE4gwnC4vs7GxzAZ9rLivoN/ufgm/Kv4Y595nL7vtWO6YXP4EjSRUzZUXlpqemS0TMzAwOl89k/fcQ/+PAOWnNycMsnJ/AF/GF6FVR6JQJhIlou4U8gViQLmQKhH/V4X8YNicHGX6daxRodV8AfYU5ULhJB8hvPQBDIwMkbj96An3rWxAxCsi+vGitka9zjzJ6/uf6Hwtcim7hTEEiU+b2DI9kciWiLBmj34RswQISkAd0oAo0gS4wAixgDRyAM3AD3iAAhIBIEAOWAy5IAmlABLJBPtgACkEx2AF2g2pwANSBetAEToI2cAZcBFfADXALDIBHQAqGwUswAd6BaQiC8BAVokGqkBakD5lC1hAbWgh5Q0FQOBQDxUOJkBCSQPnQJqgYKoOqoUNQPfQjdBq6CF2D+qAH0CA0Bv0BfYQRmALTYQ3YALaA2bA7HAhHwsvgRHgVnAcXwNvhSrgWPg63whfhG/AALIVfwpMIQMgIA9FGWAgb8URCkFgkAREha5EipAKpRZqQDqQbuY1IkXHkAwaHoWGYGBbGGeOHWYzhYlZh1mJKMNWYY5hWTBfmNmYQM4H5gqVi1bGmWCesP3YJNhGbjS3EVmCPYFuwl7ED2GHsOxwOx8AZ4hxwfrgYXDJuNa4Etw/XjLuA68MN4SbxeLwq3hTvgg/Bc/BifCG+Cn8cfx7fjx/GvyeQCVoEa4IPIZYgJGwkVBAaCOcI/YQRwjRRgahPdCKGEHnEXGIpsY7YQbxJHCZOkxRJhiQXUiQpmbSBVElqIl0mPSa9IZPJOmRHchhZQF5PriSfIF8lD5I/UJQoJhRPShxFQtlOOUq5QHlAeUOlUg2obtRYqpi6nVpPvUR9Sn0vR5Mzl/OX48mtk6uRa5Xrl3slT5TXl3eXXy6fJ18hf0r+pvy4AlHBQMFTgaOwVqFG4bTCPYVJRZqilWKIYppiiWKD4jXFUSW8koGStxJPqUDpsNIlpSEaQtOledK4tE20Otpl2jAdRzek+9OT6cX0H+i99AllJWVb5SjlHOUa5bPKUgbCMGD4M1IZpYyTjLuMj/M05rnP48/bNq9pXv+8KZX5Km4qfJUilWaVAZWPqkxVb9UU1Z2qbapP1DBqJmphatlq+9Uuq43Pp893ns+dXzT/5PyH6rC6iXq4+mr1w+o96pMamhq+GhkaVRqXNMY1GZpumsma5ZrnNMe0aFoLtQRa5VrntV4wlZnuzFRmJbOLOaGtru2nLdE+pN2rPa1jqLNYZ6NOs84TXZIuWzdBt1y3U3dCT0svWC9fr1HvoT5Rn62fpL9Hv1t/ysDQINpgi0GbwaihiqG/YZ5ho+FjI6qRq9Eqo1qjO8Y4Y7ZxivE+41smsImdSZJJjclNU9jU3lRgus+0zwxr5mgmNKs1u8eisNxZWaxG1qA5wzzIfKN5m/krCz2LWIudFt0WXyztLFMt6ywfWSlZBVhttOqw+sPaxJprXWN9x4Zq42Ozzqbd5rWtqS3fdr/tfTuaXbDdFrtOu8/2DvYi+yb7MQc9h3iHvQ732HR2KLuEfdUR6+jhuM7xjOMHJ3snsdNJp9+dWc4pzg3OowsMF/AX1C0YctFx4bgccpEuZC6MX3hwodRV25XjWuv6zE3Xjed2xG3E3dg92f24+ysPSw+RR4vHlKeT5xrPC16Il69XkVevt5L3Yu9q76c+Oj6JPo0+E752vqt9L/hh/QL9dvrd89fw5/rX+08EOASsCegKpARGBFYHPgsyCRIFdQTDwQHBu4IfL9JfJFzUFgJC/EN2hTwJNQxdFfpzGC4sNKwm7Hm4VXh+eHcELWJFREPEu0iPyNLIR4uNFksWd0bJR8VF1UdNRXtFl0VLl1gsWbPkRoxajCCmPRYfGxV7JHZyqffS3UuH4+ziCuPuLjNclrPs2nK15anLz66QX8FZcSoeGx8d3xD/iRPCqeVMrvRfuXflBNeTu4f7kufGK+eN8V34ZfyRBJeEsoTRRJfEXYljSa5JFUnjAk9BteB1sl/ygeSplJCUoykzqdGpzWmEtPi000IlYYqwK10zPSe9L8M0ozBDuspp1e5VE6JA0ZFMKHNZZruYjv5M9UiMJJslg1kLs2qy3mdHZZ/KUcwR5vTkmuRuyx3J88n7fjVmNXd1Z752/ob8wTXuaw6thdauXNu5Tnddwbrh9b7rj20gbUjZ8MtGy41lG99uit7UUaBRsL5gaLPv5sZCuUJR4b0tzlsObMVsFWzt3WazrWrblyJe0fViy+KK4k8l3JLr31l9V/ndzPaE7b2l9qX7d+B2CHfc3em681iZYlle2dCu4F2t5czyovK3u1fsvlZhW3FgD2mPZI+0MqiyvUqvakfVp+qk6oEaj5rmvep7t+2d2sfb17/fbX/TAY0DxQc+HhQcvH/I91BrrUFtxWHc4azDz+ui6rq/Z39ff0TtSPGRz0eFR6XHwo911TvU1zeoN5Q2wo2SxrHjccdv/eD1Q3sTq+lQM6O5+AQ4ITnx4sf4H++eDDzZeYp9qukn/Z/2ttBailqh1tzWibakNml7THvf6YDTnR3OHS0/m/989Iz2mZqzymdLz5HOFZybOZ93fvJCxoXxi4kXhzpXdD66tOTSna6wrt7LgZevXvG5cqnbvfv8VZerZ645XTt9nX297Yb9jdYeu56WX+x+aem172296XCz/ZbjrY6+BX3n+l37L972un3ljv+dGwOLBvruLr57/17cPel93v3RB6kPXj/Mejj9aP1j7OOiJwpPKp6qP6391fjXZqm99Oyg12DPs4hnj4a4Qy//lfmvT8MFz6nPK0a0RupHrUfPjPmM3Xqx9MXwy4yX0+OFvyn+tveV0auffnf7vWdiycTwa9HrmT9K3qi+OfrW9m3nZOjk03dp76anit6rvj/2gf2h+2P0x5Hp7E/4T5WfjT93fAn88ngmbWbm3/eE8/sKZW5kc3RyZWFtCmVuZG9iago1IDAgb2JqClsgL0lDQ0Jhc2VkIDExIDAgUiBdCmVuZG9iagoxMiAwIG9iago8PCAvTiAxIC9BbHRlcm5hdGUgL0RldmljZUdyYXkgL0xlbmd0aCAzMzg1IC9GaWx0ZXIgL0ZsYXRlRGVjb2RlID4+CnN0cmVhbQp4AaVXB1xTV9s/N/dmsMKeMsJGlgFly4jMALKH4CImgYQRYiAIiItSrGDd4sBR0aKoRasVgTpRi1bqxq0v1FJBqcVaXFh9n5uAwtv+3u/7fl/u73D/5znjWf/z3ANC2lt4UmkuBSGUJymUhSdw0qalpbPo9xEDGSJN5Io0efwCKScuLhqmIEm+REi+x/5e3kQYKbnuQu41dux/7FEFwgI+zDoFrURQwM9DCJuMEMOEL5UVIqQyDeTW8wqlJC4DrJeTlBAMeBXMUR9eC2JkES6UCGViPitcxithhfPy8ngsd1d3VpwsP1Oc+w9Wk4v+P7+8XDlpN/mzgKZekJMYBW9XsL9CwAshsS/gQ3xeaCJgb8D9ReKUGMBBCFFspIVTEgBHAhbIc5I5gJ0BN2bKwpIBBwC+K5JHkHgSQrhRqSgpFbAJ4Oic/ChyrRXgTMmcmFjAoAv/gl8QnA7YAXCbSMglc2YD+IksP4Gc44gQwRQIQ0IBgx2Et7iQmzSMKwuKEkk52EncKBUFk3aCLqp6Ni8yDrAdYDthbjipF/ahRksL48g9oU8tkuTGkLqCAJ8XFij8hT6NUShKigC5O+CkQlkSuRbsoVVmisO4gMMA7xXJIkg5+EsbkOYqeAYxobvyZKHhIIeY0Itl8gQyDuAjfZdQkkzGEzhCf4hSMB4Sonw0B/7ykQR1IxYqQGJUpEBZiIfyoLHAAmdo4TBLAk0GMwpQDsizAPd8HCf75ApyjQuSwlg+yoS5ubByRM5CAthBuZLcJR8a2SN37lXszB/W6Aoag82/RnIYF6F+GBcBmoq6FJJisDAP+sEglcNYFuDRWtyBSe4oTmGt0gZynNTSN6wlH1YIFLqU60g/lbYFg80SVApjpG0K3wlDgk1MhOZHRBP+BFuhTQYzSpCLQj5ZIRvR+slz0re+j1rngq2jvR8dsZEon4Z4FcLOueChZDg+BWDNO7A7Z3j1p2gqNK4ykTtIpTUr4rmz6sFe8LxcNlvMv7xyoL3smBFi3Vx+6gJi7ddqOa/wh4wMq5NonnFdvb3sv2T1UzZHbBub1djRvFEwSfA33oAu6jXqFepD6g3Egvcv1E5qL6B71Pvw3Ploz6cckJwSg1zJCSXb+BiumEmykAORyVWM5kE0yEwJFXkKh3U8iG8BRE8OvCNz7QIMGJ2LsQwhdxs9TjJCqT0L9lX2PjGer5CQDCH1k2z5e3z+Lydk1PnIlKwykUpn1ZcNCaXK/JG5Ey6NeRmDyp3ZB9n97F3s/ewX7IeKKCjyx77F/o3dyd4BI0/xtfgR/DjegrfiHYgFvVb8NN6iQPvxY/B8+3Hd2BOhjPHYE0Hykz98AkjvC4c5OPqsjK4KZD7IfchskPNHYpg9fLJHc5WM+GgOkbH831k0OtZjK4gy+4pTyrRmujHpTEemB5PDxJiW8LgzgwBZM62Y0UxDGI1g2jNDmOM+xmMkY7kgIRlEMu8TF5V1Lw2sHGEa6Z8Isi9TVDnesL//6SNrjJdkBRSPPmeYBpxkpSZlDRnRORJXRYbHVNBk0CRG88AOGcSVrA4SqD2sMXPI2k1WLWA8Nl2Rw3/gKM2XZk8LpdnDWmW1YtFCaBG0MMSiuZFy2gRaJGAfchZhTrgRXKh6sYhFcAgPImgYk5VwMjxkHVTGyIUIhNEAIoTwJmvkaG/BEmVsyWr5z56OPoVw1ygUFsN9BaHgfGmJTJwlKmRx4GYkZHElfFdnljvbDb6I5D2LnIPQi3jF/Qkz6ODLZUVKGUG+qEgV7mB6yBiZI2v4qruArV7ID76zoXBviEVJKA3NAutEkEsZxLYMLUGVqBqtQuvRZrQd7UINqBEdQkfRMXQa/YAuoiuoE92DL1APeooG0Es0hGEYHdPAdDFjzAKzxZwwd8wbC8BCsWgsAUvDMrAsTILJsTLsM6waW4NtxnZgDdi3WAt2GruAXcXuYN1YH/YH9paCU9QpehQzih1lAsWbwqFEUZIoMylZlLmUUkoFZQVlI6WOsp/SRDlNuUjppHRRnlIGcYSr4Qa4Je6Ce+PBeCyejmfiMnwhXoXX4HV4I1SBdvw63oX3428IGqFLsAgXyE0EkUzwibnEQmI5sZnYQzQRZ4nrRDcxQLynalBNqU5UXyqXOo2aRZ1HraTWUOupR6jnoGr3UF/SaDQD4IUX8CWNlk2bT1tO20o7QDtFu0p7RBuk0+nGdCe6Pz2WzqMX0ivpm+j76Sfp1+g99NcMNYYFw50RxkhnSBjljBrGXsYJxjXGY8aQipaKrYqvSqyKQKVEZaXKLpVWlcsqPSpDqtqq9qr+qkmq2apLVDeqNqqeU72v+kJNTc1KzUctXk2stlhto9pBtfNq3Wpv1HXUHdWD1Weoy9VXqO9WP6V+R/2FhoaGnUaQRrpGocYKjQaNMxoPNV4zdZmuTC5TwFzErGU2Ma8xn2mqaNpqcjRnaZZq1mge1rys2a+lomWnFazF01qoVavVonVLa1BbV9tNO1Y7T3u59l7tC9q9OnQdO51QHYFOhc5OnTM6j3RxXWvdYF2+7me6u3TP6fbo0fTs9bh62XrVet/oXdIb0NfRn6Sfol+sX6t/XL/LADewM+Aa5BqsNDhkcNPgraGZIcdQaLjMsNHwmuEro3FGQUZCoyqjA0adRm+NWcahxjnGq42PGj8wIUwcTeJN5plsMzln0j9Ob5zfOP64qnGHxt01pZg6miaYzjfdadphOmhmbhZuJjXbZHbGrN/cwDzIPNt8nfkJ8z4LXYsAC7HFOouTFk9Y+iwOK5e1kXWWNWBpahlhKbfcYXnJcsjK3irZqtzqgNUDa1Vrb+tM63XWbdYDNhY2U23KbPbZ3LVVsfW2FdlusG23fWVnb5dqt9TuqF2vvZE9177Ufp/9fQcNh0CHuQ51DjfG08Z7j88Zv3X8FUeKo4ejyLHW8bITxcnTSey01emqM9XZx1niXOd8y0XdheNS5LLPpdvVwDXatdz1qOuzCTYT0iesntA+4T3bg50L37d7bjpukW7lbq1uf7g7uvPda91vTNSYGDZx0cTmic8nOU0STto26baHrsdUj6UebR5/eXp5yjwbPfu8bLwyvLZ43fLW847zXu593ofqM8Vnkc8xnze+nr6Fvod8f/dz8cvx2+vXO9l+snDyrsmP/K38ef47/LsCWAEZAV8FdAVaBvIC6wJ/DrIOEgTVBz3mjOdkc/Zznk1hT5FNOTLlVbBv8ILgUyF4SHhIVcilUJ3Q5NDNoQ/DrMKywvaFDYR7hM8PPxVBjYiKWB1xi2vG5XMbuAORXpELIs9GqUclRm2O+jnaMVoW3TqVMjVy6tqp92NsYyQxR2NRLDd2beyDOPu4uXHfx9Pi4+Jr439NcEsoS2hP1E2cnbg38WXSlKSVSfeSHZLlyW0pmikzUhpSXqWGpK5J7Zo2YdqCaRfTTNLEac3p9PSU9Pr0wemh09dP75nhMaNyxs2Z9jOLZ16YZTIrd9bx2ZqzebMPZ1AzUjP2ZrzjxfLqeINzuHO2zBngB/M38J8KggTrBH1Cf+Ea4eNM/8w1mb1Z/llrs/pEgaIaUb84WLxZ/Dw7Int79quc2JzdOR9yU3MP5DHyMvJaJDqSHMnZfPP84vyrUidppbRrru/c9XMHZFGy+gKsYGZBc6Ee/FPaIXeQfy7vLgooqi16PS9l3uFi7WJJcUeJY8mykselYaVfzyfm8+e3lVmWLSnrXsBZsGMhtnDOwrZF1osqFvUsDl+8Z4nqkpwlP5Wzy9eU//lZ6metFWYViysefR7++b5KZqWs8tZSv6XbvyC+EH9xadnEZZuWva8SVP1Yza6uqX63nL/8xy/dvtz45YcVmSsurfRcuW0VbZVk1c3Vgav3rNFeU7rm0dqpa5vWsdZVrftz/ez1F2om1WzfoLpBvqFrY/TG5k02m1ZterdZtLmzdkrtgS2mW5ZtebVVsPXatqBtjdvNtldvf/uV+KvbO8J3NNXZ1dXspO0s2vnrrpRd7V97f91Qb1JfXf/Xbsnurj0Je842eDU07DXdu3IfZZ98X9/+GfuvfBPyTXOjS+OOAwYHqg+ig/KDT77N+PbmoahDbYe9Dzd+Z/vdliO6R6qasKaSpoGjoqNdzWnNV1siW9pa/VqPfO/6/e5jlsdqj+sfX3lC9UTFiQ8nS08OnpKe6j+ddfpR2+y2e2emnblxNv7spXNR587/EPbDmXZO+8nz/uePXfC90PKj949HL3pebOrw6Djyk8dPRy55Xmq67HW5+YrPldark6+euBZ47fT1kOs/3ODeuNgZ03n1ZvLN27dm3Oq6Lbjdeyf3zvO7RXeH7i2Gi33VA60HNQ9NH9b9a/y/DnR5dh3vDunu+Dnx53uP+I+e/lLwy7ueil81fq15bPG4ode991hfWN+VJ9Of9DyVPh3qr/xN+7ctzxyeffd70O8dA9MGep7Lnn/4Y/kL4xe7/5z0Z9tg3ODDl3kvh15VvTZ+veeN95v2t6lvHw/Ne0d/t/Gv8X+1vo96f/9D3ocP/wYJD/hiCmVuZHN0cmVhbQplbmRvYmoKNiAwIG9iagpbIC9JQ0NCYXNlZCAxMiAwIFIgXQplbmRvYmoKMiAwIG9iago8PCAvVHlwZSAvUGFnZXMgL01lZGlhQm94IFswIDAgNTk1IDg0Ml0gL0NvdW50IDEgL0tpZHMgWyAxIDAgUiBdID4+CmVuZG9iagoxMyAwIG9iago8PCAvVHlwZSAvQ2F0YWxvZyAvUGFnZXMgMiAwIFIgPj4KZW5kb2JqCjcgMCBvYmoKPDwgL1R5cGUgL0ZvbnQgL1N1YnR5cGUgL1RydWVUeXBlIC9CYXNlRm9udCAvQUFBQUFCK0hlbHZldGljYS1Cb2xkIC9Gb250RGVzY3JpcHRvcgoxNCAwIFIgL0VuY29kaW5nIC9NYWNSb21hbkVuY29kaW5nIC9GaXJzdENoYXIgMzIgL0xhc3RDaGFyIDExNiAvV2lkdGhzIFsgMjc4CjAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgNzIyIDAKMCAwIDAgMCAwIDAgMCA2MTEgMCAwIDAgNjY3IDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgNTU2IDAgNTU2IDAgNTU2CjAgNjExIDAgMjc4IDAgNTU2IDAgMCA2MTEgNjExIDAgMCAzODkgNTU2IDMzMyBdID4+CmVuZG9iagoxNCAwIG9iago8PCAvVHlwZSAvRm9udERlc2NyaXB0b3IgL0ZvbnROYW1lIC9BQUFBQUIrSGVsdmV0aWNhLUJvbGQgL0ZsYWdzIDMyIC9Gb250QkJveApbLTEwMTggLTQ4MSAxNDM2IDExNTldIC9JdGFsaWNBbmdsZSAwIC9Bc2NlbnQgNzcwIC9EZXNjZW50IC0yMzAgL0NhcEhlaWdodAo3MjAgL1N0ZW1WIDE0OSAvWEhlaWdodCA1MzIgL1N0ZW1IIDEyNyAvQXZnV2lkdGggNjIyIC9NYXhXaWR0aCAxNTAwIC9Gb250RmlsZTIKMTUgMCBSID4+CmVuZG9iagoxNSAwIG9iago8PCAvTGVuZ3RoMSA5Mzg0IC9MZW5ndGggNTU0NiAvRmlsdGVyIC9GbGF0ZURlY29kZSA+PgpzdHJlYW0KeAHFWgl8VOW1P+eus2SZyTJblpnJTPbJSpJhSCA3YSYJJMEQFhNMJEMIBiQISCmUQhHQQHChryqItFalLWJtJ8HiINXyKO7mPRd8KqJ0wd1ItShYyMw7905ISV5/Pn6/8mvv/Z37fedbz/c/5zvnzndn1crvdEE0bAQWmub5ly8C5XIsBEBvZ49/eYQ37KL0aOfqVbYIz+8DYPcuWn5DT4RXNwBEa25Yunakv3EjgHZNd5efxlGui/Qs66aCCIsllDq7e1atifCGFkqlpTd1jtQb24hP6/GvGZkfThJvW+bv6Yq0d1RQmrX8pptXRfi085R6l6/sGmmPNB43A5BKdVBOa5MvhvI6oBbiR9EapUSuJ3rs2kbD/NiKr0CvUoofyszfKGfeKZw1+dzJi5naDeoaaqdWxpMrqI+QHcoGiEKqf0e7YbRGrpUvXRAW5eKTwOGz0J2Lv8PnIQusYIF40FL1stzf4QuQPqYEfofPQB4VXt7oWaiHyVAIaZA40u05yBjb7Ul8ETjoyQ3iMZtv/WKTNwhtuUFoJqojmkJUQpST26+SnsQdkNB+VlKjlQOt9S3z509jPqn/A+UZwHwpKhrUnZsrrJ2bN9dlV6mxHtwcghV94FRS74DzUWsQpww4HZRMjiTMgDuFOJDUbqd12L3AetEdVKGUZD3v/JH1HNHXzkrrV84i66vU7hV3rXWwiuoHrC/lBBlKXnQGOZRirc87b7H+xp1tfdxdbh3IpLIBa38VJQete923WB/eopQ8lKMkDzqDuHvA+lM5OWh9gMa/d7NScU+k46ZIsnyLMtFNB5Rk2YEg8+hBa48zw7qAOqKktbY7l1rbnB7r7Kogpg9YG+VuB60NmYPWennqAasUmagsMnqpU5G4ODKty3nYmhWZIU1uLcVbbc4GawqN7/rpvVaX83prVU4Q9z1Rl5XjrMu8tyyIZ5U55IQElZNlkaQz8yn8BdRCNs6DdLzvQF02yYw7BqybKdl9oC7LnR5kP5LirAcy6zK3EJURpRPNCeJsySXuFBeKc8QJYq6YLWaIdjFVTBITVHEqnSpGFaXSqFQqQcWpGBWoEoLhP0i5shEnCDo5ETj5ySl5HSPn6UFPYFDFwHQICnCrYXWlqTJuit5T4/0Hjw6lsMOb+/fL9PdsrglTAvfWz2oJ7E9pDRTLmXBK62X1/0y2q5p61zevPdC89tO5vi6Hr8Ph6yLqCGxf3W0KbFxgs/V/ulausAXYjI4Fnd1y6u8KrHV0eQOfOry2/mal37jquXJ1s8PbD3N9s1v650pd3oFmqdnn8HtbDzT56maMmWvb6Fx1vn8wl08erE6eq0npN26uGXJ1kzzXDHmuGfJcTVKTMldurm/xrGoA/gjo+aOQx++EFK4aUgDCJ4jekdPQrPAZ/hXQhIfDQyx5VkyT6dQFTIBfgwhPwAZyEK/BflSDA4awGN7GFMyBtyAE78CfyN9sh5/S0wcf4dfk5T7GLGpTBpvgJ/BAeDl5zEq6P0KefNBE+Di8Lvx8+Buohj44hiLGY0r4EBRAL927YQ9GMQvC/WCCBvguRZVN8AKcCA+EP6Hxy+B91GMBVx5+lyyMpxIPbIP98ATa0YE5eF34fSo3kYxtsD/cGF5N/c5QqwKYAetotj+iFTMwF3fje+xQeGP4TlpbMtXNgU66e+AW2AV74DGl1QIumU+k8b3kPzvhTngZPoIvETAbq3EN8wb7CfsXrpzbHT5Gcsyh+TrgAWQJFSfOwYW4HB/Dx/H3+DXjZvysh32DW849SLLNga3wIDwFz8Hr8C58CkPwNxhGjmSagtfgOvwx9fsTM4FpZ9YztzMnmDNsEfseJ3Lb+Vv5w2Eu/Eb4byRzKuRQTKqFmdACXXQvgmXwHfgBbEERdkI//J6kPQWnUIM6LMAirMXZeB3eiGvhh7gXn8STeBo/wI9JunjGyjiYAmY1zbeJ2cY8xgwwh5ghVs+uYtezR9j32K+5RK6dO0L3KT6PXyUkC/XizNDdoVPhvPCO8G7Si4FuJ2RT5JmCFEbo3kKa3EaY7YG98Cj8CgZgIHwBPXAMXiW5/ghn4BxpLJluOxbjRGzCmSThUuzBH+AuknA/HiQpD+NheBPfxAt0h8DMqJk85jrGz6ylezfsYl5X8Ili7WwWm8fWs7PCX7CPsf3sl1w6N49bwa3j+rhd3AN8Mj+Zv5afxy/n7+EP8i/x/8Of4c8KKUKvsFd4XHhdVIkl4i4xhGkkiw3T4XF4mqzuXnY58U6YiltIq3PhZbLeIXgGLsA3cAR+gSkQYmVtZoQfhGB4K2nzKfgN+32ogB8yP2KmhyvZfawai8PnaKxC0tfldwh2kbValXeY7FATxNB+dMh7U8rJzsrMSHc60uw2a2pKcpLFbDIaEhPi4/S62JjoKK1GrRIFnmMZBJfPUdNhC2R0BLgMR11dnsw7/FTgv6ygI2CjopqxbQI2uZ+fqsa0lKjlonEtpUhLabQl6mwVUJHnsvkctsCg12EL4ryZLZS/w+totQWGlHyjkt+h5KMpb7dTB5vP1O21BbDD5gvUrO7u83V481x4SKJIoclzwSEACbTywAGY6l9Pnhemyi18AYvD6wuYHZSnOjbd518YaJrZ4vMm2e2tea4ATu10LAiAozoQmzvSXe5HHjK9uYXmznMtDpD8sD1qoWPh9qAECzrknL+tJcD6WwNMhzyHPjdgdHgDxu+9b/o7eynnu/2yygCTXuPv6qsJSB3bCXSZ7ZA5/+3E1c+y0bDMra0tAbyVhJOFUGSPrCISQ9I7ltgCake1o7tvSQdhDk0tAxbJ4nN0eFsD0NwyYJbMCpPnOmTaUG4nUA7lVeVVyWm53bQhkn64OVL+2hE5NW049gdK65tHcUF5bsc0EjNg66RJCAuSdaL86JoIfZ0TCT66WpFWuZjkmRpgyJTY9ACfPs0f2DhrRAx/t3dEuCXeAbXZogSt6lZq39Gnm0QKpPY6h63vKyDNOoY+G1viHykR0nVfgVwp63/UhALov5RfLQfXdIpX3SZHt6y+1YqqiXeYfJcVEC8HtTx6G3XVB0Hd1NKPeGdrEMO3BsGbcoiCDzv/eqrOlQ1usZemI8blooIcO+VIghqaqEa2DFufrW/awj5bja2bTIpLV1Kq6OprLSDAZrUQLDC7xR6QWpNGs12trZNonHx5HOpCzftaaYQlIyNQqhQVDFOjAlc9rSqjqWVmS2CjNykgeVsJdDLiI00tgSNkv62t1KpwVFKSWH77jshcRDIX5lB9cWQUeufZSEO09vXJY85qcdgDR/r6kvrkXRfh6fV5fIE0UhAEuYmMcBA3NlFfShz2JAVyu8NOYrXKmE4gA75kQPTO/+0Il47KTT3LSNpSBWH3VUJ44pUg7LkihCeNSjoG4XKSeZKMcMW/DuHJYxCe8u0IV47KTUJKJG2lgnDVVUK4+koQnnpFCHtHJR2DsI9k9soI1/zrEK4dg3DdtyM8bVRuEnI6STtNQbj+KiHccCUIN14RwjNGJR2D8DUk8wwZ4aZ/HcIzxyDc/O0IzxqVm4ScTdLOUhCec5UQnnslCF97RQi3jEo6BuFWkrlFRnjeKMJSUgAu98Mbx7lduOqO+boxkLd9O+Ttowshqa8n8dsVyOdfJcg7rgRy/xVBvmBU0jGQd5LMC2TIF/4bIe8aA/mib4f8htGFkNTdJP4NCuSLrxLkS64E8huvCPKlo5KOgbyHZF4qQ77s3wj5TZdBTucVz8FuxqOkbdyfYQ8/Fx7mboZyolqiAiqrpvptlN9E+V6ZZ1MofzOV71dOO+nnOv26oENWEOhXHYCNfn9HSpTif+LB/J++7EgJHYX9PxdP9QKRSCQfF6uJIqfJWpJUvqIhBmKVHEAJ3T+nX59xeJBxMkG2mF3EXuQauIe4z/iV/G+pFUOnJkC/cY/SKbUIUyQ7L6TQ70NOTGFBw3MpLMtY1IKYgmBWqffbl1bQydqMsxWNwxUzdF9XNOqGK6CyYrhCpqLCCXq7PpNoN/dw8OIgf/RvU4Jc84VfycIw0BZ+k1/Hn6HzByuskrKv1dwt3q1ir2Nak1pSFnHfxW38IwkD3BOaZ7nntCeYdxLeNZ1KOm/SGYOolRwWlcoSVWVl2bgqi9pqcBtVbmuqaLHHulPNNvt99sfmKnI1DpFUjXrP0PGhAqgcqqwYivMU6IaKCrEd2uPcZXab0WC0Z2RmONKYxATDhGJ3mdsugN2WmaHHtv9+HA246pfzxdDLqQWzf7bv6OBPHppTYMWirNAToXDo6MGDzA7u2lcPnt3Wt6SsI/TF+fPnlnhWfhF67eVB7GItZB176Nx/P2HJQ7YUCwxTxatYi8ikg1kQg5h8wN78aETO4Rm6D6CycbiyqDDeTojZ92AJc+LCl/zRC7WhcwpeD5NetDSWig7tp0jJO3GnwETlcFwMmxPLxKhU7nhLIhudHmNOSAxiCg09AoGimcYhqKyUFx9Ze4aDpiguKwVOzlCWS2RPrO0J0ZlWz1osCp3/KvRc6L+YTe+hiutYEJqx5ObQ8FvDn/NHT58hWVgoD7/HTeTmk2V5YBLcJV1TzpSWrcVtyL2Vihl//SDnQ0dMNE+navGWXDp/4DLyM/Jz5AIuSZuWZHBNsoo5Gq2rWDspvhEa8yeV5kzJsFRYGpPyVI2l5vKK36IZ7FCHv4IRNZ5VFHla7xl8/31Fk2Rggx59nNET5/GgnMqUG1EsxmAsCqKgaLTMnVnmListIRWLgminvL2YTkH0CcZUNCba8zGTWjrSMkpLSPfxzHtJ7kJpXmb1zElt97OPXZM2uX1eV06qJjSkrl2B8Qe2b2fY5OTQi9EatryxbdXd/3n/nJ8tZ+L0ieoonTGzeVrV0rvOaGIt7qkTitMr72rbUVv7TCiqZPrErOgc+6R0Ka/0kftfmFeUiMcje6A2fIIrIRxTaBcsk3z3GfYZmN5knJbYEtcdt0azNi6Y+Fz884kqEyNwKa9xzlSLaIjRROmeiHImaFN1ZbFWKEs1plhsqjKj2WrrtdfNGGP3w2cVux/SezweMn4llTFaAe2oWL0MkpHsXjZ7UbDbmFIdTCjmjMjqVPbCrh2lyckT7lg4W40OzezbQt+EvjmPcV8MIm8KJTGHJxdV39WwYc20rUvnblp1GCd+g2acGPwY9yo2UhA+yU2itdF2ou9Fj0rTalS9CTvxPg0noJoXdLylnq/RTbPdhrfG9lo1rIE1xhvijXWqBkODcZqlzdBmnGc5ie9wH6d8aDtn003HGt1WfrOOY4J4jzThmpj5MTfFsDExSYIzzS4a41xJWgPLpLFlxnVpqR1RG6OYKIuTscbck2p2OHeNIjN8mlxCO/mE00MF+jgPeYXBiFtoHy4qhBXtuKIdyE7y0VFmIOdgEO30GHEMsqGAnj7hIb7SE4OHxXXXbT1RK8VrmWGD4C+f1eJONaJDO+/2i6+EjqL1/QR21feXrPjOp4uW+TfW37G3Ors4qdC/8AGMwnxMom9cCk7VoWruesIpmk6WC2GepOtLJYPmnYUFYpyQHu3MDmKlZEu2uUyxhYw1zpqeWeiKtxQnb0nKU5e5zEXFtDbfmG2i9wyfPU27ZHiwcshTSavTe2SlOy/tAkXlcbS4Urs+gbSe5sy8tMjJ8r4hZ1haEjfBzTzVt3nZvZ5U26R7tZO7JUys/V7o56+GzsdgWVRSfs/ukrTsgjlbX7vw5XvXfbLzZ/c/dEf9svnT+9iV5tybf3zh69dvDO59uNiQeUP1npoaRxVmXvwr1iuBjaHzXMD9/EtKjCmX0hqgAdugjY6u+8lFCKJGbTRaQMhEkYLMgL0psjwlyPi6vOQoKysbyZGREZPvUmh/6BTaI8TRZ4DQdy88TVPQaSlwPfxT9JHzL9KAxNTwx5n3GS5WpVHP4bfxd6nuVD/Dv6h6WzylOqnWqgSTUMAWcFl8nuBmJwoNbJ3QzrYKS9jFwhpuK7eTvUd8hP01t1/YJx5kg9yz7AucpV6YLs7lt3KbVcf451Vvs29z74onVFpereZ4XtBq6SOXSFk6Z9UwNpZ9KY7jqIplOIFRazhW0IgUrQVLNGoyQWvTFmolLac1R0X32pv+LCv1YrsSWj+nNVNQVZyd0dPbmJ/LrdfVz2z5XusxiCMH6PHE9upUFaKOoq5swSvaKYygXU1n4qLevglN2In+0Ga8PbQvdGF16CP+qYsf4O7Q/OGF+Nq60CNyPO4lrPxkhwYwQr2Ux2MipqMbW7TdWgHjdILaSZshhtMY+TJjLGMx62MyY80m89OX1NM4fGwk2JLpkaxDlR7F7ICcrV1fIsdY8jZytEkkJzwhk+17M3TSmLP6h2XJodMY7y5q6V3MtfUPDqcxO+fmz15X1TU8wEkPzE6vlo2GhWrylXu4LtKlkb7KNEpZRhZVUVujtupYY7QpdlE0yztNCaLWGaM1mVRMmdFiUZXpzWZLEFcfGN3+ShyhDTHyOkBorYSVK0a2hhIxnBT+obREfiYi8+ltt61f39u7nskPfRb6kO7PMIHcnBkThl9/YWDv3v7+vXsHFoUexTl/+QznhX7+GSNF7I65wLVRpJ5+CFisPcDERgtBrJXM8WK0EKWxMYWMxLCJZOZMjDYzSonZCw/YmxZFNvLwseP0Zc77QWO7bOsk7nHZ3A1GPbmlMSgy72rjk3Kif1lup9itqy5q2si1IYZOsszyys3D57jqp3uyphJ8pN/q8Dv0LcMPueCCDdI1ap2QYY5m1Zxdq63XTNPW2r22uuw3WVVKmi1KwxlyOYPF5YoTOVeW1uWKTdTYUgyNaWJintiYbsmPgpTG2DxozDXn5V8Wdc7SK4ZsBENn6Z2LjJIcbATo4UHdoN5I9nB9+/XYjopLJXdEnycoDJWWlMkxJ/IepgQk2fEmJggOW0YpYqc6tfSu2Z1ZWaHwoYaGoTdfRowP/VkwF6xovyYnJ7x/zuwvLobCX9GHnbYGm6e4uNBsnpzv827c+fbDz7ttkyZlFhmME7NmNq97aPDtfSwZE0Ji+BNmDd9Ntj79oM4Va41y6Z/EFfT3iDbJIEKbgIKJVBMrnOXUmfAfpCdTEGMO2Dtk9RyvOD1ccbZC1s/njcrL7lAl+Vt6cSuV33cnJDr08ptkmTtRFGht+sRdaOnvT7s2OiWm98XphWzPS1gYeuWl4SNT7Yhv8GJj0SLmAdKPcoXlL3D/6KLP4bQHMihGTKCviDVQR1/CG+hr40xopt8hc+FapRNCHK1OvgT5N0uVfFXn1nUtXd21anGnP6/6pqUL5fVfuuooM5uICmEV0Raiu4nkCP440TGi40Snic5SR44ogchJVBIeuagORvMItnG8Yn6X1dN/c8a0bxrH+8fxneN4BZ/LxrthXP3icfyN4/hl4/ibxvErx/E3j+NXyfz/ArmI71wKZW5kc3RyZWFtCmVuZG9iago4IDAgb2JqCjw8IC9UeXBlIC9Gb250IC9TdWJ0eXBlIC9UcnVlVHlwZSAvQmFzZUZvbnQgL0FBQUFBQytIZWx2ZXRpY2EgL0ZvbnREZXNjcmlwdG9yCjE2IDAgUiAvRW5jb2RpbmcgL01hY1JvbWFuRW5jb2RpbmcgL0ZpcnN0Q2hhciAzMiAvTGFzdENoYXIgMTIwIC9XaWR0aHMgWyAyNzgKMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAyNzggMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMAowIDYxMSAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgMCAwIDAgNTU2IDAgMCA1NTYgNTU2CjAgMCAwIDIyMiAwIDAgMjIyIDgzMyAwIDU1NiA1NTYgMCAwIDAgMCA1NTYgMCAwIDUwMCBdID4+CmVuZG9iagoxNiAwIG9iago8PCAvVHlwZSAvRm9udERlc2NyaXB0b3IgL0ZvbnROYW1lIC9BQUFBQUMrSGVsdmV0aWNhIC9GbGFncyAzMiAvRm9udEJCb3ggWy05NTEgLTQ4MSAxNDQ1IDExMjJdCi9JdGFsaWNBbmdsZSAwIC9Bc2NlbnQgNzcwIC9EZXNjZW50IC0yMzAgL0NhcEhlaWdodCA3MTcgL1N0ZW1WIDk4IC9YSGVpZ2h0CjUyMyAvU3RlbUggODUgL0F2Z1dpZHRoIDQ0MSAvTWF4V2lkdGggMTUwMCAvRm9udEZpbGUyIDE3IDAgUiA+PgplbmRvYmoKMTcgMCBvYmoKPDwgL0xlbmd0aDEgODQ3MiAvTGVuZ3RoIDUwMTYgL0ZpbHRlciAvRmxhdGVEZWNvZGUgPj4Kc3RyZWFtCngBxVp5eBRVtj+3lq7q7qTTna2XdKe7qXR3OvtCNhJIEbpDWAIhAUwjgawQEDRijMZtogOjROThMAREnzO4sMqksjxoQJDxqeiM44gzg4jO4ojLzGc+36KOCul+p6pDJJmRjz/85lXl3HvPOXc593dPnVt9K50bbm+DaOgBGmqWNXWsAuWyXwYg1pb1TR0RPsGK+S9bujodEZ59FYDesqpj9foIr14MoN22el33WPtEHkC9rb2tqTWiB+wPCttREOHJVMxT2td33hnh4y9iXrzulpYxfcInyCevb7pzbHx4D3nHzU3r2yL17ecxT+m45bbOMX4X5mLHhrax+qQegLkZCEp1MB3nJl8U6PFeDcB9ot2mSGQ9XgufeeWblTFlX4ABzcZrZfW/Kfm7OXWlX7Vd9mgf5b9GgVrpT9ZgO5U35AWIIqgf0T46rlHaYaILQkM6OQ4sOQYr08kL5ATMgKngBRvEorot/QXyPFRMkpyEaRMk8AI5CtVofxGkjjcLQiMsVCRJYx0dg9lY5+quj0/qGo6TU8BAa3qQHHH4711j8gWhLj0Ic5DKkQqQ0tNnmqCH7IVtSD9DomENeRi6kTYjPYbEjJcOIHeMPDzI8OJx0g0WMlfUMvbF8Wa7SaO1vxUkquEn7e+YPjhBzOhc7xPzYDSoZ2rIz8hPoRXs5FlwkbugClLJ7iHvOnsjqg5AB1IPEq2khBwYTM6znyIZ4GIItnFDMkOO2D/OzbR/mBukyKD9RU+QwewXyciJMfbTtiftL9hW208hHYqoDnqxxhH7Ads6+/bkINk9aP+xLUiwzaOR7HYbNj1iX+/ts7fmKvr5fUHq0KC9BPVLRa29sNhpL7BdtGd7gjxBPtM2356W+2t7CjbEag7s1CUa7Fbbdvs0VCXb/J5pSCfIQfI4pJHHB11z7cexiNMdmuMt7guSu4eqUnNdQXKXWFiV2uet8ri88+0ub6XHg+Wlr3IbuRu5mVwel86lcm7OySVx8Xwsr+d1fBSv4XmeC5LnBsvtqhPkEJQjLIeGeBXPBsnPUcicIIcV4eGjPMNTPPDxwfCfh2WHjQ+SQ8N6uYSFIyqlpAqSw0MR0WHRzsglRlHoKbmMCaZAEZ6CuSCRR4Iq2JTYVW4qj51hKKn0fVfSqGiupOnffZmITeqbV1cvHbQFpDy5ELYFrlQ3XSl8Z955O6raKtLT59V2D3V1rF3lbxP8jYK/DalRerir3ST1NDscA2s7ZIVDot2NzS3tct7UJnUIbT5preBzDHQp7SapV8nqLsE3AKv8i+sHVoltvsEuscsvNPkCQ80VGxomjLV5fKwNFf9krAq5sw3yWM1Ku0ljNcjqZnmsBnmsBnmsZrFZGUuevH9NXcVtneidDv+aeQ4ptU6as2hZveRoCviCZC8KfbcDsKdBz56EVLYHLEw22AHC7yBdkPPQkvBH7BnQh9aH/5suxVU9JhMVKi+D0/AIPA79oIL9WE6FFbALXiNr8eFeDsNwjiRDFu4NDARhPrxOwuGzsAqewfqd8CLsgAGIwjbrIQG1W4krfBfyIpabYWP4KUiBYvgRnIQS7HUrjIQPhIdQWwtL4CAcwva/IgI1wMSFfx6+CDwswj43ouZseH64H6NdBsawGpRuhFPERV8It4MJStG6J+CnsAd+AZ+SB8hwuD3cFX4z/D76qgmsUIf3vWSYvE/3Mz8KPxH+WziESKRCGo7aCNvhaey/H+/TBIif3EQ6yXaygxKpB6hhZhNrDI0iDl6MprMxNN0CDyECx+Al+B/4mnxGmWg93Um/HC4I/y9oYR7OUp5JG3Th/SDeW3FOJ4iK5JBZpIbcS35CdpDfUmnUEqqeuoO6k/qIXkAvp7vp3zK3MYPsFnaXShv6InwifCb8ezDitnAjbID7cHYvwpvwOXxDaOzLSlyklFSQFXj3kMepY2QPOUbVkNPkTeog+RP5gHxGLlEsFUUlUOlUJ7WdOkS9SL1Br6F30I/Rf6K/YGawFLuH/VDl4t4NNYc2h94Il4bfD3+FMZYHJ65MBSyAldCEs+3ArecHOIvDePfjqr0EL8Nryv0BscIIfIUoAIklFpJHqvFeQBaSVWQNeZIcx/uUYsuXFC4EpaYMlJGyUnVUM7We6qF+T/XQSXQaPZdeRvfj/Sp9jr5EX2JYJo5JYGYzc2ALs57ZjfdeZj8zyPyGLWFnsAvYpWwPu5ndQrewZ9lzqvtUW1WDqs9U/4VxcT53C7cFV+c19NlfoC9/ezEkBa3Pg5uhhfhIM/ThauwhTdCL3tVKHkK8OiA13EDfR8+mctAbTsHd6K274V7YTC+HPeHz9EF4Gz1lHXbZA/uYCrCxO3F1HoAc9KJv7+246j+D5/C5OIQ4AaSHlijPnZM9BR7Rm+ZN9bhdKcIUpwP3BGuSxWwyJibEx8Ua9NFRWo2a51QsQ1MEMvxCZaNDcjdKjFuoqsqUeaEJBU1XCRrxWXdIlRPrSA65XROqJtQUseaqSTXFSE1xvCbRO8qgLDPD4Rcc0q99giNIli2qx/IjPiHgkEaUcrVS3qaUo7HsdGIDh9/U7nNIpNHhlyq72nv9jb7MDHJMRAg0mRlyYBFBK3cswaymezECwyy5hl+yCD6/ZBawjDra5W9qlWoW1ft9SU5nAGUoqq3HMTIz1khoJzwc1Sq0PhwUoblRLjUtr5fopoBENcp9GdIlo+CTjHd9aPqWvVLyb7lKKVGuyqa23kpJbHwYwZXZRplr2oLcvDoHdkttCtRLZNOYEbKNa9FS2dzIpuFqXOuQ1EKF0N67thHBhdr6QYtoUaKzBDX1g2bRrDCZGcdM95U6cfbHMmdmzpTzUqfpvkj+8Q8j8rdOy7npvpf+jPm82nEAiIyAMAftlBwtyiACGlssJ23F0NtSjDjhFSA4zTVozyyJQp+hXRLrmtMk9dRdMaPdFzGuca1vUG22KLtURQDrN/bqp+FKYX294Oj9ArfzRmHk04mSpjGJyqX/AmSlvNDjviKRpivlLnk3deGs201Cu7y+XcqaIi+Y/FcJkJehkW2W4nGHr6l3So4ACvB1M2NeENQ19QOEbA0ESXhTEHy2Y/iOTa9cgeoM2dXW+HB8ZDIzUJDmxFJWhqMSR66UfcXR6+id09rrqHS0ozMxLiVHRVtvIBsRrKtHnGAxjigGksaLbYHANOwnW+4Hm2D13gD2sHasB8wVUfYoVsrJwN2WdtfUL6qXenxJkugL4Cqg+56uqZdOo+cGAlgrd9xStFh+tY7YnIc256ahPj/SC77c9GAXgd5euc+6esEpne7tTeqVn7cIHyQwWSCOCYIgV5EhD5KeGmyLmeBMUtbAKTjRrICM6VR06SsehS/110a4cNxubFmE1hYqCBd/TwiXXA/C064L4dJxSycgXIY2l8oIT//XITxjAsLl10ZYHLcbjZyJ1ooKwhXfE8Kzrgdh33Uh7B+3dALClWizX0Z49r8O4aoJCM+5NsJzx+1GI+ehtXMVhOd/TwhXXw/CC64L4YXjlk5AuAZtXigjvOhfh3DtBITrro3w4nG70cglaO1iBeGl3xPCN1wPwvXXhXBg3NIJCC9DmwMywjeOIywmSXB1HO6ZFHbhew/MyydA3nBtyFeMTwStXonmr1Agb/yeIG+6HsibrwvylnFLJ0Deija3yJC3/T9CvuoqyNlYqKBK8CSjBPqZD5Bug1qkYqQqcgY2Im1WHYSNyJcidSH14GmIFl9q8ScPpnjQh78Mn8fcAYExiSL+h4T6B8m1BfS11d+hRePwYtGmyMUpGY9vT/gartgdkUcpWXSEgUK8l8JDpJacoh6ijlDn6cX068wMZheDp7n4w60Cz0zfxDMEGjiYFTkg5LODwCDx+iDAm0gyj2X6PSxjzmFOY65+D45jK4Cl6cexJxbznNx8g9PgQapgtgYv/4U9+c2sIFN9CQ+cEMF+THrgAo7lFuNIGq1hjUYLaQUzw7Y6W9rw8GfB59WjC/xtvo+gvHokN6coP0HoP3v2Ah5ojLVnDqKtaigRTVwyw6jpZDyxUvOqm4hFS/MuMGu0QXLDkHPHe2OdlS3Qf1l9EcrLy0ZiS7JHc3PinAlOg0xCP33p8uvU2dHsM+zJ4VBF/2grHm9Dbfg95ddpDJ47lMEfxOK0HKLRa5OirJ78Kv0a9Vo9V8LHRqnppDwuRW3TR9lK06ksb+nRUqo0L80Vq+dY3uqZYrQGSa8oGG12zmPL0lK2Am0ZV1Zmjee8aftTLDOSvNa5MZ5i8/QZz5Od+KP8GOmDiMkjn48oNo++hAaj4SPyjcYbYo0lDYbYkqyRrBGCucFYkpszq1tMLSxKmALE7CKFMU4wJSc5IdER7yTOKVBEOcFiMzpJghMTPOxNJ/oy+XDp/vvvhwbSkJKYn1dUOJ3oSAxRcaoEUlhUWDDVLUzhVJwwg+Tn4c9XQzxWwiF0RJjicXvkzF0wtbAojug2LFgZ6HO2561vzq0jwzMSon541yOlTs1+9u9Pn+y63eiKSjakZbgb0hLVRW/cs+Pk8Z29v1mWMWfvowlWlS7amr2arOMzTJnL6+an1b3yeFXVrtGd1ik0vSlKVSGIVWv/46Edz8SRi7KPFocv0CPsi+jjNrhDzCvSzdbdoNvHHEhiXXw8FWPTA2+zcXEaymbUsllxWXqvIdZi13os5mT7g84NFWPAIqxl1aMX0RtGZFgNJYYIghaTVa0BQkxaN6itmICZcoMmiXcTRGwMrVgZBgUcVQIYE42GfINQIKMBBVNj87/88Z579+y966EDpLcuZ/rhp8qfu2Uo9M1nfyQrP3n7tV/955u/pIqmJs+jbN/M2NFSTzK/+Ru5AX2tKnyBseBJiBVPzVwkSuzeyT9m2WenWR0Vw8Yn6GJjEuLFKDGe91rIPO0R+gx5hT6TdJ5/R33Ofl74xPiJoD1jOBNLLedZZ0rM7kRbSomK4xKdNiunsSVqXdxO6z7rUevbVsaVGOOysmZNFGfQeWJsHtbiScniPGaz2/M7596GsYfloux4I78bLYktQXcrwSy7IeKBWCobLdOPoFRxukoQGJbGYybCMiq726CP1cfp4/WMKso1JSnFjRHT5ibJNrWRc4M2Qecm0TrB4kQRiwlv0rghWo+J7JIRn1T8Mi097X5yawPc2tAAiYhxYoIzGb2wqLAoX0fQJ1WItkEP+cTtQSdVcYQaPldcGKu//Bm7becji3PiB7iFubXdM2tfDf2NmP5C7NrUuYfv2c8SgZl905JF6+Y+9fTLDYWzSx/NqrHqiYBnbRSpCLlvr3xgqJfIH5vQ1zZioCkdi4eFopX7kMHApaI1agxVWN/L0WDm1QedzRGvKqt+abTspbGQVV6mRK04dA0DRq6NR/Fi0i6dY0++rsSvzdj3dKVvr5iAwSYS/ygv0BgBr+pytOxKhxivsLPNw8NyIFX6QPtULmY2uGGTWMrxnE4VY+SNOmOMh/fg0laZl2pXa6MEl8ZiE8waijG6nDajLVrFgSrJ6qLjNKk4EYMXvwyQQYtX/iAiou9nubxuMHtSgyR66NupjV7Ufz7y+ZWAbCzDKFo9gj5gLJEDkOwK0BCXn4BRQw4VxisRQzDIMUSVgChMVRYKSxsHxamBW3sWZKSUPdV2fkHaiZuq1z521OLtWLVvmMnetTBlenlK5dK6JxZvHS2iPrmpZuve0UepE+vz5j35m1HcqGgoDb/DOJkFuCebwAzbxPxdfJ/+scRnmf38Xv2BxCD/Kv8286Hur/FR03iVzcRF2WK1Zs5sTqA8MZYktSfBbEkKEvWQc8OYtytRVt4UIh6uuHUGGBm3Nk6Nnmmg3IQzYomNxpImPsoNRI8Jn6hyE1qHieK7cpKOwTQltmBsrhgvY9FLKYy/BeirHPXnTTnzjz/b1/c0HqxfDv39D6HLJPZjVSeJ2du34ieXBw9dpC+EPg19HhoN/ZykX8ZgLLLoh12hJYwLY4MOpkCnmHGA32ekUnmH1aBT2RK4GJXOZtVO0VEekyVFk6XPcnqnxJiFlAedJyPTUwKd8jgr0ysfMSjrhfuFNTEJWIubcUMSToxNxISYdW6gjcqclGnJ20MKRjt59XBfiDcm5pOxdcbDTPk5xK3AIFCv7HNVHj/hd2EayuovFG+8+0joaOfu7tqc0uHu377Vs3zgROvue27YSw9snZNaFvorzvGpvpUFyXNG/yA/az3hD+g/4hyNuKYrxGnB+FfjKXUcH2+OM8enqu6g3+Y4HlidBlTRGhbX08SZTNrE6CyNN0prsRBvotlseeuKu1bLCypPG10zsqblZXIUk52UNBCDPAkMJQVy4C5SYonHXWBwkWJLzg+f97mGD1LC1NXbP6zLJP1M9mhJ7dTG/cv+ndJdOvvk9LTFj9Vups5b5HcQfD+k32eyMRdgQMOXS6r8AVCVS3Q+kaKypehz+H1EY4gdoPiSkpzcuPwkYlQTAf9I8l+//Prd0E7S/VHoy1DoIulmskMPkm529NLou+THoZspl4yJcoXb8BvDP7t0KKTBgN8rfMr3ivn4VbgGv0nUQT1+S5Avgl9RIm+vKvzuDTPla1Z6Vdu6rrbONS1NSg2lIiYi0nyk5Ujy2fc9SFuQnkB6Dul5pNeR3kP6FOkydh8VHruQh/EywYg/kc+axFdO4mVLrm6PL18TeGX+V/W/ZpJ+3SRe+Z+Eq+rfMknfMYnHr2cTxrtT5v8PvOa9HAplbmRzdHJlYW0KZW5kb2JqCjE4IDAgb2JqCjw8IC9UaXRsZSAoVW50aXRsZWQgMykgL1Byb2R1Y2VyIChtYWNPUyBWZXJzaW9uIDExLjIuMSBcKEJ1aWxkIDIwRDc0XCkgUXVhcnR6IFBERkNvbnRleHQpCi9DcmVhdG9yIChUZXh0RWRpdCkgL0NyZWF0aW9uRGF0ZSAoRDoyMDIxMDIyODE1NTQ1MVowMCcwMCcpIC9Nb2REYXRlIChEOjIwMjEwMjI4MTU1NDUxWjAwJzAwJykKPj4KZW5kb2JqCnhyZWYKMCAxOQowMDAwMDAwMDAwIDY1NTM1IGYgCjAwMDAwMDAzNjEgMDAwMDAgbiAKMDAwMDAwNzAwMiAwMDAwMCBuIAowMDAwMDAwMDIyIDAwMDAwIG4gCjAwMDAwMDA0NjUgMDAwMDAgbiAKMDAwMDAwMzQ0MyAwMDAwMCBuIAowMDAwMDA2OTY2IDAwMDAwIG4gCjAwMDAwMDcxMzUgMDAwMDAgbiAKMDAwMDAxMzQwMyAwMDAwMCBuIAowMDAwMDAwNjI0IDAwMDAwIG4gCjAwMDAwMDA2NzcgMDAwMDAgbiAKMDAwMDAwMDczMCAwMDAwMCBuIAowMDAwMDAzNDc5IDAwMDAwIG4gCjAwMDAwMDcwODUgMDAwMDAgbiAKMDAwMDAwNzUxMSAwMDAwMCBuIAowMDAwMDA3NzY5IDAwMDAwIG4gCjAwMDAwMTM3NzggMDAwMDAgbiAKMDAwMDAxNDAyOCAwMDAwMCBuIAowMDAwMDE5MTMyIDAwMDAwIG4gCnRyYWlsZXIKPDwgL1NpemUgMTkgL1Jvb3QgMTMgMCBSIC9JbmZvIDE4IDAgUiAvSUQgWyA8NjhiODQxMzYwZWIyYWIzMmJlNzEwN2E0OWUyMTJjNDM+Cjw2OGI4NDEzNjBlYjJhYjMyYmU3MTA3YTQ5ZTIxMmM0Mz4gXSA+PgpzdGFydHhyZWYKMTkzMzYKJSVFT0YK"
+                      }
+                    ],
+                    "rows_attributes": [
+                      {
+                        "quantity": 1,
+                        "package_type": "EUR",
+                        "description": "Goods on EUR pallet",
+                        "weight": 100,
+                        "length": 120,
+                        "width": 80,
+                        "height": 100,
+                        "ldm": 0.4,
+                        "cbm": 0.96,
+                        "adr_rows_attributes": [
+                          {
+                            "adr_un": "3535",
+                            "adr_group": "II",
+                            "adr_class": "6.1 (4.1)",
+                            "adr_neq": "50",
+                            "adr_description": "Fire extinguishers"
+                          },
+                          {
+                            "adr_un": "3535",
+                            "adr_group": "II",
+                            "adr_class": "6.1 (4.1)",
+                            "adr_neq": "10",
+                            "adr_description": "More fire extinguishers"
+                          }
+                        ]
+                      },
+                      {
+                        "quantity": 2,
+                        "package_type": "FIN",
+                        "description": "Goods on 2 FIN pallets",
+                        "weight": 150,
+                        "length": 120,
+                        "width": 100,
+                        "height": 90,
+                        "ldm": 1,
+                        "cbm": 1.08
+                      }
+                    ],
+                    "options": {
+                      "label_format": "label_printer",
+                      "direct_booking_service_id": 1234,
+                      "create_incomplete_shipment": false,
+                      "parcel_machine_reference": "96003"
+                    }
+                  }
+                },
+                "OutsideEUFullBooking": {
+                  "value": {
+                    "customer_reference": "test-customer-ref-123",
+                    "collection_date": "2023-08-29",
+                    "collection_time_from": "15:00",
+                    "collection_time_to": "19:00",
+                    "collection_country": "EE",
+                    "collection_postcode": "12345",
+                    "collection_address_row_1": "Kuldnoka 4",
+                    "collection_address_row_2": "Harjumaa",
+                    "collection_city": "Tallinn",
+                    "collection_company_name": "Demo OÜ",
+                    "collection_contact_name": "Cargo Son",
+                    "collection_contact_email": "hello@cargoson.com",
+                    "collection_contact_phone": "+37255551234",
+                    "collection_comment": "Collection comment example",
+                    "collection_with_tail_lift": true,
+                    "collection_prenotification": true,
+                    "delivery_date": "2023-09-15",
+                    "delivery_time_from": "08:00",
+                    "delivery_time_to": "12:00",
+                    "delivery_country": "US",
+                    "delivery_postcode": "20500",
+                    "delivery_address_row_1": "1600 Pennsylvania Avenue NW",
+                    "delivery_address_row_2": "DC",
+                    "delivery_city": "Washington",
+                    "delivery_company_name": "Demo USA Ltd",
+                    "delivery_contact_name": "Boe Jiden",
+                    "delivery_contact_email": "support@cargoson.com",
+                    "delivery_contact_phone": "+1 12345555",
+                    "delivery_comment": "Delivery comment example",
+                    "delivery_with_tail_lift": true,
+                    "delivery_prenotification": true,
+                    "delivery_return_document": true,
+                    "delivery_to_private_person": true,
+                    "goods_value": 13.5,
+                    "goods_value_currency": "EUR",
+                    "frigo": true,
+                    "temp_min": -10,
+                    "temp_max": 5,
+                    "incoterm_code": "DAP",
+                    "incoterm_city": "Riga",
+                    "customer_remark": "Customer remark example",
+                    "documents_attributes": [
+                      {
+                        "category": "package_list",
+                        "filename": "package-list.pdf",
+                        "annex": "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"
+                      }
+                    ],
+                    "rows_attributes": [
+                      {
+                        "quantity": 1,
+                        "package_type": "EUR",
+                        "description": "Goods on EUR pallet",
+                        "weight": 100,
+                        "length": 120,
+                        "width": 80,
+                        "height": 100,
+                        "ldm": 0.4,
+                        "cbm": 0.96,
+                        "adr_rows_attributes": [
+                          {
+                            "adr_un": "3535",
+                            "adr_group": "II",
+                            "adr_class": "6.1 (4.1)",
+                            "adr_neq": "50",
+                            "adr_description": "Fire extinguishers"
+                          },
+                          {
+                            "adr_un": "3535",
+                            "adr_group": "II",
+                            "adr_class": "6.1 (4.1)",
+                            "adr_neq": "10",
+                            "adr_description": "More fire extinguishers"
+                          }
+                        ]
+                      },
+                      {
+                        "quantity": 2,
+                        "package_type": "FIN",
+                        "description": "Goods on 2 FIN pallets",
+                        "weight": 150,
+                        "length": 120,
+                        "width": 100,
+                        "height": 90,
+                        "ldm": 1,
+                        "cbm": 1.08
+                      }
+                    ],
+                    "declaration_attributes": {
+                      "invoice_reference": "BKN",
+                      "invoice_reference_text": "CA12345",
+                      "currency": "EUR",
+                      "remark": "Some remark here",
+                      "declaration_text": "I/We hereby certify that the information on this declaration is true and correct and that the contents of this shipment are as stated above.",
+                      "declaration_items_attributes": [
+                        {
+                          "quantity": 2,
+                          "description": "Kindle Scribe - electronic reader",
+                          "hs_code": "8543700500",
+                          "origin_country": "CH",
+                          "unit_of_measure": "PCS",
+                          "value": 115.25,
+                          "net_weight": 0.5,
+                          "gross_weight": 1.5
+                        }
+                      ],
+                      "declaration_charges_attributes": [
+                        {
+                          "category": "FRCST",
+                          "value": 150.5
+                        }
+                      ],
+                      "declaration_documents_attributes": [
+                        {
+                          "category": "CIV",
+                          "document_id": "REF12345"
+                        }
+                      ]
+                    },
+                    "options": {
+                      "label_format": "label_printer",
+                      "direct_booking_service_id": 1234,
+                      "create_incomplete_shipment": false,
+                      "parcel_machine_reference": "96003"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/queries/{id}": {
+      "patch": {
+        "summary": "Edit a query",
+        "operationId": "patchQuery",
+        "description": "This endpoint is used to edit an existing query which has no bookings or quotes in Cargoson. \n\nIncluding new ```rows_attributes``` will overwrite any and all previous rows.\n\nIf a ```direct_booking_service_id``` option is provided, a booking will be created.  ```parcel_machine_reference``` can be also be provided alongside the service id, if it is a parcel machine service. \n\nIf ```automated_booking``` option is provided, the service will be automatically chosen based on user-defined rules and a booking will be created.\n",
+        "tags": [
+          "Shipments"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/json",
+              "enum": [
+                "application/json"
+              ]
+            },
+            "required": true,
+            "description": "The API can read JSON messages. The value should be application/json"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api.v1",
+              "enum": [
+                "application/vnd.api.v1"
+              ]
+            },
+            "description": "This header is for defining the API version. The value should be application/vnd.api.v1",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID or reference of the query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query is changed, and the query is found in the response body. \n\nYou can find the label and tracking URLs in the elements ```label_url``` and ```tracking_url```, respectively. When visiting these URLs the user will not see any content until the shipment is booked in Cargoson.\n",
+            "content": {}
+          },
+          "422": {
+            "description": "Couldn't (fully) complete request due to some issue in the input data. You can find the error messages in the ```errors``` array.\n\nIf you included the option to immediately book the shipment to a specific carrier's service (options/direct_booking_service_id), it is possible that the shipment was created but it couldn't be booked to the requested service. When this happens, you will see the created query elements, along with a ```\"query_status\": \"created\"``` and a ```\"booking_status\": \"failed\"```. The error messages will be included in the ```errors``` array.\n",
+            "content": {}
+          },
+          "404": {
+            "description": "A query with the provided ID could not be found",
+            "content": {}
+          },
+          "403": {
+            "description": "The API key does not have enough privileges to complete this operation or a booking/quote exists for the shipment",
+            "content": {}
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              },
+              "examples": {
+                "MinimumChange": {
+                  "value": {
+                    "collection_date": "2023-08-29"
+                  }
+                },
+                "MinimumBooking": {
+                  "value": {
+                    "options": {
+                      "direct_booking_service_id": 1234
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "delete": {
+        "summary": "Cancel a query",
+        "operationId": "cancelQuery",
+        "description": "This endpoint is used to delete an existing query which has no bookings in Cargoson. \n\nIf a ```direct_booking_service_id``` is provided, a booking will be created as well.  ```parcel_machine_reference``` can be also be provided alongside the service id, if it is a parcel machine service.\n",
+        "tags": [
+          "Shipments"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/json",
+              "enum": [
+                "application/json"
+              ]
+            },
+            "required": true,
+            "description": "The API can read JSON messages. The value should be application/json"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api.v1",
+              "enum": [
+                "application/vnd.api.v1"
+              ]
+            },
+            "description": "This header is for defining the API version. The value should be application/vnd.api.v1",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID or reference of the query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Query deleted.\n",
+            "content": {}
+          },
+          "422": {
+            "description": "Couldn't (fully) complete request due to some issue in the input data. You can find the error messages in the ```errors``` array.\n\nIf you included the option to immediately book the shipment to a specific carrier's service (options/direct_booking_service_id), it is possible that the shipment was created but it couldn't be booked to the requested service. When this happens, you will see the created query elements, along with a ```\"query_status\": \"created\"``` and a ```\"booking_status\": \"failed\"```. The error messages will be included in the ```errors``` array.\n",
+            "content": {}
+          },
+          "403": {
+            "description": "The API key does not have enough privileges to complete this operation or shipment is already booked",
+            "content": {}
+          },
+          "404": {
+            "description": "A query with the provided ID could not be found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/bookings/{id}": {
+      "get": {
+        "summary": "Return details about a booking",
+        "operationId": "getBookingByIdOrReference",
+        "description": "This endpoint is used to get information about a shipment which is already booked to a carrier (a booking). \n\nEither an ID or a reference (XX12345) must be provided.\n",
+        "tags": [
+          "Booking info"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/json",
+              "enum": [
+                "application/json"
+              ]
+            },
+            "required": true,
+            "description": "The API can read JSON messages. The value should be application/json"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api.v1",
+              "enum": [
+                "application/vnd.api.v1"
+              ]
+            },
+            "description": "This header is for defining the API version. The value should be application/vnd.api.v1",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID or reference of the booking to return"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successful and the booking attributes are included in the response body",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized request or the requested booking was not found (invalid ID/reference)",
+            "content": {}
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetBookingRequestBody"
+              },
+              "examples": {
+                "FullExample": {
+                  "value": {
+                    "options": {
+                      "label_format": "a4",
+                      "include_associations": {
+                        "rows": true,
+                        "offer": true,
+                        "carrier": true,
+                        "consignor": true,
+                        "consignee": true,
+                        "declaration": true
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "required": false
+        }
+      },
+      "patch": {
+        "summary": "Edit a booking",
+        "operationId": "patchBooking",
+        "description": "This endpoint is used to edit an existing booking in Cargoson. \n\nIncluding new ```rows_attributes``` will overwrite any and all previous rows.\n",
+        "tags": [
+          "Booking info"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/json",
+              "enum": [
+                "application/json"
+              ]
+            },
+            "required": true,
+            "description": "The API can read JSON messages. The value should be application/json"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api.v1",
+              "enum": [
+                "application/vnd.api.v1"
+              ]
+            },
+            "description": "This header is for defining the API version. The value should be application/vnd.api.v1",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID or reference of the booking"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking is changed, and the Booking is found in the response body. \n\nYou can find the label and tracking URLs in the elements ```label_url``` and ```tracking_url```, respectively. When visiting these URLs the user will not see any content until the shipment is booked in Cargoson.\n",
+            "content": {}
+          },
+          "422": {
+            "description": "Couldn't (fully) complete request due to some issue in the input data. You can find the error messages in the ```errors``` array.\n",
+            "content": {}
+          },
+          "404": {
+            "description": "A booking with the provided ID could not be found",
+            "content": {}
+          },
+          "403": {
+            "description": "The API key does not have enough privileges to complete this operation",
+            "content": {}
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              },
+              "examples": {
+                "MinimumChange": {
+                  "value": {
+                    "collection_date": "2023-08-29"
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        }
+      },
+      "delete": {
+        "summary": "Cancel a Booking",
+        "operationId": "cancelBooking",
+        "description": "This endpoint is used to delete an existing booking in Cargoson. \n\nThis cannot be undone and should be agreed upon with the carrier beforehand.\n",
+        "tags": [
+          "Booking info"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/json",
+              "enum": [
+                "application/json"
+              ]
+            },
+            "required": true,
+            "description": "The API can read JSON messages. The value should be application/json"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api.v1",
+              "enum": [
+                "application/vnd.api.v1"
+              ]
+            },
+            "description": "This header is for defining the API version. The value should be application/vnd.api.v1",
+            "required": true
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "ID or reference of the booking"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Booking deleted.\n",
+            "content": {}
+          },
+          "422": {
+            "description": "Couldn't (fully) complete request due to some issue in the input data. You can find the error messages in the ```errors``` array.\n",
+            "content": {}
+          },
+          "403": {
+            "description": "The API key does not have enough privileges to complete this operation",
+            "content": {}
+          },
+          "404": {
+            "description": "Booking could not be found",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/freightPrices/list": {
+      "post": {
+        "summary": "Return a list of prices for a shipment",
+        "operationId": "getPrices",
+        "description": "This endpoint is used to get a list of prices for a shipment from different carriers from Cargoson. The returned prices are sourced from the user's personal price lists or from the online prices of the user's carriers.\n",
+        "tags": [
+          "Freight prices"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/json",
+              "enum": [
+                "application/json"
+              ]
+            },
+            "required": true,
+            "description": "The API can read JSON messages. The value should be application/json"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api.v1",
+              "enum": [
+                "application/vnd.api.v1"
+              ]
+            },
+            "description": "This header is for defining the API version. The value should be application/vnd.api.v1",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successful and the found prices are included in the response body",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AvailablePrices"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "The request was valid but no results were found",
+            "content": {}
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {}
+          },
+          "422": {
+            "description": "Unprocessable entry - the request was invalid",
+            "content": {}
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PriceRequestShipment"
+              },
+              "examples": {
+                "FullExample": {
+                  "value": {
+                    "collection_date": "2023-08-29",
+                    "collection_postcode": "12345",
+                    "collection_country": "EE",
+                    "collection_with_tail_lift": true,
+                    "collection_prenotification": true,
+                    "delivery_postcode": "54321",
+                    "delivery_country": "LV",
+                    "delivery_with_tail_lift": true,
+                    "delivery_prenotification": true,
+                    "delivery_return_document": true,
+                    "delivery_to_private_person": true,
+                    "frigo": true,
+                    "adr": false,
+                    "rows_attributes": [
+                      {
+                        "quantity": 1,
+                        "package_type": "EUR",
+                        "weight": 100,
+                        "description": "Goods on EUR pallet"
+                      },
+                      {
+                        "quantity": 2,
+                        "package_type": "FIN",
+                        "weight": 300,
+                        "description": "Goods on two FIN pallets"
+                      }
+                    ],
+                    "request_external_partners": false,
+                    "carrier_id": ""
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    },
+    "/parcelMachines": {
+      "get": {
+        "summary": "Return a list of parcel machines",
+        "operationId": "getParcelMachines",
+        "description": "Return a list of parcel machines. All of the returned parcel machines only belong to the carriers that are activated in the account (no irrelevant machines are returned). Additional search filters can be applied to limit the size of the response.\n",
+        "tags": [
+          "ParcelMachine"
+        ],
+        "parameters": [
+          {
+            "name": "Accept",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api.v1",
+              "enum": [
+                "application/vnd.api.v1"
+              ]
+            },
+            "description": "This header is for defining the API version. The value should be application/vnd.api.v1",
+            "required": true
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Return parcel machines only from this two-letter country code (ISO 3166-1 alpha-2)"
+          },
+          {
+            "name": "carrier_id",
+            "in": "query",
+            "schema": {
+              "type": "integer"
+            },
+            "required": false,
+            "description": "Return parcel machines only from this carrier ID"
+          },
+          {
+            "name": "postcode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Return parcel machines only from this postcode"
+          },
+          {
+            "name": "reference",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Return parcel machines that have this reference. If the reference is correct, it will normally return exactly one parcel machine. But, since the references are defined by the carriers, it is not guaranteed that parcel machines have unique references and therefore it might return more parcel machines. It is recommended to add additional filters, such as ```carrier_id``` to avoid this problem."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successful and the parcel machines are included in the response body. If the response body is an empty array, no parcel machines were found based on your criteria.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ParcelMachines"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {}
+          }
+        }
+      }
+    },
+    "/emissions/co2e": {
+      "post": {
+        "summary": "Return expected CO2e emissions for a shipment",
+        "operationId": "co2e",
+        "description": "Returns a list of expected CO2e emissions in kg for applicaple freight types\n",
+        "tags": [
+          "CO2e"
+        ],
+        "parameters": [
+          {
+            "name": "Accept",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api.v1",
+              "enum": [
+                "application/vnd.api.v1"
+              ]
+            },
+            "description": "This header is for defining the API version. The value should be application/vnd.api.v1",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "The request was successful and the calculated coordinates, distances and co2e emissions are in the return body\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Emissions"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {}
+          },
+          "422": {
+            "description": "Couldn't (fully) complete request due to some issue in the input data. You can find the error messages in the ```errors``` array.",
+            "content": {}
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Order"
+              },
+              "examples": {
+                "SampleShipment": {
+                  "value": {
+                    "collection_date": "2023-08-29",
+                    "collection_country": "EE",
+                    "collection_postcode": "10619",
+                    "collection_address_row_1": "Kuldnoka 4",
+                    "collection_city": "Tallinn",
+                    "delivery_country": "FR",
+                    "delivery_postcode": "59000",
+                    "delivery_address_row_1": "23 Rue Gosselet",
+                    "delivery_city": "Lille",
+                    "rows_attributes": [
+                      {
+                        "quantity": 3,
+                        "package_type": "EUR",
+                        "weight": 1000,
+                        "description": "Goods on EUR pallet"
+                      },
+                      {
+                        "quantity": 2,
+                        "package_type": "FIN",
+                        "weight": 500,
+                        "description": "Goods on FIN pallet"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "required": true
+        }
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.cargoson.com/api",
+      "description": "Cargoson live environment"
+    },
+    {
+      "url": "https://cargoson-staging.herokuapp.com/api",
+      "description": "Cargoson staging (test) environment"
+    }
+  ],
+  "security": [
+    {
+      "Token": []
+    }
+  ],
+  "components": {
+    "links": {},
+    "callbacks": {},
+    "schemas": {
+      "Order": {
+        "type": "object",
+        "properties": {
+          "customer_reference": {
+            "type": "string",
+            "description": "Internal shipment reference"
+          },
+          "collection_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date when goods are ready for collection. Can be today or in the future"
+          },
+          "collection_time_from": {
+            "type": "string",
+            "pattern": "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+            "description": "Must be before collection time to. Cannot be less than current local time if collection date is set to today"
+          },
+          "collection_time_to": {
+            "type": "string",
+            "pattern": "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+            "description": "Must be after collection time from"
+          },
+          "delivery_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Desired delivery date. Must be equal to the collection date or later"
+          },
+          "delivery_time_from": {
+            "type": "string",
+            "pattern": "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+            "description": "Must be before delivery time to. If collection and delivery dates match then must be after collection time to"
+          },
+          "delivery_time_to": {
+            "type": "string",
+            "pattern": "^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$",
+            "description": "Must be after delivery time from"
+          },
+          "collection_company_name": {
+            "type": "string",
+            "description": "The name of the company the goods are collected from"
+          },
+          "collection_address_row_1": {
+            "type": "string",
+            "description": "Street, house number"
+          },
+          "collection_address_row_2": {
+            "type": "string",
+            "description": "County, building, unit"
+          },
+          "collection_postcode": {
+            "type": "string",
+            "minLength": 3,
+            "description": "ZIP or postal code. May contain both numbers and letters. Should not include the country code."
+          },
+          "collection_city": {
+            "type": "string",
+            "description": "City, district, suburb, town or village"
+          },
+          "collection_country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "Two-letter country code (ISO 3166-1 alpha-2)"
+          },
+          "collection_contact_name": {
+            "type": "string",
+            "description": "The name of the person that the driver can contact"
+          },
+          "collection_contact_phone": {
+            "type": "string",
+            "description": "The phone number of the person that the driver can contact"
+          },
+          "collection_contact_email": {
+            "type": "string",
+            "description": "The email of the person that the carrier can contact"
+          },
+          "collection_comment": {
+            "type": "string",
+            "description": "Additional collection related information. (e.g., \"Code to enter the gate is 1234\")"
+          },
+          "delivery_company_name": {
+            "type": "string",
+            "description": "The name of the company the goods are delivered to"
+          },
+          "delivery_address_row_1": {
+            "type": "string",
+            "description": "Street, house number"
+          },
+          "delivery_address_row_2": {
+            "type": "string",
+            "description": "County, building, unit"
+          },
+          "delivery_postcode": {
+            "type": "string",
+            "minLength": 3,
+            "description": "ZIP or postal code. May contain both numbers and letters. Should not include the country code."
+          },
+          "delivery_city": {
+            "type": "string",
+            "description": "City, district, suburb, town or village"
+          },
+          "delivery_country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "Two-letter country code (ISO 3166-1 alpha-2)"
+          },
+          "delivery_contact_name": {
+            "type": "string",
+            "description": "The name of the person that the driver can contact"
+          },
+          "delivery_contact_phone": {
+            "type": "string",
+            "description": "The phone number of the person that the driver can contact"
+          },
+          "delivery_contact_email": {
+            "type": "string",
+            "description": "The email of the person that the carrier can contact"
+          },
+          "delivery_comment": {
+            "type": "string",
+            "description": "Additional delivery related information. (e.g., \"Code to enter the gate is 1234\")"
+          },
+          "goods_value": {
+            "type": "number",
+            "description": "The monetary value of the goods"
+          },
+          "goods_value_currency": {
+            "type": "string",
+            "default": "EUR",
+            "description": "Three-letter currency code (ISO 4217)"
+          },
+          "frigo": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the goods are temperature sensitive"
+          },
+          "temp_min": {
+            "type": "integer",
+            "description": "Minimum temperature limit"
+          },
+          "temp_max": {
+            "type": "integer",
+            "description": "Maximum temperature limit"
+          },
+          "incoterm_code": {
+            "type": "string",
+            "description": "International Commercial Terms are a series of pre-defined commercial terms published by the International Chamber of Commerce (ICC) relating to international commercial law",
+            "enum": [
+              "EXW",
+              "FCA",
+              "CPT",
+              "CIP",
+              "DAT",
+              "DPU",
+              "DAP",
+              "DDP",
+              "FAS",
+              "FOB",
+              "CFR",
+              "CIF"
+            ]
+          },
+          "incoterm_city": {
+            "type": "string",
+            "description": "Incoterm city"
+          },
+          "customer_remark": {
+            "type": "string",
+            "description": "Important additional information for the carrier"
+          },
+          "collection_with_tail_lift": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the collection should be performed with a tail-lift truck"
+          },
+          "collection_prenotification": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the driver should call the collection contact before loading"
+          },
+          "delivery_with_tail_lift": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the delivery should be performed with a tail-lift truck"
+          },
+          "delivery_prenotification": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the driver should call the delivery contact before loading"
+          },
+          "delivery_return_document": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the customer expects signed documents to be returned"
+          },
+          "delivery_to_private_person": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the goods will be delivered to a private person instead of a company"
+          },
+          "documents_attributes": {
+            "type": "array",
+            "minItems": 0,
+            "description": "Array of files that will be attached to the shipment",
+            "items": {
+              "type": "object",
+              "required": [
+                "category",
+                "filename",
+                "annex"
+              ],
+              "properties": {
+                "category": {
+                  "type": "string",
+                  "description": "Type of the document selected from the predefined document types",
+                  "enum": [
+                    "goods_invoice",
+                    "package_list",
+                    "cmr",
+                    "waybill",
+                    "bol",
+                    "transportation_invoice",
+                    "pod",
+                    "labels",
+                    "other"
+                  ]
+                },
+                "filename": {
+                  "type": "string",
+                  "description": "File name with extension"
+                },
+                "annex": {
+                  "type": "string",
+                  "description": "File content in Base64 encoded string"
+                }
+              }
+            }
+          },
+          "rows_attributes": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Array of goods rows, with each row consisting of the following 7 (or less) key-value pairs and an array of ADR rows (not required)",
+            "items": {
+              "type": "object",
+              "required": [
+                "quantity",
+                "package_type",
+                "weight",
+                "description"
+              ],
+              "properties": {
+                "quantity": {
+                  "type": "integer",
+                  "description": "Number of packages"
+                },
+                "package_type": {
+                  "type": "string",
+                  "description": "Type of the package selected from the predefined package types",
+                  "enum": [
+                    "EUR",
+                    "CTN",
+                    "FIN",
+                    "HPL",
+                    "QPL",
+                    "LOAD",
+                    "PLD",
+                    "PXL",
+                    "PLL",
+                    "TBE",
+                    "CLL",
+                    "RLL",
+                    "20DC",
+                    "40DC",
+                    "40HC"
+                  ]
+                },
+                "weight": {
+                  "type": "integer",
+                  "description": "Total weight in kilograms of the goods described in the row. If there are 5 EUR pallets, 100kg each, then the weight is 500 kg"
+                },
+                "length": {
+                  "type": "integer",
+                  "description": "Package length in cm"
+                },
+                "width": {
+                  "type": "integer",
+                  "description": "Package width in cm"
+                },
+                "height": {
+                  "type": "integer",
+                  "description": "Package height in cm"
+                },
+                "cbm": {
+                  "type": "number",
+                  "description": "Row volume in cubic meters"
+                },
+                "ldm": {
+                  "type": "number",
+                  "description": "Row area in loading meters (ex.: 1 EUR pallet = 0.4 LDM)"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the goods in this row"
+                },
+                "adr_rows_attributes": {
+                  "type": "array",
+                  "description": "Array of dangerous goods rows that are included in this goods row, with each row consisting of the following 5 (or less) key-value pairs",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "adr_un": {
+                        "type": "string",
+                        "pattern": ".{3,4}",
+                        "description": "Four-digit UN number that identifies hazardous materials, and articles"
+                      },
+                      "adr_group": {
+                        "type": "string",
+                        "description": "I - high danger, II - medium danger, III - low danger"
+                      },
+                      "adr_class": {
+                        "type": "string",
+                        "description": "1 - Explosives, 2 - Gases, 3 - Flammable liquids, 4 - Flammable solids"
+                      },
+                      "adr_neq": {
+                        "type": "string",
+                        "description": "The weight or volume of the dangerous goods contained in a package excluding the weight or volume of any packaging material; or the weight of an unpackaged article of dangerous goods"
+                      },
+                      "adr_description": {
+                        "type": "string",
+                        "description": "Description of the dangerous goods"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "offer": {
+            "type": "object",
+            "required": [
+              "total_price"
+            ],
+            "properties": {
+              "total_price": {
+                "type": "number",
+                "description": "Price for the shipment that has been previously agreed upon with carrier"
+              },
+              "currency": {
+                "type": "string",
+                "description": "Currency of agreed price. Defaults to user's company's currency if not provided"
+              }
+            }
+          },
+          "options": {
+            "type": "object",
+            "properties": {
+              "label_format": {
+                "type": "string",
+                "description": "The response includes a link to the goods labels. The link will be empty until the shipment is booked in Cargoson. You can choose the format of those labels with this option. \n\n**a4** => up to four A6 labels per one A4 page. \n\n**label_printer** => one label per page in the size of 4x6 inches (10.16 x 15.24 cm, which is close to the A6 format.)\n",
+                "enum": [
+                  "label_printer",
+                  "a4"
+                ],
+                "default": "label_printer"
+              },
+              "direct_booking_service_id": {
+                "type": "integer",
+                "description": "If you wish to submit the booking immediately, you can enter the ID of the desired carrier's service. You can request the service IDs from Cargoson support.\n"
+              },
+              "create_incomplete_shipment": {
+                "type": "boolean",
+                "default": true,
+                "description": "Indicates if you want the shipment to be saved for later editing even if booking itself fails"
+              },
+              "automated_booking": {
+                "type": "boolean",
+                "default": false,
+                "description": "Indicates if you want the shipment to be automatically booked based on rules defined in Cargoson by the user"
+              },
+              "save_collection_address": {
+                "type": "boolean",
+                "default": false,
+                "description": "Indicates if you want to save the collection address in Cargoson's address book for later use"
+              },
+              "save_delivery_address": {
+                "type": "boolean",
+                "default": false,
+                "description": "Indicates if you want to save the delivery address in Cargoson's address book for later use"
+              },
+              "parcel_machine_reference": {
+                "type": "string",
+                "description": "If ```direct_booking_service_id``` was defined, and the service id is for a parcel machine service, you can define the desired parcel machine here. If the service is a parcel machine service but this element is not defined, the closest parcel machine to the delivery address will be selected. You can request the desired parcel machine references from Cargoson support. Do not use if the ```direct_booking_service_id``` was not used or is not a parcel machine service ID:\n"
+              }
+            }
+          },
+          "declaration_attributes": {
+            "type": "object",
+            "description": "If the shipment requires a customs declaration, these fields should be filled",
+            "required": [
+              "declaration_items_attributes"
+            ],
+            "properties": {
+              "invoice_reference": {
+                "type": "string",
+                "description": "Invoice reference.  \n\nACL - Parent Shipment ID for BBX  \nCID - Customer Identifier  \nCN - Contract Number  \nCU - Consignor reference number  \nITN - US Export declaration reference ID  \nMRN - Movement Reference number  \nUCN - Unique reference of a consignment (UCRN)  \nOID - Order Number  \nPON - Purchase Order Number  \nRMA - RMA Number  \nAAM - AWB Ref #  \nABT - Goods Declaration number  \nADA - Buyer Reference number  \nAES - AES Post Clearance  \nAFD - 1496 Item number  \nANT - Consignee Reference number  \nBKN - Booking Number  \nBOL - Bill of Lading Number  \nCDN - Customs Declaration number  \nCOD - Cash On Delivery  \nDSC - Weltpaket Reference  \nFF - Freight forwarder's reference number  \nFN - Freight bill number  \nFTR - Post Clearance Exemption US  \nHWB - Shipment Identifiers  \nIBC - Inbound center reference number  \nIPP - Insurance Policy Provider  \nLLR - Load list reference  \nMAB - Master Airwaybill Number  \nMWB - MAWB Reference number  \nOBC - Outbound center reference number  \nPD - Vendor Reference Number  \nPRN - Pickup request number  \nRTL - Return Leg waybill number  \nSID - Shipment ID 15 Digit CODA  \nSS - Seller Reference number  \nSWN - Original Waybill number (Return)\n",
+                "enum": [
+                  "ACL",
+                  "CID",
+                  "CN",
+                  "CU",
+                  "ITN",
+                  "MRN",
+                  "UCN",
+                  "OID",
+                  "PON",
+                  "RMA",
+                  "AAM",
+                  "ABT",
+                  "ADA",
+                  "AES",
+                  "AFD",
+                  "ANT",
+                  "BKN",
+                  "BOL",
+                  "CDN",
+                  "COD",
+                  "DSC",
+                  "FF",
+                  "FN",
+                  "FTR",
+                  "HWB",
+                  "IBC",
+                  "IPP",
+                  "LLR",
+                  "MAB",
+                  "MWB",
+                  "OBC",
+                  "PD",
+                  "PRN",
+                  "RTL",
+                  "SID",
+                  "SS",
+                  "SWN"
+                ]
+              },
+              "invoice_reference_text": {
+                "type": "string",
+                "description": "Invoice reference number"
+              },
+              "currency": {
+                "type": "string",
+                "description": "Currency for all values in declaration. ISO 4217"
+              },
+              "remark": {
+                "type": "string",
+                "description": "Remarks for declaration"
+              },
+              "declaration_text": {
+                "type": "string",
+                "description": "Field to explicity state that the information declared is correct"
+              },
+              "declaration_items_attributes": {
+                "type": "array",
+                "description": "Goods to be declared",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "quantity",
+                    "unit_of_measure",
+                    "hs_code",
+                    "net_weight",
+                    "gross_weight",
+                    "origin_country",
+                    "value",
+                    "description"
+                  ],
+                  "properties": {
+                    "quantity": {
+                      "type": "integer",
+                      "description": "Number of goods"
+                    },
+                    "unit_of_measure": {
+                      "type": "string",
+                      "description": "Unit of measure of stated quanity. (Usually Pieces)   \nBOX: Boxes  \n2GM: Centigram  \n2M: Centimeters  \n2M3: Cubic Centimeters  \n3M3: Cubic Feet  \nM3: Cubic Meters  \nDPR: Dozen Pairs  \nDOZ: Dozen  \n2NO: Each  \nPCS: Pieces  \nGM: Grams  \nGRS: Gross  \nKG: Kilograms  \nL: Liters  \nM: Meters  \n3GM: Milligrams  \n3L: Milliliters  \nX: No Unit Required  \nNO: Number  \n2KG: Ounces  \nPRS: Pairs  \n2L: Gallons  \n3KG: Pounds  \nCM2: Square Centimeters  \n2M2: Square Feet  \n3M2: Square Inches  \nM2: Square Meters  \n4M2: Square Yards  \n3M: Yards\n",
+                      "enum": [
+                        "BOX",
+                        "2GM",
+                        "2M",
+                        "2M3",
+                        "3M3",
+                        "M3",
+                        "DPR",
+                        "DOZ",
+                        "2NO",
+                        "PCS",
+                        "GM",
+                        "GRS",
+                        "KG",
+                        "L",
+                        "M",
+                        "3GM",
+                        "3L",
+                        "X",
+                        false,
+                        "2KG",
+                        "PRS",
+                        "2L",
+                        "3KG",
+                        "CM2",
+                        "2M2",
+                        "3M2",
+                        "M2",
+                        "4M2",
+                        "3M"
+                      ]
+                    },
+                    "hs_code": {
+                      "type": "string",
+                      "description": "TARIC (10 digits), Combined Nomenclature (8 digits) or Harmonised System code (6 digits) for goods"
+                    },
+                    "origin_country": {
+                      "type": "string",
+                      "description": "Country of Origin/Manufacture. ISO 3166-2"
+                    },
+                    "net_weight": {
+                      "type": "number",
+                      "description": "Net weight of goods (kg) PER ITEM"
+                    },
+                    "gross_weight": {
+                      "type": "number",
+                      "description": "Gross weight of goods (kg) PER ITEM"
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "Value of goods PER ITEM"
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "Description of the goods, as descriptive as possible"
+                    }
+                  }
+                }
+              },
+              "declaration_charges_attributes": {
+                "type": "array",
+                "description": "Charges",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "category": {
+                      "type": "string",
+                      "description": "Charge type  \n  \nADMIN: Administration fee  \nDELIV: Delivery fee  \nDOCUM: Documentation fee  \nEXPED: Expedite fee  \nEXCHA: Export fee  \nFRCST: Freight cost  \nSSRGE: Fuel surcharge  \nLOGST: Logistic fee  \nSOTHR: Other fee  \nSPKGN: Packaging/packing fee  \nPICUP: Pickup fee  \nHRCRG: Handling fee  \nVATCR: VAT fee  \nINSCH: Insurance cost  \nREVCH: Reverse charge\n",
+                      "enum": [
+                        "ADMIN",
+                        "DELIV",
+                        "DOCUM",
+                        "EXPED",
+                        "EXCHA",
+                        "FRCST",
+                        "SSRGE",
+                        "LOGST",
+                        "SOTHR",
+                        "SPKGN",
+                        "PICUP",
+                        "HRCRG",
+                        "VATCR",
+                        "INSCH",
+                        "REVCH"
+                      ]
+                    },
+                    "value": {
+                      "type": "number",
+                      "description": "Charge value"
+                    }
+                  }
+                }
+              },
+              "declaration_documents_attributes": {
+                "type": "array",
+                "description": "Document references related to declaration. These files should be included in the ```documents_attributes```",
+                "minItems": 1,
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "category": {
+                      "type": "string",
+                      "description": "Document type  \n  \n972: T2LF Dispense Paiement Droits  \nAHC: Analysis and Health Certificate  \nATA: ATA Carnet  \nATR: Preference Certificate ATR  \nCHD: CHED-D (Common Health Entry Document for Feed and Food of Non-Animal Origin)  \nCHP: CHED-P (Common Health Entry Document for Products)  \nCIT: CITES Certificate  \nCOO: Generic Certificate of Origin  \nDEX: Duty Exemption Certificate  \nEU1: Preference Certificate EUR1  \nEU2: Preferential Declaration of Origin on the Invoice - EUR2  \nEUS: End Use Authorization  \nFMA: Certificate of Origin (Form A)  \nPHY: Phytosanitary Certificate  \nVET: Veterinary Entry Document  \nVEX: VAT Exemption Certificate  \nCRL: Control Document  \nCSD: Consolidated Customs Entry  \nPPY: Proof Of Payment  \nCI2: Export-only Invoice  \nCIV: Customs Invoice Value  \nDOV: Invoice  \nINV: Commercial Invoice  \nPFI: Pro-Forma  \nALC: Agricultural License  \nHLC: Health Products RegulatoryAuthority (HPRA) Licensing Requirements  \nJLC: Justice License  \nLIC: Specific Export Licenses  \nLNP: License or Permit  \nPLI: Permits & Licenses  \nDLI: Driver's License  \nNID: National Identity Card  \nPAS: Passport  \nCHA: Power of Attorney  \nCPA: Consignee Power of Attorney  \nPOA: Power of Attorney (Customer-based)  \nBEX: Branch Letter of Exemption  \nDGD: Dangerous Goods Declaration  \nIPA: Intellectual Property Authorization  \nT2M: T2M Transport Accompanying Document  \nTAD: TAD Transport Accompanying Document T1  \nTCS: Transportation Charges Statement  \nROD: Receipt on Delivery  \nEXL: DCE Export of Customs Data  \nHWB: House Waybill  \nELP: Export Licenses and Permits\n",
+                      "enum": [
+                        "CIV",
+                        "DOV",
+                        "INV",
+                        "ATR",
+                        "CHD",
+                        "CHP",
+                        "CIT",
+                        "COO",
+                        "DEX",
+                        "EU1",
+                        "EU2",
+                        "EUS",
+                        "FMA",
+                        "PHY",
+                        "VET",
+                        "VEX",
+                        "CRL",
+                        "CSD",
+                        "PPY",
+                        "CI2",
+                        "972",
+                        "AHC",
+                        "ATA",
+                        "PFI",
+                        "ALC",
+                        "HLC",
+                        "JLC",
+                        "LIC",
+                        "LNP",
+                        "PLI",
+                        "DLI",
+                        "NID",
+                        "PAS",
+                        "CHA",
+                        "CPA",
+                        "POA",
+                        "BEX",
+                        "DGD",
+                        "IPA",
+                        "T2M",
+                        "TAD",
+                        "TCS",
+                        "ROD",
+                        "EXL",
+                        "HWB",
+                        "ELP"
+                      ]
+                    },
+                    "document_id": {
+                      "type": "string",
+                      "description": "Document reference number/ID"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "collection_date",
+          "collection_postcode",
+          "collection_country",
+          "delivery_postcode",
+          "delivery_country",
+          "rows_attributes"
+        ]
+      },
+      "PriceRequestShipment": {
+        "type": "object",
+        "description": "the shipment for which the prices are requested",
+        "properties": {
+          "collection_date": {
+            "type": "string",
+            "format": "date",
+            "description": "Date when goods are ready for collection. Can be today or in the future"
+          },
+          "collection_postcode": {
+            "type": "string",
+            "minLength": 3,
+            "description": "ZIP or postal code. May contain both numbers and letters. Should not include the country code."
+          },
+          "collection_country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "Two-letter country code (ISO 3166-1 alpha-2)"
+          },
+          "delivery_postcode": {
+            "type": "string",
+            "minLength": 3,
+            "description": "ZIP or postal code. May contain both numbers and letters. Should not include the country code."
+          },
+          "delivery_country": {
+            "type": "string",
+            "minLength": 2,
+            "maxLength": 2,
+            "description": "Two-letter country code (ISO 3166-1 alpha-2)"
+          },
+          "frigo": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the goods are temperature sensitive"
+          },
+          "adr": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the shipment is hazardous (ADR). The shipment is hazardous if any of its goods contain hazardous goods"
+          },
+          "collection_prenotification": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the driver should call the collection contact before loading"
+          },
+          "collection_with_tail_lift": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the collection should be performed with a tail-lift truck"
+          },
+          "delivery_prenotification": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the driver should call the delivery contact before loading"
+          },
+          "delivery_with_tail_lift": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the delivery should be performed with a tail-lift truck"
+          },
+          "delivery_return_document": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the customer expects signed documents to be returned"
+          },
+          "delivery_to_private_person": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates whether the goods will be delivered to a private person instead of a company"
+          },
+          "rows_attributes": {
+            "type": "array",
+            "minItems": 1,
+            "description": "Array of goods rows, with each row consisting of the following 7 (or less) key-value pairs",
+            "items": {
+              "type": "object",
+              "required": [
+                "quantity",
+                "package_type",
+                "weight"
+              ],
+              "properties": {
+                "quantity": {
+                  "type": "integer",
+                  "description": "Number of packages"
+                },
+                "package_type": {
+                  "type": "string",
+                  "description": "Type of the package selected from the predefined package types",
+                  "enum": [
+                    "EUR",
+                    "CTN",
+                    "FIN",
+                    "HPL",
+                    "QPL",
+                    "LOAD",
+                    "PLD",
+                    "PXL",
+                    "PLL",
+                    "TBE",
+                    "CLL",
+                    "RLL",
+                    "20DC",
+                    "40DC",
+                    "40HC"
+                  ]
+                },
+                "weight": {
+                  "type": "integer",
+                  "description": "Total weight in kilograms of the goods described in the row. If there are 5 EUR pallets, 100kg each, then the weight is 500 kg"
+                },
+                "length": {
+                  "type": "integer",
+                  "description": "Package length in cm"
+                },
+                "width": {
+                  "type": "integer",
+                  "description": "Package width in cm"
+                },
+                "height": {
+                  "type": "integer",
+                  "description": "Package height in cm"
+                },
+                "cbm": {
+                  "type": "number",
+                  "description": "Row volume in cubic meters"
+                },
+                "ldm": {
+                  "type": "number",
+                  "description": "Row area in loading metres (ex.: 1 EUR pallet = 0.4 LDM)"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description of the goods in this row"
+                }
+              }
+            }
+          }
+        },
+        "required": [
+          "collection_date",
+          "collection_postcode",
+          "collection_country",
+          "delivery_postcode",
+          "delivery_country"
+        ]
+      },
+      "GetBookingRequestBody": {
+        "type": "object",
+        "description": "Request body for defining different options for fetching a booking",
+        "properties": {
+          "options": {
+            "type": "object",
+            "description": "Object that holds different options for fetching data about the booking",
+            "properties": {
+              "label_format": {
+                "type": "string",
+                "description": "The response includes a link to the goods labels. You can choose the format of those labels with this option. \n\n```a4``` => up to four A6 labels per one A4 page. \n\n```label_printer``` => one label per page in the size of 4x6 inches (10.16 x 15.24 cm, which is close to the A6 format.)\n",
+                "enum": [
+                  "label_printer",
+                  "a4"
+                ],
+                "default": "label_printer"
+              },
+              "include_associations": {
+                "type": "object",
+                "description": "Object that holds options for which attribute groups to fetch. By default, these additional attributes are all disabled. Enable only what you need, since every additional step will make the request a bit slower.",
+                "properties": {
+                  "offer": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indicates whether you want to receive information about the selected offer (price, service, carrier etc)."
+                  },
+                  "carrier": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indicates whether you want to receive information about the selected carrier."
+                  },
+                  "consignor": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indicates whether you want to receive information about the consignor (sender)."
+                  },
+                  "consignee": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indicates whether you want to receive information about the consignee (receiver)."
+                  },
+                  "rows": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indicates whether you want to receive information about the goods rows."
+                  },
+                  "declaration": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "Indicates whether you want to receive information about the declaration."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "AvailablePrices": {
+        "type": "object",
+        "example": {
+          "status": 200,
+          "object": {
+            "prices": [
+              {
+                "carrier": "DSV Estonia AS",
+                "reg_no": "10342368",
+                "id": 3,
+                "service": "Main",
+                "service_id": 85,
+                "price": "19.13",
+                "unit": "payable_weight",
+                "type": "price_list"
+              },
+              {
+                "carrier": "DSV Estonia AS",
+                "reg_no": "10342368",
+                "id": 3,
+                "service": "Express Service",
+                "service_id": 123,
+                "price": "32.50",
+                "unit": "real_weight",
+                "type": "online"
+              },
+              {
+                "carrier": "DPD Eesti AS",
+                "reg_no": "10092256",
+                "id": 10,
+                "service": "Main",
+                "service_id": 555,
+                "price": "20.00",
+                "unit": "payable_weight",
+                "type": "price_list"
+              }
+            ]
+          }
+        },
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Status code"
+          },
+          "object": {
+            "type": "object",
+            "description": "The object containing the prices array",
+            "properties": {
+              "prices": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "description": "A price object detailing the price of the shipment, the carrier and the service whom which the price is from, and the source of the price",
+                  "properties": {
+                    "carrier": {
+                      "type": "string",
+                      "description": "The name of the carrier from which the price is from"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "The numeric ID of the carrier for more reliable identification"
+                    },
+                    "reg_no": {
+                      "type": "string",
+                      "description": "The business registration number of the carrier"
+                    },
+                    "service": {
+                      "type": "string",
+                      "description": "The name of the carrier service that the price is related to. One carrier can have multiple prices if they have multiple services defined"
+                    },
+                    "service_id": {
+                      "type": "integer",
+                      "description": "The numeric ID of the carrier service for more reliable identification"
+                    },
+                    "price": {
+                      "type": "string",
+                      "description": "The price for the requested shipment related to this carrier and service. The price is a float rounded to two decimal places, represented as a string"
+                    },
+                    "unit": {
+                      "type": "string",
+                      "description": "The measurement unit by which the price was calculated",
+                      "enum": [
+                        "payable_weight",
+                        "real_weight",
+                        "parcel",
+                        "eur_pll",
+                        "fin_pll",
+                        "xl_pll",
+                        "half_pll"
+                      ]
+                    },
+                    "type": {
+                      "type": "string",
+                      "description": "The source of this price",
+                      "enum": [
+                        "price_list",
+                        "online"
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "ParcelMachines": {
+        "type": "array",
+        "example": [
+          {
+            "id": 53,
+            "reference": "EE90045",
+            "name": "Automaat Valga Rimi",
+            "carrier_name": "DPD Eesti AS",
+            "carrier_id": 10,
+            "carrier_reg_no": "10092256",
+            "address_row_1": "Riia 18",
+            "city": "Valga",
+            "postcode": "68203",
+            "country": "EE"
+          },
+          {
+            "id": 2354,
+            "reference": "96118",
+            "name": "Antsla Coop Konsumi pakiautomaat",
+            "carrier_name": "Eesti Post AS",
+            "carrier_id": 267,
+            "carrier_reg_no": "10328799",
+            "address_row_1": "F. R. Kreutzwaldi tn 4a",
+            "city": "Antsla vald",
+            "postcode": "66404",
+            "country": "EE"
+          }
+        ],
+        "description": "an array containing objects of the found parcel machines",
+        "items": {
+          "type": "object",
+          "description": "A parcel machine object detailing information about the parcel machine, such as its name, location, references and info about its carrier",
+          "properties": {
+            "id": {
+              "type": "integer",
+              "description": "The numeric ID of this parcel machine"
+            },
+            "reference": {
+              "type": "string",
+              "description": "The reference of this parcel machine (as referenced to by the carrier)"
+            },
+            "name": {
+              "type": "string",
+              "description": "The name of this parcel machine"
+            },
+            "carrier_name": {
+              "type": "string",
+              "description": "The name of the carrier of this parcel machine"
+            },
+            "carrier_id": {
+              "type": "integer",
+              "description": "The numeric ID of the carrier of this parcel machine"
+            },
+            "carrier_reg_no": {
+              "type": "string",
+              "description": "The business registration number of the carrier of this parcel machine"
+            },
+            "address_row_1": {
+              "type": "string",
+              "description": "The street address of this parcel machine"
+            },
+            "city": {
+              "type": "string",
+              "description": "The name of the city of this parcel machine"
+            },
+            "postcode": {
+              "type": "string",
+              "description": "The postcode of this parcel machine"
+            },
+            "country": {
+              "type": "string",
+              "description": "The two-letter country code (ISO 3166-1 alpha-2) of this parcel machine"
+            }
+          }
+        }
+      },
+      "Emissions": {
+        "type": "object",
+        "example": {
+          "status": 200,
+          "object": {
+            "distances": {
+              "coordinates": {
+                "collection": [
+                  "59.4211, 24.69927"
+                ],
+                "delivery": [
+                  "50.62627, 3.06691"
+                ]
+              },
+              "road": 2358.67,
+              "sea": {
+                "ship": 1880,
+                "truck": 65
+              },
+              "gcd": 1680
+            },
+            "co2e_kg": {
+              "road": "220.54",
+              "sea": "37.78",
+              "air": "2449.5",
+              "rail": "99.49"
+            }
+          }
+        },
+        "properties": {
+          "status": {
+            "type": "integer",
+            "description": "Status code"
+          },
+          "object": {
+            "type": "object",
+            "description": "an object containing shipment coordinates and co2e emissions",
+            "properties": {
+              "distances": {
+                "type": "object",
+                "description": "an object containing shipment coordinates and distances",
+                "properties": {
+                  "coordinates": {
+                    "type": "object",
+                    "description": "an object containing collection and delivery coordinates",
+                    "properties": {
+                      "collection": {
+                        "type": "array",
+                        "description": "Collection coordinates",
+                        "items": {
+                          "type": "number",
+                          "description": "Latitude and longitude"
+                        }
+                      },
+                      "delivery": {
+                        "type": "array",
+                        "description": "Delivery coordinates",
+                        "items": {
+                          "type": "number",
+                          "description": "Latitude and longitude"
+                        }
+                      }
+                    }
+                  },
+                  "road": {
+                    "type": "number",
+                    "description": "Road distance"
+                  },
+                  "sea": {
+                    "type": "object",
+                    "description": "Sea distance",
+                    "properties": {
+                      "ship": {
+                        "type": "number",
+                        "description": "Ship distance"
+                      },
+                      "truck": {
+                        "type": "number",
+                        "description": "Truck distance"
+                      }
+                    }
+                  },
+                  "gcd": {
+                    "type": "number",
+                    "description": "Great Circle distance"
+                  }
+                }
+              },
+              "co2e_kg": {
+                "type": "object",
+                "description": "Expected CO2e emissions for different freight types",
+                "properties": {
+                  "road": {
+                    "type": "string",
+                    "description": "Road CO2e emissions in kg"
+                  },
+                  "sea": {
+                    "type": "string",
+                    "description": "Sea CO2e emissions in kg"
+                  },
+                  "air": {
+                    "type": "string",
+                    "description": "Air CO2e emissions in kg"
+                  },
+                  "rail": {
+                    "type": "string",
+                    "description": "Rail CO2e emissions in kg"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "Token": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header",
+        "description": "Enter your token in the format **Token &lt;token>**"
+      }
+    }
+  }
+}
