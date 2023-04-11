@@ -125,14 +125,20 @@ class GetBookingRequestBodyOptionsInclude_Associations(object):
         return GetBookingRequestBodyOptionsInclude_Associations(**v)
 
     def as_dict(self):
-        return dict(
-            offer=self.__offer,
-            carrier=self.__carrier,
-            consignor=self.__consignor,
-            consignee=self.__consignee,
-            rows=self.__rows,
-            declaration=self.__declaration
-        )
+        res = dict()
+        if self.__offer is not None:
+            res['offer'] = self.__offer
+        if self.__carrier is not None:
+            res['carrier'] = self.__carrier
+        if self.__consignor is not None:
+            res['consignor'] = self.__consignor
+        if self.__consignee is not None:
+            res['consignee'] = self.__consignee
+        if self.__rows is not None:
+            res['rows'] = self.__rows
+        if self.__declaration is not None:
+            res['declaration'] = self.__declaration
+        return res
 
 
 # noinspection PyPep8Naming
@@ -166,7 +172,7 @@ class GetBookingRequestBodyOptions(object):
         return self.__label_format
 
     def __set_label_format(self, label_format):
-        if not (label_format in ['label_printer', 'a4'] or label_format is None):
+        if not (label_format.as_dict() if hasattr(label_format, "as_dict") else label_format in ['label_printer', 'a4'] or label_format is None):
             raise Exception(f'Cannot set field GetBookingRequestBodyOptionsLabel_Format.label_format to {repr(label_format)}')
 
         self.__label_format = label_format
@@ -202,15 +208,17 @@ class GetBookingRequestBodyOptions(object):
     @staticmethod
     def from_dict(d):
         v = dict()
-        v['label_format'] = d.get('label_format')
+        v['label_format'] = GetBookingRequestBodyOptionsLabel_Format.from_dict(d.get('label_format'))
         v['include_associations'] = GetBookingRequestBodyOptionsInclude_Associations.from_dict(d.get('include_associations'))
         return GetBookingRequestBodyOptions(**v)
 
     def as_dict(self):
-        return dict(
-            label_format=self.__label_format,
-            include_associations=self.__include_associations.as_dict() if self.__include_associations is not None else None
-        )
+        res = dict()
+        if self.__label_format is not None:
+            res['label_format'] = self.__label_format.as_dict()
+        if self.__include_associations is not None:
+            res['include_associations'] = self.__include_associations.as_dict()
+        return res
 
 
 # noinspection PyPep8Naming
@@ -246,8 +254,9 @@ class GetBookingRequestBody(object):
         return GetBookingRequestBody(**v)
 
     def as_dict(self):
-        return dict(
-            options=self.__options.as_dict() if self.__options is not None else None
-        )
+        res = dict()
+        if self.__options is not None:
+            res['options'] = self.__options.as_dict()
+        return res
 
 

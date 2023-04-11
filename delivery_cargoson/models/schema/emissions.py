@@ -52,10 +52,12 @@ class EmissionsObjectDistancesSea(object):
         return EmissionsObjectDistancesSea(**v)
 
     def as_dict(self):
-        return dict(
-            ship=self.__ship,
-            truck=self.__truck
-        )
+        res = dict()
+        if self.__ship is not None:
+            res['ship'] = self.__ship
+        if self.__truck is not None:
+            res['truck'] = self.__truck
+        return res
 
 
 # noinspection PyPep8Naming
@@ -109,10 +111,12 @@ class EmissionsObjectDistancesCoordinates(object):
         return EmissionsObjectDistancesCoordinates(**v)
 
     def as_dict(self):
-        return dict(
-            collection=self.__collection,
-            delivery=self.__delivery
-        )
+        res = dict()
+        if self.__collection is not None:
+            res['collection'] = [item.as_dict() if hasattr(item, 'as_dict') else item for item in self.__collection]
+        if self.__delivery is not None:
+            res['delivery'] = [item.as_dict() if hasattr(item, 'as_dict') else item for item in self.__delivery]
+        return res
 
 
 # noinspection PyPep8Naming
@@ -202,12 +206,16 @@ class EmissionsObjectCo2E_Kg(object):
         return EmissionsObjectCo2E_Kg(**v)
 
     def as_dict(self):
-        return dict(
-            road=self.__road,
-            sea=self.__sea,
-            air=self.__air,
-            rail=self.__rail
-        )
+        res = dict()
+        if self.__road is not None:
+            res['road'] = self.__road
+        if self.__sea is not None:
+            res['sea'] = self.__sea
+        if self.__air is not None:
+            res['air'] = self.__air
+        if self.__rail is not None:
+            res['rail'] = self.__rail
+        return res
 
 
 # noinspection PyPep8Naming
@@ -297,12 +305,16 @@ class EmissionsObjectDistances(object):
         return EmissionsObjectDistances(**v)
 
     def as_dict(self):
-        return dict(
-            coordinates=self.__coordinates.as_dict() if self.__coordinates is not None else None,
-            road=self.__road,
-            sea=self.__sea.as_dict() if self.__sea is not None else None,
-            gcd=self.__gcd
-        )
+        res = dict()
+        if self.__coordinates is not None:
+            res['coordinates'] = self.__coordinates.as_dict()
+        if self.__road is not None:
+            res['road'] = self.__road
+        if self.__sea is not None:
+            res['sea'] = self.__sea.as_dict()
+        if self.__gcd is not None:
+            res['gcd'] = self.__gcd
+        return res
 
 
 # noinspection PyPep8Naming
@@ -356,10 +368,12 @@ class EmissionsObject(object):
         return EmissionsObject(**v)
 
     def as_dict(self):
-        return dict(
-            distances=self.__distances.as_dict() if self.__distances is not None else None,
-            co2e_kg=self.__co2e_kg.as_dict() if self.__co2e_kg is not None else None
-        )
+        res = dict()
+        if self.__distances is not None:
+            res['distances'] = self.__distances.as_dict()
+        if self.__co2e_kg is not None:
+            res['co2e_kg'] = self.__co2e_kg.as_dict()
+        return res
 
 
 # noinspection PyPep8Naming
@@ -410,9 +424,11 @@ class Emissions(object):
         return Emissions(**v)
 
     def as_dict(self):
-        return dict(
-            status=self.__status,
-            object=self.__object.as_dict() if self.__object is not None else None
-        )
+        res = dict()
+        if self.__status is not None:
+            res['status'] = self.__status
+        if self.__object is not None:
+            res['object'] = self.__object.as_dict()
+        return res
 
 

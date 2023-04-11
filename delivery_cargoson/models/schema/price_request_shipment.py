@@ -61,7 +61,7 @@ class PriceRequestShipmentRows_AttributesItem(object):
         return self.__package_type
 
     def __set_package_type(self, package_type):
-        if not (package_type in ['EUR', 'CTN', 'FIN', 'HPL', 'QPL', 'LOAD', 'PLD', 'PXL', 'PLL', 'TBE', 'CLL', 'RLL', '20DC', '40DC', '40HC'] or package_type is None):
+        if not (package_type.as_dict() if hasattr(package_type, "as_dict") else package_type in ['EUR', 'CTN', 'FIN', 'HPL', 'QPL', 'LOAD', 'PLD', 'PXL', 'PLL', 'TBE', 'CLL', 'RLL', '20DC', '40DC', '40HC'] or package_type is None):
             raise Exception(f'Cannot set field PriceRequestShipmentRows_AttributesItemPackage_Type.package_type to {repr(package_type)}')
 
         self.__package_type = package_type
@@ -199,7 +199,7 @@ class PriceRequestShipmentRows_AttributesItem(object):
     def from_dict(d):
         v = dict()
         v['quantity'] = d.get('quantity')
-        v['package_type'] = d.get('package_type')
+        v['package_type'] = PriceRequestShipmentRows_AttributesItemPackage_Type.from_dict(d.get('package_type'))
         v['weight'] = d.get('weight')
         v['length'] = d.get('length')
         v['width'] = d.get('width')
@@ -210,17 +210,26 @@ class PriceRequestShipmentRows_AttributesItem(object):
         return PriceRequestShipmentRows_AttributesItem(**v)
 
     def as_dict(self):
-        return dict(
-            quantity=self.__quantity,
-            package_type=self.__package_type,
-            weight=self.__weight,
-            length=self.__length,
-            width=self.__width,
-            height=self.__height,
-            cbm=self.__cbm,
-            ldm=self.__ldm,
-            description=self.__description
-        )
+        res = dict()
+        if self.__quantity is not None:
+            res['quantity'] = self.__quantity
+        if self.__package_type is not None:
+            res['package_type'] = self.__package_type.as_dict()
+        if self.__weight is not None:
+            res['weight'] = self.__weight
+        if self.__length is not None:
+            res['length'] = self.__length
+        if self.__width is not None:
+            res['width'] = self.__width
+        if self.__height is not None:
+            res['height'] = self.__height
+        if self.__cbm is not None:
+            res['cbm'] = self.__cbm
+        if self.__ldm is not None:
+            res['ldm'] = self.__ldm
+        if self.__description is not None:
+            res['description'] = self.__description
+        return res
 
 
 # noinspection PyPep8Naming
@@ -229,13 +238,13 @@ class PriceRequestShipment(object):
     the shipment for which the prices are requested
     """
 
-    __collection_date: Optional[str] = None
+    __collection_date: str = None
 
     def __get_collection_date(self):
         return self.__collection_date
 
     def __set_collection_date(self, collection_date):
-        if not (isinstance(collection_date, str) or collection_date is None):
+        if not (isinstance(collection_date, str)):
             raise Exception(f'Cannot set field "collection_date" (type str) to {repr(collection_date)}')
 
         self.__collection_date = collection_date
@@ -245,13 +254,13 @@ class PriceRequestShipment(object):
     Date when goods are ready for collection. Can be today or in the future
     """
 
-    __collection_postcode: Optional[str] = None
+    __collection_postcode: str = None
 
     def __get_collection_postcode(self):
         return self.__collection_postcode
 
     def __set_collection_postcode(self, collection_postcode):
-        if not (isinstance(collection_postcode, str) or collection_postcode is None):
+        if not (isinstance(collection_postcode, str)):
             raise Exception(f'Cannot set field "collection_postcode" (type str) to {repr(collection_postcode)}')
 
         self.__collection_postcode = collection_postcode
@@ -261,13 +270,13 @@ class PriceRequestShipment(object):
     ZIP or postal code. May contain both numbers and letters. Should not include the country code.
     """
 
-    __collection_country: Optional[str] = None
+    __collection_country: str = None
 
     def __get_collection_country(self):
         return self.__collection_country
 
     def __set_collection_country(self, collection_country):
-        if not (isinstance(collection_country, str) or collection_country is None):
+        if not (isinstance(collection_country, str)):
             raise Exception(f'Cannot set field "collection_country" (type str) to {repr(collection_country)}')
 
         self.__collection_country = collection_country
@@ -277,13 +286,13 @@ class PriceRequestShipment(object):
     Two-letter country code (ISO 3166-1 alpha-2)
     """
 
-    __delivery_postcode: Optional[str] = None
+    __delivery_postcode: str = None
 
     def __get_delivery_postcode(self):
         return self.__delivery_postcode
 
     def __set_delivery_postcode(self, delivery_postcode):
-        if not (isinstance(delivery_postcode, str) or delivery_postcode is None):
+        if not (isinstance(delivery_postcode, str)):
             raise Exception(f'Cannot set field "delivery_postcode" (type str) to {repr(delivery_postcode)}')
 
         self.__delivery_postcode = delivery_postcode
@@ -293,13 +302,13 @@ class PriceRequestShipment(object):
     ZIP or postal code. May contain both numbers and letters. Should not include the country code.
     """
 
-    __delivery_country: Optional[str] = None
+    __delivery_country: str = None
 
     def __get_delivery_country(self):
         return self.__delivery_country
 
     def __set_delivery_country(self, delivery_country):
-        if not (isinstance(delivery_country, str) or delivery_country is None):
+        if not (isinstance(delivery_country, str)):
             raise Exception(f'Cannot set field "delivery_country" (type str) to {repr(delivery_country)}')
 
         self.__delivery_country = delivery_country
@@ -490,21 +499,30 @@ class PriceRequestShipment(object):
         return PriceRequestShipment(**v)
 
     def as_dict(self):
-        return dict(
-            collection_date=self.__collection_date,
-            collection_postcode=self.__collection_postcode,
-            collection_country=self.__collection_country,
-            delivery_postcode=self.__delivery_postcode,
-            delivery_country=self.__delivery_country,
-            frigo=self.__frigo,
-            adr=self.__adr,
-            collection_prenotification=self.__collection_prenotification,
-            collection_with_tail_lift=self.__collection_with_tail_lift,
-            delivery_prenotification=self.__delivery_prenotification,
-            delivery_with_tail_lift=self.__delivery_with_tail_lift,
-            delivery_return_document=self.__delivery_return_document,
-            delivery_to_private_person=self.__delivery_to_private_person,
-            rows_attributes=[item.as_dict() for item in self.__rows_attributes] if self.__rows_attributes is not None else None
-        )
+        res = dict()
+        res['collection_date'] = self.__collection_date
+        res['collection_postcode'] = self.__collection_postcode
+        res['collection_country'] = self.__collection_country
+        res['delivery_postcode'] = self.__delivery_postcode
+        res['delivery_country'] = self.__delivery_country
+        if self.__frigo is not None:
+            res['frigo'] = self.__frigo
+        if self.__adr is not None:
+            res['adr'] = self.__adr
+        if self.__collection_prenotification is not None:
+            res['collection_prenotification'] = self.__collection_prenotification
+        if self.__collection_with_tail_lift is not None:
+            res['collection_with_tail_lift'] = self.__collection_with_tail_lift
+        if self.__delivery_prenotification is not None:
+            res['delivery_prenotification'] = self.__delivery_prenotification
+        if self.__delivery_with_tail_lift is not None:
+            res['delivery_with_tail_lift'] = self.__delivery_with_tail_lift
+        if self.__delivery_return_document is not None:
+            res['delivery_return_document'] = self.__delivery_return_document
+        if self.__delivery_to_private_person is not None:
+            res['delivery_to_private_person'] = self.__delivery_to_private_person
+        if self.__rows_attributes is not None:
+            res['rows_attributes'] = [item.as_dict() for item in self.__rows_attributes]
+        return res
 
 

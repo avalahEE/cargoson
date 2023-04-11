@@ -196,17 +196,27 @@ class ParcelMachines(object):
         return ParcelMachines(**v)
 
     def as_dict(self):
-        return dict(
-            id=self.__id,
-            reference=self.__reference,
-            name=self.__name,
-            carrier_name=self.__carrier_name,
-            carrier_id=self.__carrier_id,
-            carrier_reg_no=self.__carrier_reg_no,
-            address_row_1=self.__address_row_1,
-            city=self.__city,
-            postcode=self.__postcode,
-            country=self.__country
-        )
+        res = dict()
+        if self.__id is not None:
+            res['id'] = self.__id
+        if self.__reference is not None:
+            res['reference'] = self.__reference
+        if self.__name is not None:
+            res['name'] = self.__name
+        if self.__carrier_name is not None:
+            res['carrier_name'] = self.__carrier_name
+        if self.__carrier_id is not None:
+            res['carrier_id'] = self.__carrier_id
+        if self.__carrier_reg_no is not None:
+            res['carrier_reg_no'] = self.__carrier_reg_no
+        if self.__address_row_1 is not None:
+            res['address_row_1'] = self.__address_row_1
+        if self.__city is not None:
+            res['city'] = self.__city
+        if self.__postcode is not None:
+            res['postcode'] = self.__postcode
+        if self.__country is not None:
+            res['country'] = self.__country
+        return res
 
 

@@ -242,7 +242,7 @@ class OrderDeclaration_AttributesDeclaration_Documents_AttributesItem(object):
         return self.__category
 
     def __set_category(self, category):
-        if not (category in ['CIV', 'DOV', 'INV', 'ATR', 'CHD', 'CHP', 'CIT', 'COO', 'DEX', 'EU1', 'EU2', 'EUS', 'FMA', 'PHY', 'VET', 'VEX', 'CRL', 'CSD', 'PPY', 'CI2', '972', 'AHC', 'ATA', 'PFI', 'ALC', 'HLC', 'JLC', 'LIC', 'LNP', 'PLI', 'DLI', 'NID', 'PAS', 'CHA', 'CPA', 'POA', 'BEX', 'DGD', 'IPA', 'T2M', 'TAD', 'TCS', 'ROD', 'EXL', 'HWB', 'ELP'] or category is None):
+        if not (category.as_dict() if hasattr(category, "as_dict") else category in ['CIV', 'DOV', 'INV', 'ATR', 'CHD', 'CHP', 'CIT', 'COO', 'DEX', 'EU1', 'EU2', 'EUS', 'FMA', 'PHY', 'VET', 'VEX', 'CRL', 'CSD', 'PPY', 'CI2', '972', 'AHC', 'ATA', 'PFI', 'ALC', 'HLC', 'JLC', 'LIC', 'LNP', 'PLI', 'DLI', 'NID', 'PAS', 'CHA', 'CPA', 'POA', 'BEX', 'DGD', 'IPA', 'T2M', 'TAD', 'TCS', 'ROD', 'EXL', 'HWB', 'ELP'] or category is None):
             raise Exception(f'Cannot set field OrderDeclaration_AttributesDeclaration_Documents_AttributesItemCategory.category to {repr(category)}')
 
         self.__category = category
@@ -323,15 +323,17 @@ class OrderDeclaration_AttributesDeclaration_Documents_AttributesItem(object):
     @staticmethod
     def from_dict(d):
         v = dict()
-        v['category'] = d.get('category')
+        v['category'] = OrderDeclaration_AttributesDeclaration_Documents_AttributesItemCategory.from_dict(d.get('category'))
         v['document_id'] = d.get('document_id')
         return OrderDeclaration_AttributesDeclaration_Documents_AttributesItem(**v)
 
     def as_dict(self):
-        return dict(
-            category=self.__category,
-            document_id=self.__document_id
-        )
+        res = dict()
+        if self.__category is not None:
+            res['category'] = self.__category.as_dict()
+        if self.__document_id is not None:
+            res['document_id'] = self.__document_id
+        return res
 
 
 # noinspection PyPep8Naming
@@ -346,7 +348,7 @@ class OrderDeclaration_AttributesDeclaration_Charges_AttributesItem(object):
         return self.__category
 
     def __set_category(self, category):
-        if not (category in ['ADMIN', 'DELIV', 'DOCUM', 'EXPED', 'EXCHA', 'FRCST', 'SSRGE', 'LOGST', 'SOTHR', 'SPKGN', 'PICUP', 'HRCRG', 'VATCR', 'INSCH', 'REVCH'] or category is None):
+        if not (category.as_dict() if hasattr(category, "as_dict") else category in ['ADMIN', 'DELIV', 'DOCUM', 'EXPED', 'EXCHA', 'FRCST', 'SSRGE', 'LOGST', 'SOTHR', 'SPKGN', 'PICUP', 'HRCRG', 'VATCR', 'INSCH', 'REVCH'] or category is None):
             raise Exception(f'Cannot set field OrderDeclaration_AttributesDeclaration_Charges_AttributesItemCategory.category to {repr(category)}')
 
         self.__category = category
@@ -396,15 +398,17 @@ class OrderDeclaration_AttributesDeclaration_Charges_AttributesItem(object):
     @staticmethod
     def from_dict(d):
         v = dict()
-        v['category'] = d.get('category')
+        v['category'] = OrderDeclaration_AttributesDeclaration_Charges_AttributesItemCategory.from_dict(d.get('category'))
         v['value'] = d.get('value')
         return OrderDeclaration_AttributesDeclaration_Charges_AttributesItem(**v)
 
     def as_dict(self):
-        return dict(
-            category=self.__category,
-            value=self.__value
-        )
+        res = dict()
+        if self.__category is not None:
+            res['category'] = self.__category.as_dict()
+        if self.__value is not None:
+            res['value'] = self.__value
+        return res
 
 
 # noinspection PyPep8Naming
@@ -435,7 +439,7 @@ class OrderDeclaration_AttributesDeclaration_Items_AttributesItem(object):
         return self.__unit_of_measure
 
     def __set_unit_of_measure(self, unit_of_measure):
-        if not (unit_of_measure in ['BOX', '2GM', '2M', '2M3', '3M3', 'M3', 'DPR', 'DOZ', '2NO', 'PCS', 'GM', 'GRS', 'KG', 'L', 'M', '3GM', '3L', 'X', False, '2KG', 'PRS', '2L', '3KG', 'CM2', '2M2', '3M2', 'M2', '4M2', '3M'] or unit_of_measure is None):
+        if not (unit_of_measure.as_dict() if hasattr(unit_of_measure, "as_dict") else unit_of_measure in ['BOX', '2GM', '2M', '2M3', '3M3', 'M3', 'DPR', 'DOZ', '2NO', 'PCS', 'GM', 'GRS', 'KG', 'L', 'M', '3GM', '3L', 'X', False, '2KG', 'PRS', '2L', '3KG', 'CM2', '2M2', '3M2', 'M2', '4M2', '3M'] or unit_of_measure is None):
             raise Exception(f'Cannot set field OrderDeclaration_AttributesDeclaration_Items_AttributesItemUnit_Of_Measure.unit_of_measure to {repr(unit_of_measure)}')
 
         self.__unit_of_measure = unit_of_measure
@@ -585,7 +589,7 @@ class OrderDeclaration_AttributesDeclaration_Items_AttributesItem(object):
     def from_dict(d):
         v = dict()
         v['quantity'] = d.get('quantity')
-        v['unit_of_measure'] = d.get('unit_of_measure')
+        v['unit_of_measure'] = OrderDeclaration_AttributesDeclaration_Items_AttributesItemUnit_Of_Measure.from_dict(d.get('unit_of_measure'))
         v['hs_code'] = d.get('hs_code')
         v['origin_country'] = d.get('origin_country')
         v['net_weight'] = d.get('net_weight')
@@ -595,16 +599,24 @@ class OrderDeclaration_AttributesDeclaration_Items_AttributesItem(object):
         return OrderDeclaration_AttributesDeclaration_Items_AttributesItem(**v)
 
     def as_dict(self):
-        return dict(
-            quantity=self.__quantity,
-            unit_of_measure=self.__unit_of_measure,
-            hs_code=self.__hs_code,
-            origin_country=self.__origin_country,
-            net_weight=self.__net_weight,
-            gross_weight=self.__gross_weight,
-            value=self.__value,
-            description=self.__description
-        )
+        res = dict()
+        if self.__quantity is not None:
+            res['quantity'] = self.__quantity
+        if self.__unit_of_measure is not None:
+            res['unit_of_measure'] = self.__unit_of_measure.as_dict()
+        if self.__hs_code is not None:
+            res['hs_code'] = self.__hs_code
+        if self.__origin_country is not None:
+            res['origin_country'] = self.__origin_country
+        if self.__net_weight is not None:
+            res['net_weight'] = self.__net_weight
+        if self.__gross_weight is not None:
+            res['gross_weight'] = self.__gross_weight
+        if self.__value is not None:
+            res['value'] = self.__value
+        if self.__description is not None:
+            res['description'] = self.__description
+        return res
 
 
 # noinspection PyPep8Naming
@@ -820,13 +832,18 @@ class OrderRows_AttributesItemAdr_Rows_AttributesItem(object):
         return OrderRows_AttributesItemAdr_Rows_AttributesItem(**v)
 
     def as_dict(self):
-        return dict(
-            adr_un=self.__adr_un,
-            adr_group=self.__adr_group,
-            adr_class=self.__adr_class,
-            adr_neq=self.__adr_neq,
-            adr_description=self.__adr_description
-        )
+        res = dict()
+        if self.__adr_un is not None:
+            res['adr_un'] = self.__adr_un
+        if self.__adr_group is not None:
+            res['adr_group'] = self.__adr_group
+        if self.__adr_class is not None:
+            res['adr_class'] = self.__adr_class
+        if self.__adr_neq is not None:
+            res['adr_neq'] = self.__adr_neq
+        if self.__adr_description is not None:
+            res['adr_description'] = self.__adr_description
+        return res
 
 
 # noinspection PyPep8Naming
@@ -895,7 +912,7 @@ class OrderDeclaration_Attributes(object):
         return self.__invoice_reference
 
     def __set_invoice_reference(self, invoice_reference):
-        if not (invoice_reference in ['ACL', 'CID', 'CN', 'CU', 'ITN', 'MRN', 'UCN', 'OID', 'PON', 'RMA', 'AAM', 'ABT', 'ADA', 'AES', 'AFD', 'ANT', 'BKN', 'BOL', 'CDN', 'COD', 'DSC', 'FF', 'FN', 'FTR', 'HWB', 'IBC', 'IPP', 'LLR', 'MAB', 'MWB', 'OBC', 'PD', 'PRN', 'RTL', 'SID', 'SS', 'SWN'] or invoice_reference is None):
+        if not (invoice_reference.as_dict() if hasattr(invoice_reference, "as_dict") else invoice_reference in ['ACL', 'CID', 'CN', 'CU', 'ITN', 'MRN', 'UCN', 'OID', 'PON', 'RMA', 'AAM', 'ABT', 'ADA', 'AES', 'AFD', 'ANT', 'BKN', 'BOL', 'CDN', 'COD', 'DSC', 'FF', 'FN', 'FTR', 'HWB', 'IBC', 'IPP', 'LLR', 'MAB', 'MWB', 'OBC', 'PD', 'PRN', 'RTL', 'SID', 'SS', 'SWN'] or invoice_reference is None):
             raise Exception(f'Cannot set field OrderDeclaration_AttributesInvoice_Reference.invoice_reference to {repr(invoice_reference)}')
 
         self.__invoice_reference = invoice_reference
@@ -1006,13 +1023,13 @@ class OrderDeclaration_Attributes(object):
     Field to explicity state that the information declared is correct
     """
 
-    __declaration_items_attributes: Optional[List["OrderDeclaration_AttributesDeclaration_Items_AttributesItem"]] = []
+    __declaration_items_attributes: List["OrderDeclaration_AttributesDeclaration_Items_AttributesItem"] = []
 
     def __get_declaration_items_attributes(self):
         return self.__declaration_items_attributes
 
     def __set_declaration_items_attributes(self, declaration_items_attributes):
-        if not (isinstance(declaration_items_attributes, list) or declaration_items_attributes is None):
+        if not (isinstance(declaration_items_attributes, list)):
             raise Exception(f'Cannot set field List["OrderDeclaration_AttributesDeclaration_Items_AttributesItem"].declaration_items_attributes to {repr(declaration_items_attributes)}')
 
         self.__declaration_items_attributes = declaration_items_attributes
@@ -1068,7 +1085,7 @@ class OrderDeclaration_Attributes(object):
     @staticmethod
     def from_dict(d):
         v = dict()
-        v['invoice_reference'] = d.get('invoice_reference')
+        v['invoice_reference'] = OrderDeclaration_AttributesInvoice_Reference.from_dict(d.get('invoice_reference'))
         v['invoice_reference_text'] = d.get('invoice_reference_text')
         v['currency'] = d.get('currency')
         v['remark'] = d.get('remark')
@@ -1079,16 +1096,23 @@ class OrderDeclaration_Attributes(object):
         return OrderDeclaration_Attributes(**v)
 
     def as_dict(self):
-        return dict(
-            invoice_reference=self.__invoice_reference,
-            invoice_reference_text=self.__invoice_reference_text,
-            currency=self.__currency,
-            remark=self.__remark,
-            declaration_text=self.__declaration_text,
-            declaration_items_attributes=[item.as_dict() for item in self.__declaration_items_attributes] if self.__declaration_items_attributes is not None else None,
-            declaration_charges_attributes=[item.as_dict() for item in self.__declaration_charges_attributes] if self.__declaration_charges_attributes is not None else None,
-            declaration_documents_attributes=[item.as_dict() for item in self.__declaration_documents_attributes] if self.__declaration_documents_attributes is not None else None
-        )
+        res = dict()
+        if self.__invoice_reference is not None:
+            res['invoice_reference'] = self.__invoice_reference.as_dict()
+        if self.__invoice_reference_text is not None:
+            res['invoice_reference_text'] = self.__invoice_reference_text
+        if self.__currency is not None:
+            res['currency'] = self.__currency
+        if self.__remark is not None:
+            res['remark'] = self.__remark
+        if self.__declaration_text is not None:
+            res['declaration_text'] = self.__declaration_text
+        res['declaration_items_attributes'] = [item.as_dict() for item in self.__declaration_items_attributes] if self.__declaration_items_attributes is not None else None
+        if self.__declaration_charges_attributes is not None:
+            res['declaration_charges_attributes'] = [item.as_dict() for item in self.__declaration_charges_attributes]
+        if self.__declaration_documents_attributes is not None:
+            res['declaration_documents_attributes'] = [item.as_dict() for item in self.__declaration_documents_attributes]
+        return res
 
 
 # noinspection PyPep8Naming
@@ -1100,7 +1124,7 @@ class OrderOptions(object):
         return self.__label_format
 
     def __set_label_format(self, label_format):
-        if not (label_format in ['label_printer', 'a4'] or label_format is None):
+        if not (label_format.as_dict() if hasattr(label_format, "as_dict") else label_format in ['label_printer', 'a4'] or label_format is None):
             raise Exception(f'Cannot set field OrderOptionsLabel_Format.label_format to {repr(label_format)}')
 
         self.__label_format = label_format
@@ -1221,7 +1245,7 @@ class OrderOptions(object):
     @staticmethod
     def from_dict(d):
         v = dict()
-        v['label_format'] = d.get('label_format')
+        v['label_format'] = OrderOptionsLabel_Format.from_dict(d.get('label_format'))
         v['direct_booking_service_id'] = d.get('direct_booking_service_id')
         v['create_incomplete_shipment'] = d.get('create_incomplete_shipment')
         v['automated_booking'] = d.get('automated_booking')
@@ -1231,27 +1255,34 @@ class OrderOptions(object):
         return OrderOptions(**v)
 
     def as_dict(self):
-        return dict(
-            label_format=self.__label_format,
-            direct_booking_service_id=self.__direct_booking_service_id,
-            create_incomplete_shipment=self.__create_incomplete_shipment,
-            automated_booking=self.__automated_booking,
-            save_collection_address=self.__save_collection_address,
-            save_delivery_address=self.__save_delivery_address,
-            parcel_machine_reference=self.__parcel_machine_reference
-        )
+        res = dict()
+        if self.__label_format is not None:
+            res['label_format'] = self.__label_format.as_dict()
+        if self.__direct_booking_service_id is not None:
+            res['direct_booking_service_id'] = self.__direct_booking_service_id
+        if self.__create_incomplete_shipment is not None:
+            res['create_incomplete_shipment'] = self.__create_incomplete_shipment
+        if self.__automated_booking is not None:
+            res['automated_booking'] = self.__automated_booking
+        if self.__save_collection_address is not None:
+            res['save_collection_address'] = self.__save_collection_address
+        if self.__save_delivery_address is not None:
+            res['save_delivery_address'] = self.__save_delivery_address
+        if self.__parcel_machine_reference is not None:
+            res['parcel_machine_reference'] = self.__parcel_machine_reference
+        return res
 
 
 # noinspection PyPep8Naming
 class OrderOffer(object):
 
-    __total_price: Optional[float] = None
+    __total_price: float = None
 
     def __get_total_price(self):
         return self.__total_price
 
     def __set_total_price(self, total_price):
-        if not (isinstance(total_price, float) or isinstance(total_price, int) or total_price is None):
+        if not (isinstance(total_price, float) or isinstance(total_price, int)):
             raise Exception(f'Cannot set field "total_price" (type float) to {repr(total_price)}')
 
         self.__total_price = total_price
@@ -1290,10 +1321,11 @@ class OrderOffer(object):
         return OrderOffer(**v)
 
     def as_dict(self):
-        return dict(
-            total_price=self.__total_price,
-            currency=self.__currency
-        )
+        res = dict()
+        res['total_price'] = self.__total_price
+        if self.__currency is not None:
+            res['currency'] = self.__currency
+        return res
 
 
 # noinspection PyPep8Naming
@@ -1324,7 +1356,7 @@ class OrderRows_AttributesItem(object):
         return self.__package_type
 
     def __set_package_type(self, package_type):
-        if not (package_type in ['EUR', 'CTN', 'FIN', 'HPL', 'QPL', 'LOAD', 'PLD', 'PXL', 'PLL', 'TBE', 'CLL', 'RLL', '20DC', '40DC', '40HC'] or package_type is None):
+        if not (package_type.as_dict() if hasattr(package_type, "as_dict") else package_type in ['EUR', 'CTN', 'FIN', 'HPL', 'QPL', 'LOAD', 'PLD', 'PXL', 'PLL', 'TBE', 'CLL', 'RLL', '20DC', '40DC', '40HC'] or package_type is None):
             raise Exception(f'Cannot set field OrderRows_AttributesItemPackage_Type.package_type to {repr(package_type)}')
 
         self.__package_type = package_type
@@ -1479,7 +1511,7 @@ class OrderRows_AttributesItem(object):
     def from_dict(d):
         v = dict()
         v['quantity'] = d.get('quantity')
-        v['package_type'] = d.get('package_type')
+        v['package_type'] = OrderRows_AttributesItemPackage_Type.from_dict(d.get('package_type'))
         v['weight'] = d.get('weight')
         v['length'] = d.get('length')
         v['width'] = d.get('width')
@@ -1491,18 +1523,28 @@ class OrderRows_AttributesItem(object):
         return OrderRows_AttributesItem(**v)
 
     def as_dict(self):
-        return dict(
-            quantity=self.__quantity,
-            package_type=self.__package_type,
-            weight=self.__weight,
-            length=self.__length,
-            width=self.__width,
-            height=self.__height,
-            cbm=self.__cbm,
-            ldm=self.__ldm,
-            description=self.__description,
-            adr_rows_attributes=[item.as_dict() for item in self.__adr_rows_attributes] if self.__adr_rows_attributes is not None else None
-        )
+        res = dict()
+        if self.__quantity is not None:
+            res['quantity'] = self.__quantity
+        if self.__package_type is not None:
+            res['package_type'] = self.__package_type.as_dict()
+        if self.__weight is not None:
+            res['weight'] = self.__weight
+        if self.__length is not None:
+            res['length'] = self.__length
+        if self.__width is not None:
+            res['width'] = self.__width
+        if self.__height is not None:
+            res['height'] = self.__height
+        if self.__cbm is not None:
+            res['cbm'] = self.__cbm
+        if self.__ldm is not None:
+            res['ldm'] = self.__ldm
+        if self.__description is not None:
+            res['description'] = self.__description
+        if self.__adr_rows_attributes is not None:
+            res['adr_rows_attributes'] = [item.as_dict() for item in self.__adr_rows_attributes]
+        return res
 
 
 # noinspection PyPep8Naming
@@ -1517,7 +1559,7 @@ class OrderDocuments_AttributesItem(object):
         return self.__category
 
     def __set_category(self, category):
-        if not (category in ['goods_invoice', 'package_list', 'cmr', 'waybill', 'bol', 'transportation_invoice', 'pod', 'labels', 'other'] or category is None):
+        if not (category.as_dict() if hasattr(category, "as_dict") else category in ['goods_invoice', 'package_list', 'cmr', 'waybill', 'bol', 'transportation_invoice', 'pod', 'labels', 'other'] or category is None):
             raise Exception(f'Cannot set field OrderDocuments_AttributesItemCategory.category to {repr(category)}')
 
         self.__category = category
@@ -1568,17 +1610,20 @@ class OrderDocuments_AttributesItem(object):
     @staticmethod
     def from_dict(d):
         v = dict()
-        v['category'] = d.get('category')
+        v['category'] = OrderDocuments_AttributesItemCategory.from_dict(d.get('category'))
         v['filename'] = d.get('filename')
         v['annex'] = d.get('annex')
         return OrderDocuments_AttributesItem(**v)
 
     def as_dict(self):
-        return dict(
-            category=self.__category,
-            filename=self.__filename,
-            annex=self.__annex
-        )
+        res = dict()
+        if self.__category is not None:
+            res['category'] = self.__category.as_dict()
+        if self.__filename is not None:
+            res['filename'] = self.__filename
+        if self.__annex is not None:
+            res['annex'] = self.__annex
+        return res
 
 
 # noinspection PyPep8Naming
@@ -1627,13 +1672,13 @@ class Order(object):
     Internal shipment reference
     """
 
-    __collection_date: Optional[str] = None
+    __collection_date: str = None
 
     def __get_collection_date(self):
         return self.__collection_date
 
     def __set_collection_date(self, collection_date):
-        if not (isinstance(collection_date, str) or collection_date is None):
+        if not (isinstance(collection_date, str)):
             raise Exception(f'Cannot set field "collection_date" (type str) to {repr(collection_date)}')
 
         self.__collection_date = collection_date
@@ -1771,13 +1816,13 @@ class Order(object):
     County, building, unit
     """
 
-    __collection_postcode: Optional[str] = None
+    __collection_postcode: str = None
 
     def __get_collection_postcode(self):
         return self.__collection_postcode
 
     def __set_collection_postcode(self, collection_postcode):
-        if not (isinstance(collection_postcode, str) or collection_postcode is None):
+        if not (isinstance(collection_postcode, str)):
             raise Exception(f'Cannot set field "collection_postcode" (type str) to {repr(collection_postcode)}')
 
         self.__collection_postcode = collection_postcode
@@ -1803,13 +1848,13 @@ class Order(object):
     City, district, suburb, town or village
     """
 
-    __collection_country: Optional[str] = None
+    __collection_country: str = None
 
     def __get_collection_country(self):
         return self.__collection_country
 
     def __set_collection_country(self, collection_country):
-        if not (isinstance(collection_country, str) or collection_country is None):
+        if not (isinstance(collection_country, str)):
             raise Exception(f'Cannot set field "collection_country" (type str) to {repr(collection_country)}')
 
         self.__collection_country = collection_country
@@ -1931,13 +1976,13 @@ class Order(object):
     County, building, unit
     """
 
-    __delivery_postcode: Optional[str] = None
+    __delivery_postcode: str = None
 
     def __get_delivery_postcode(self):
         return self.__delivery_postcode
 
     def __set_delivery_postcode(self, delivery_postcode):
-        if not (isinstance(delivery_postcode, str) or delivery_postcode is None):
+        if not (isinstance(delivery_postcode, str)):
             raise Exception(f'Cannot set field "delivery_postcode" (type str) to {repr(delivery_postcode)}')
 
         self.__delivery_postcode = delivery_postcode
@@ -1963,13 +2008,13 @@ class Order(object):
     City, district, suburb, town or village
     """
 
-    __delivery_country: Optional[str] = None
+    __delivery_country: str = None
 
     def __get_delivery_country(self):
         return self.__delivery_country
 
     def __set_delivery_country(self, delivery_country):
-        if not (isinstance(delivery_country, str) or delivery_country is None):
+        if not (isinstance(delivery_country, str)):
             raise Exception(f'Cannot set field "delivery_country" (type str) to {repr(delivery_country)}')
 
         self.__delivery_country = delivery_country
@@ -2129,7 +2174,7 @@ class Order(object):
         return self.__incoterm_code
 
     def __set_incoterm_code(self, incoterm_code):
-        if not (incoterm_code in ['EXW', 'FCA', 'CPT', 'CIP', 'DAT', 'DPU', 'DAP', 'DDP', 'FAS', 'FOB', 'CFR', 'CIF'] or incoterm_code is None):
+        if not (incoterm_code.as_dict() if hasattr(incoterm_code, "as_dict") else incoterm_code in ['EXW', 'FCA', 'CPT', 'CIP', 'DAT', 'DPU', 'DAP', 'DDP', 'FAS', 'FOB', 'CFR', 'CIF'] or incoterm_code is None):
             raise Exception(f'Cannot set field OrderIncoterm_Code.incoterm_code to {repr(incoterm_code)}')
 
         self.__incoterm_code = incoterm_code
@@ -2283,13 +2328,13 @@ class Order(object):
     Array of files that will be attached to the shipment
     """
 
-    __rows_attributes: Optional[List["OrderRows_AttributesItem"]] = []
+    __rows_attributes: List["OrderRows_AttributesItem"] = []
 
     def __get_rows_attributes(self):
         return self.__rows_attributes
 
     def __set_rows_attributes(self, rows_attributes):
-        if not (isinstance(rows_attributes, list) or rows_attributes is None):
+        if not (isinstance(rows_attributes, list)):
             raise Exception(f'Cannot set field List["OrderRows_AttributesItem"].rows_attributes to {repr(rows_attributes)}')
 
         self.__rows_attributes = rows_attributes
@@ -2425,7 +2470,7 @@ class Order(object):
         v['frigo'] = d.get('frigo')
         v['temp_min'] = d.get('temp_min')
         v['temp_max'] = d.get('temp_max')
-        v['incoterm_code'] = d.get('incoterm_code')
+        v['incoterm_code'] = OrderIncoterm_Code.from_dict(d.get('incoterm_code'))
         v['incoterm_city'] = d.get('incoterm_city')
         v['customer_remark'] = d.get('customer_remark')
         v['collection_with_tail_lift'] = d.get('collection_with_tail_lift')
@@ -2442,53 +2487,93 @@ class Order(object):
         return Order(**v)
 
     def as_dict(self):
-        return dict(
-            customer_reference=self.__customer_reference,
-            collection_date=self.__collection_date,
-            collection_time_from=self.__collection_time_from,
-            collection_time_to=self.__collection_time_to,
-            delivery_date=self.__delivery_date,
-            delivery_time_from=self.__delivery_time_from,
-            delivery_time_to=self.__delivery_time_to,
-            collection_company_name=self.__collection_company_name,
-            collection_address_row_1=self.__collection_address_row_1,
-            collection_address_row_2=self.__collection_address_row_2,
-            collection_postcode=self.__collection_postcode,
-            collection_city=self.__collection_city,
-            collection_country=self.__collection_country,
-            collection_contact_name=self.__collection_contact_name,
-            collection_contact_phone=self.__collection_contact_phone,
-            collection_contact_email=self.__collection_contact_email,
-            collection_comment=self.__collection_comment,
-            delivery_company_name=self.__delivery_company_name,
-            delivery_address_row_1=self.__delivery_address_row_1,
-            delivery_address_row_2=self.__delivery_address_row_2,
-            delivery_postcode=self.__delivery_postcode,
-            delivery_city=self.__delivery_city,
-            delivery_country=self.__delivery_country,
-            delivery_contact_name=self.__delivery_contact_name,
-            delivery_contact_phone=self.__delivery_contact_phone,
-            delivery_contact_email=self.__delivery_contact_email,
-            delivery_comment=self.__delivery_comment,
-            goods_value=self.__goods_value,
-            goods_value_currency=self.__goods_value_currency,
-            frigo=self.__frigo,
-            temp_min=self.__temp_min,
-            temp_max=self.__temp_max,
-            incoterm_code=self.__incoterm_code,
-            incoterm_city=self.__incoterm_city,
-            customer_remark=self.__customer_remark,
-            collection_with_tail_lift=self.__collection_with_tail_lift,
-            collection_prenotification=self.__collection_prenotification,
-            delivery_with_tail_lift=self.__delivery_with_tail_lift,
-            delivery_prenotification=self.__delivery_prenotification,
-            delivery_return_document=self.__delivery_return_document,
-            delivery_to_private_person=self.__delivery_to_private_person,
-            documents_attributes=[item.as_dict() for item in self.__documents_attributes] if self.__documents_attributes is not None else None,
-            rows_attributes=[item.as_dict() for item in self.__rows_attributes] if self.__rows_attributes is not None else None,
-            offer=self.__offer.as_dict() if self.__offer is not None else None,
-            options=self.__options.as_dict() if self.__options is not None else None,
-            declaration_attributes=self.__declaration_attributes.as_dict() if self.__declaration_attributes is not None else None
-        )
+        res = dict()
+        if self.__customer_reference is not None:
+            res['customer_reference'] = self.__customer_reference
+        res['collection_date'] = self.__collection_date
+        if self.__collection_time_from is not None:
+            res['collection_time_from'] = self.__collection_time_from
+        if self.__collection_time_to is not None:
+            res['collection_time_to'] = self.__collection_time_to
+        if self.__delivery_date is not None:
+            res['delivery_date'] = self.__delivery_date
+        if self.__delivery_time_from is not None:
+            res['delivery_time_from'] = self.__delivery_time_from
+        if self.__delivery_time_to is not None:
+            res['delivery_time_to'] = self.__delivery_time_to
+        if self.__collection_company_name is not None:
+            res['collection_company_name'] = self.__collection_company_name
+        if self.__collection_address_row_1 is not None:
+            res['collection_address_row_1'] = self.__collection_address_row_1
+        if self.__collection_address_row_2 is not None:
+            res['collection_address_row_2'] = self.__collection_address_row_2
+        res['collection_postcode'] = self.__collection_postcode
+        if self.__collection_city is not None:
+            res['collection_city'] = self.__collection_city
+        res['collection_country'] = self.__collection_country
+        if self.__collection_contact_name is not None:
+            res['collection_contact_name'] = self.__collection_contact_name
+        if self.__collection_contact_phone is not None:
+            res['collection_contact_phone'] = self.__collection_contact_phone
+        if self.__collection_contact_email is not None:
+            res['collection_contact_email'] = self.__collection_contact_email
+        if self.__collection_comment is not None:
+            res['collection_comment'] = self.__collection_comment
+        if self.__delivery_company_name is not None:
+            res['delivery_company_name'] = self.__delivery_company_name
+        if self.__delivery_address_row_1 is not None:
+            res['delivery_address_row_1'] = self.__delivery_address_row_1
+        if self.__delivery_address_row_2 is not None:
+            res['delivery_address_row_2'] = self.__delivery_address_row_2
+        res['delivery_postcode'] = self.__delivery_postcode
+        if self.__delivery_city is not None:
+            res['delivery_city'] = self.__delivery_city
+        res['delivery_country'] = self.__delivery_country
+        if self.__delivery_contact_name is not None:
+            res['delivery_contact_name'] = self.__delivery_contact_name
+        if self.__delivery_contact_phone is not None:
+            res['delivery_contact_phone'] = self.__delivery_contact_phone
+        if self.__delivery_contact_email is not None:
+            res['delivery_contact_email'] = self.__delivery_contact_email
+        if self.__delivery_comment is not None:
+            res['delivery_comment'] = self.__delivery_comment
+        if self.__goods_value is not None:
+            res['goods_value'] = self.__goods_value
+        if self.__goods_value_currency is not None:
+            res['goods_value_currency'] = self.__goods_value_currency
+        if self.__frigo is not None:
+            res['frigo'] = self.__frigo
+        if self.__temp_min is not None:
+            res['temp_min'] = self.__temp_min
+        if self.__temp_max is not None:
+            res['temp_max'] = self.__temp_max
+        if self.__incoterm_code is not None:
+            res['incoterm_code'] = self.__incoterm_code.as_dict()
+        if self.__incoterm_city is not None:
+            res['incoterm_city'] = self.__incoterm_city
+        if self.__customer_remark is not None:
+            res['customer_remark'] = self.__customer_remark
+        if self.__collection_with_tail_lift is not None:
+            res['collection_with_tail_lift'] = self.__collection_with_tail_lift
+        if self.__collection_prenotification is not None:
+            res['collection_prenotification'] = self.__collection_prenotification
+        if self.__delivery_with_tail_lift is not None:
+            res['delivery_with_tail_lift'] = self.__delivery_with_tail_lift
+        if self.__delivery_prenotification is not None:
+            res['delivery_prenotification'] = self.__delivery_prenotification
+        if self.__delivery_return_document is not None:
+            res['delivery_return_document'] = self.__delivery_return_document
+        if self.__delivery_to_private_person is not None:
+            res['delivery_to_private_person'] = self.__delivery_to_private_person
+        if self.__documents_attributes is not None:
+            res['documents_attributes'] = [item.as_dict() for item in self.__documents_attributes]
+        res['rows_attributes'] = [item.as_dict() for item in self.__rows_attributes] if self.__rows_attributes is not None else None
+        if self.__offer is not None:
+            res['offer'] = self.__offer.as_dict()
+        if self.__options is not None:
+            res['options'] = self.__options.as_dict()
+        if self.__declaration_attributes is not None:
+            res['declaration_attributes'] = self.__declaration_attributes.as_dict()
+        return res
 
 

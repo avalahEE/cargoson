@@ -147,7 +147,7 @@ class AvailablePricesObjectPricesItem(object):
         return self.__unit
 
     def __set_unit(self, unit):
-        if not (unit in ['payable_weight', 'real_weight', 'parcel', 'eur_pll', 'fin_pll', 'xl_pll', 'half_pll'] or unit is None):
+        if not (unit.as_dict() if hasattr(unit, "as_dict") else unit in ['payable_weight', 'real_weight', 'parcel', 'eur_pll', 'fin_pll', 'xl_pll', 'half_pll'] or unit is None):
             raise Exception(f'Cannot set field AvailablePricesObjectPricesItemUnit.unit to {repr(unit)}')
 
         self.__unit = unit
@@ -163,7 +163,7 @@ class AvailablePricesObjectPricesItem(object):
         return self.__type
 
     def __set_type(self, type):
-        if not (type in ['price_list', 'online'] or type is None):
+        if not (type.as_dict() if hasattr(type, "as_dict") else type in ['price_list', 'online'] or type is None):
             raise Exception(f'Cannot set field AvailablePricesObjectPricesItemType.type to {repr(type)}')
 
         self.__type = type
@@ -193,21 +193,29 @@ class AvailablePricesObjectPricesItem(object):
         v['service'] = d.get('service')
         v['service_id'] = d.get('service_id')
         v['price'] = d.get('price')
-        v['unit'] = d.get('unit')
-        v['type'] = d.get('type')
+        v['unit'] = AvailablePricesObjectPricesItemUnit.from_dict(d.get('unit'))
+        v['type'] = AvailablePricesObjectPricesItemType.from_dict(d.get('type'))
         return AvailablePricesObjectPricesItem(**v)
 
     def as_dict(self):
-        return dict(
-            carrier=self.__carrier,
-            id=self.__id,
-            reg_no=self.__reg_no,
-            service=self.__service,
-            service_id=self.__service_id,
-            price=self.__price,
-            unit=self.__unit,
-            type=self.__type
-        )
+        res = dict()
+        if self.__carrier is not None:
+            res['carrier'] = self.__carrier
+        if self.__id is not None:
+            res['id'] = self.__id
+        if self.__reg_no is not None:
+            res['reg_no'] = self.__reg_no
+        if self.__service is not None:
+            res['service'] = self.__service
+        if self.__service_id is not None:
+            res['service_id'] = self.__service_id
+        if self.__price is not None:
+            res['price'] = self.__price
+        if self.__unit is not None:
+            res['unit'] = self.__unit.as_dict()
+        if self.__type is not None:
+            res['type'] = self.__type.as_dict()
+        return res
 
 
 # noinspection PyPep8Naming
@@ -240,9 +248,10 @@ class AvailablePricesObject(object):
         return AvailablePricesObject(**v)
 
     def as_dict(self):
-        return dict(
-            prices=[item.as_dict() for item in self.__prices] if self.__prices is not None else None
-        )
+        res = dict()
+        if self.__prices is not None:
+            res['prices'] = [item.as_dict() for item in self.__prices]
+        return res
 
 
 # noinspection PyPep8Naming
@@ -293,9 +302,11 @@ class AvailablePrices(object):
         return AvailablePrices(**v)
 
     def as_dict(self):
-        return dict(
-            status=self.__status,
-            object=self.__object.as_dict() if self.__object is not None else None
-        )
+        res = dict()
+        if self.__status is not None:
+            res['status'] = self.__status
+        if self.__object is not None:
+            res['object'] = self.__object.as_dict()
+        return res
 
 
