@@ -15,8 +15,11 @@
         'mail',
     ],
     'data': [
+        'security/ir.model.access.csv',
         'security/security.xml',
-        # 'security/ir.model.access.csv',
+
+        'views/delivery_cargoson.xml',
+        'views/choose_delivery_carrier_views.xml',
     ],
     'installable': True,
     'application': True,

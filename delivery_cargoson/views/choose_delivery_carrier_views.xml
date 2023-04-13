@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="choose_delivery_carrier_view_form_cargoson" model="ir.ui.view">
+        <field name="name">choose.delivery.carrier.form</field>
+        <field name="model">choose.delivery.carrier</field>
+        <field name="inherit_id" ref="delivery.choose_delivery_carrier_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form/field[@name='available_carrier_ids']" position="after">
+                <table attrs="{'invisible': [('delivery_type', '!=', 'cargoson')]}">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label for="cargoson_collection_date" />
+                            </td>
+                            <td>
+                                <field name="cargoson_collection_date" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_package_type" />
+                            </td>
+                            <td>
+                                <field name="cargoson_package_type" />
+                            </td>
+                        </tr>
+                        <tr attrs="{'invisible': [('cargoson_package_type', '=', False)]}">
+                            <td>
+                                <label for="cargoson_package_qty" />
+                            </td>
+                            <td>
+                                <field name="cargoson_package_qty" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_collection_prenotification" />
+                            </td>
+                            <td>
+                                <field name="cargoson_collection_prenotification" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_collection_with_tail_lift" />
+                            </td>
+                            <td>
+                                <field name="cargoson_collection_with_tail_lift" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_delivery_prenotification" />
+                            </td>
+                            <td>
+                                <field name="cargoson_delivery_prenotification" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_delivery_with_tail_lift" />
+                            </td>
+                            <td>
+                                <field name="cargoson_delivery_with_tail_lift" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_delivery_return_document" />
+                            </td>
+                            <td>
+                                <field name="cargoson_delivery_return_document" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_delivery_to_private_person" />
+                            </td>
+                            <td>
+                                <field name="cargoson_delivery_to_private_person" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_frigo" />
+                            </td>
+                            <td>
+                                <field name="cargoson_frigo" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_adr" />
+                            </td>
+                            <td>
+                                <field name="cargoson_adr" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </xpath>
+
+            <xpath expr="//form/footer" position="before">
+                <field name="cargoson_selected_carrier_id" invisible="1" />
+                <div class="o_row">
+                    <label for="cargoson_selected_carrier_name" attrs="{'invisible': ['|', ('delivery_type', '!=', 'cargoson'), ('cargoson_selected_carrier_id', '=', False)]}" />
+                    <field
+                        name="cargoson_selected_carrier_name"
+                        readonly="1"
+                        attrs="{'invisible': ['|', ('delivery_type', '!=', 'cargoson'), ('cargoson_selected_carrier_id', '=', False)]}" />
+                </div>
+                <field
+                    name="cargoson_rate_results"
+                    readonly="1"
+                    options="{'no_create': True, 'no_open': True}"
+                    attrs="{'invisible': [('delivery_type', '!=', 'cargoson')]}">
+                    <tree string="Available prices">
+                        <field name="carrier" />
+                        <field name="price" widget="monetary" />
+                        <field name="service" />
+                        <button string="Select" name="select_carrier" type="object" />
+                    </tree>
+                </field>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_cargoson_rate_results" model="ir.ui.view">
+        <field name="name">cargoson.rate.result.tree</field>
+        <field name="model">cargoson.rate.result</field>
+        <field name="arch" type="xml">
+            <tree string="Available prices">
+                <field name="carrier" />
+                <field name="price" />
+                <field name="service" />
+                <field name="unit" />
+                <field name="type" />
+            </tree>
+        </field>
+    </record>
+</odoo>
