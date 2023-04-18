@@ -4,10 +4,11 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+# noinspection PyProtectedMember
 class ChooseDeliveryCarrier(models.TransientModel):
     _inherit = 'choose.delivery.carrier'
 
-    cargoson_collection_date = fields.Date('Collection date')
+    cargoson_collection_date = fields.Date('Collection date', default=fields.Datetime.now)
     cargoson_frigo = fields.Boolean('Goods are temperature sensitive')
     cargoson_adr = fields.Boolean('Shipment is hazardous (ADR)')
     cargoson_collection_prenotification = fields.Boolean('Call the collection contact before loading')
@@ -44,6 +45,15 @@ class ChooseDeliveryCarrier(models.TransientModel):
     cargoson_selected_service_id = fields.Integer('Selected service ID')
     cargoson_selected_price = fields.Monetary('Selected price')
 
+    cargoson_collection_address = fields.Many2one('res.partner', 'Collection address', compute='_compute_addresses')
+    cargoson_delivery_address = fields.Many2one('res.partner', 'Delivery address', compute='_compute_addresses')
+
+    @api.depends('order_id')
+    def _compute_addresses(self):
+        for record in self:
+            record.cargoson_collection_address = record.order_id.get_cargoson_collection_address()
+            record.cargoson_delivery_address = record.order_id.get_cargoson_delivery_address()
+
     def get_cargoson_options(self):
         self.ensure_one()
         return dict(
@@ -62,7 +72,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
 
     def _get_shipment_rate(self):
         if self.delivery_type != 'cargoson' or not self.id:
-            return super()._get_shipment_rate()  # noqa
+            return super()._get_shipment_rate()
 
         vals = self.with_context(**self.get_cargoson_options()).carrier_id.rate_shipment(self.order_id)
         if not vals.get('success'):
@@ -72,11 +82,13 @@ class ChooseDeliveryCarrier(models.TransientModel):
         self.delivery_message = vals.get('warning_message', False)
         self.delivery_price = vals['price']
         self.display_price = vals['carrier_price']
-        self.write({'cargoson_rate_results': [(5, 0, 0)]})
+        # ########################################################
 
         available_prices = vals.get('cargoson')
         if not available_prices:
             return {'error_message': _('Could not fetch any prices from Cargoson')}
+
+        self.write({'cargoson_rate_results': [(5, 0, 0)]})
 
         # noinspection PyPep8Naming
         CargosonAvailablePrice = self.env['cargoson.rate.result']
@@ -87,6 +99,12 @@ class ChooseDeliveryCarrier(models.TransientModel):
         return {}
 
     def button_confirm(self):
+        if self.delivery_type != 'cargoson':
+            return super().button_confirm()
+
+        if not self.cargoson_selected_carrier_id:
+            raise UserError(_('Please select a carrier first'))
+
         res = super().button_confirm()
 
         # update selected values on SaleOrder

@@ -12,6 +12,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+# noinspection PyProtectedMember
 class ProviderCargoson(models.Model):
     _inherit = 'delivery.carrier'
 
@@ -40,7 +41,10 @@ class ProviderCargoson(models.Model):
     # _cargoson_get_default_custom_package_code
 
     def cargoson_rate_shipment(self, order):
-        carrier = self._match_address(order.partner_shipping_id)
+        collection_address = order.get_cargoson_collection_address()
+        delivery_address = order.get_cargoson_delivery_address()
+
+        carrier = self._match_address(delivery_address)
         if not carrier:
             return {
                 'success': False,
@@ -49,18 +53,23 @@ class ProviderCargoson(models.Model):
                 'warning_message': False
             }
 
-        if not order.partner_shipping_id.zip:
-            raise UserError(_("Selected delivery contact must have a ZIP code"))
-        if not order.partner_shipping_id.country_id:
-            raise UserError(_("Selected delivery contact must have a country"))
+        if not collection_address.zip:
+            raise UserError(_('Collection contact must have a ZIP code'))
+        if not collection_address.country_id:
+            raise UserError(_('Collection contact must have a country'))
+
+        if not delivery_address.zip:
+            raise UserError(_('Selected delivery contact must have a ZIP code'))
+        if not delivery_address.country_id:
+            raise UserError(_('Selected delivery contact must have a country'))
 
         package_type = self.env.context.get('cargoson_package_type')
         if not package_type:
             return {
                 'success': False,
                 'price': 0.0,
-                'error_message': _("Package type is required"),
-                'warning_message': _("Please select package type")
+                'error_message': _('Package type is required'),
+                'warning_message': _('Please select package type')
             }
 
         package_qty = self.env.context.get('cargoson_package_qty', 0)
@@ -68,7 +77,7 @@ class ProviderCargoson(models.Model):
             return {
                 'success': False,
                 'price': 0.0,
-                'error_message': _("Package quantity must be greater than 0"),
+                'error_message': _('Package quantity must be greater than 0'),
                 'warning_message': False
             }
 
@@ -85,14 +94,13 @@ class ProviderCargoson(models.Model):
         collection_date = self.env.context.get('cargoson_collection_date')
         if not collection_date:
             collection_date = fields.Date.today()
-        logger.info(repr(collection_date))
 
         price_request = PriceRequestShipment(
             collection_date=collection_date.isoformat(),
-            collection_postcode='12345',  # TODO
-            collection_country='EE',  # TODO
-            delivery_postcode=order.partner_shipping_id.zip,
-            delivery_country=order.partner_shipping_id.country_id.code,
+            collection_postcode=collection_address.zip,
+            collection_country=collection_address.country_id.code,
+            delivery_postcode=delivery_address.zip,
+            delivery_country=delivery_address.country_id.code,
             collection_with_tail_lift=self.env.context.get('cargoson_collection_with_tail_lift', False),
             collection_prenotification=self.env.context.get('cargoson_collection_prenotification', False),
             delivery_with_tail_lift=self.env.context.get('cargoson_delivery_with_tail_lift', False),

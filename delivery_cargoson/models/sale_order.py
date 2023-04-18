@@ -40,3 +40,14 @@ class SaleOrder(models.Model):
     cargoson_selected_carrier_id = fields.Integer('Selected carrier ID')
     cargoson_selected_service_id = fields.Integer('Selected service ID')
     cargoson_selected_price = fields.Monetary('Selected price')
+
+    def get_cargoson_collection_address(self):
+        self.ensure_one()
+        if hasattr(self, 'warehouse_id'):
+            return self.warehouse_id.partner_id
+        else:
+            return self.company_id.partner_id
+
+    def get_cargoson_delivery_address(self):
+        self.ensure_one()
+        return self.partner_shipping_id

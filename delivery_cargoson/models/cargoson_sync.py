@@ -28,17 +28,3 @@ class CargosonSyncParcelMachine(models.Model):
 
     def complete(self):
         self.unlink()
-
-    """
-    So how does this work:
-
-    when you trigger a cron run:
-        if no tasks in queue:
-            create tasks (
-                task: delivery.carrier.id, res.country.id,
-            )
-        else:
-            run the next task
-
-    but what if we must yield in the middle of a per country update
-    """

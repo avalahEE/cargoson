@@ -10,6 +10,25 @@
                     <tbody>
                         <tr>
                             <td>
+                                <label for="cargoson_collection_address" />
+                            </td>
+                            <td>
+                                <field name="cargoson_collection_address" readonly="1" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_delivery_address" />
+                            </td>
+                            <td>
+                                <field name="cargoson_delivery_address" readonly="1" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><br /></td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <label for="cargoson_collection_date" />
                             </td>
                             <td>
@@ -102,13 +121,6 @@
 
             <xpath expr="//form/footer" position="before">
                 <field name="cargoson_selected_carrier_id" invisible="1" />
-                <div class="o_row">
-                    <label for="cargoson_selected_carrier_name" attrs="{'invisible': ['|', ('delivery_type', '!=', 'cargoson'), ('cargoson_selected_carrier_id', '=', False)]}" />
-                    <field
-                        name="cargoson_selected_carrier_name"
-                        readonly="1"
-                        attrs="{'invisible': ['|', ('delivery_type', '!=', 'cargoson'), ('cargoson_selected_carrier_id', '=', False)]}" />
-                </div>
                 <field
                     name="cargoson_rate_results"
                     readonly="1"
@@ -121,6 +133,12 @@
                         <button string="Select" name="select_carrier" type="object" />
                     </tree>
                 </field>
+                <div
+                    class="o_row"
+                    attrs="{'invisible': ['|', ('delivery_type', '!=', 'cargoson'), ('cargoson_selected_carrier_id', '=', 0)]}">
+                    <label for="cargoson_selected_carrier_name" />
+                    <field name="cargoson_selected_carrier_name" readonly="1" />
+                </div>
             </xpath>
         </field>
     </record>
