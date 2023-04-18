@@ -25,6 +25,11 @@ class ProviderCargoson(models.Model):
         string='Cargoson Test API URL', default='https://cargoson-staging.herokuapp.com/api')
     cargoson_test_api_key = fields.Char(string='Cargoson Test API key', default='NotConfigured')
 
+    cargoson_parcel_machine_country_ids = fields.Many2many(
+        'res.country',
+        'delivery_carrier_cargoson_country_rel', 'carrier_id', 'country_id',
+        'Enabled parcel machine regions')
+
     # TODO
     # cargoson_send_shipping - Send the package to the service provider - POST /queries
     # cargoson_get_tracking_link - Ask the tracking link to the service provider
@@ -98,7 +103,7 @@ class ProviderCargoson(models.Model):
             adr=self.env.context.get('cargoson_adr', False),
             rows_attributes=[package]
         )
-        result = self._cargoson_api_post('freightPrices/list', price_request.as_dict(), AvailablePrices)
+        result = self.cargoson_api_post('freightPrices/list', price_request.as_dict(), AvailablePrices)
         if result:
             return {
                 'success': True,
@@ -128,10 +133,27 @@ class ProviderCargoson(models.Model):
     def cargoson_cancel_shipment(self, pickings):
         raise NotImplementedError()
 
-    # def _cargoson_api_get(self, path):
-    #     pass
+    def cargoson_api_get(self, path, params, schema_class=None):
+        self.ensure_one()
+        url = self._cargoson_get_api_url(path)
+        try:
+            log_request = 'URL: {}\nHEADERS: {}\n\n{}\n'.format(url, self._cargoson_get_headers(), json.dumps(params))
+            self.log_xml(log_request, path)
 
-    def _cargoson_api_post(self, path, data, schema_class=None):
+            response = requests.get(url, params=params, headers=self._cargoson_get_headers())
+
+            log_response = 'URL: {}\n\n{}\n'.format(url, response.text)
+            self.log_xml(log_response, path)
+
+            data = response.json()
+            if schema_class is None:
+                return data
+            return schema_class.from_dict(data)
+        except Exception as err:
+            logger.error(err)
+            self.log_xml('URL: {}\nERROR: {}\n\n{}\n'.format(url, err, traceback.format_exc()), path)
+
+    def cargoson_api_post(self, path, data, schema_class=None):
         self.ensure_one()
         url = self._cargoson_get_api_url(path)
         try:

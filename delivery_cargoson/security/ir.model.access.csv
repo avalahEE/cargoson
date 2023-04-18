@@ -1,2 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_cargoson_rate_result,access_cargoson_rate_result,model_cargoson_rate_result,stock.group_stock_user,1,1,1,1
+access_cargoson_log,access_cargoson_log,model_cargoson_log,delivery_cargoson.group_cargoson_admin,1,1,1,1
+access_cargoson_parcel_machine,access_cargoson_parcel_machine,model_cargoson_parcel_machine,base.group_user,1,0,0,0
+access_cargoson_sync_parcel_machine,access_cargoson_sync_parcel_machine,model_cargoson_sync_parcel_machine,base.group_user,1,0,0,0

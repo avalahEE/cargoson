@@ -8,19 +8,16 @@ class ChooseDeliveryCarrier(models.TransientModel):
     _inherit = 'choose.delivery.carrier'
 
     cargoson_collection_date = fields.Date('Collection date')
-    cargoson_frigo = fields.Boolean('Goods are temperature sensitive', required=False)
-    cargoson_adr = fields.Boolean('Shipment is hazardous (ADR)', required=False)
-    cargoson_collection_prenotification = fields.Boolean('Call the collection contact before loading', required=False)
-    cargoson_collection_with_tail_lift = fields.Boolean(
-        'Collection should be performed with a tail-lift truck', required=False)
-    cargoson_delivery_prenotification = fields.Boolean('Call the delivery contact before loading', required=False)
-    cargoson_delivery_with_tail_lift = fields.Boolean(
-        'Delivery should be performed with a tail-lift truck', required=False)
-    cargoson_delivery_return_document = fields.Boolean(
-        'Customer expects signed documents to be returned', required=False)
+    cargoson_frigo = fields.Boolean('Goods are temperature sensitive')
+    cargoson_adr = fields.Boolean('Shipment is hazardous (ADR)')
+    cargoson_collection_prenotification = fields.Boolean('Call the collection contact before loading')
+    cargoson_collection_with_tail_lift = fields.Boolean('Collection should be performed with a tail-lift truck')
+    cargoson_delivery_prenotification = fields.Boolean('Call the delivery contact before loading')
+    cargoson_delivery_with_tail_lift = fields.Boolean('Delivery should be performed with a tail-lift truck')
+    cargoson_delivery_return_document = fields.Boolean('Customer expects signed documents to be returned')
     cargoson_delivery_to_private_person = fields.Boolean(
         'Delivery contact is a private person',
-        required=False, help='Indicates whether the goods will be delivered to a private person instead of a company')
+        help='Indicates whether the goods will be delivered to a private person instead of a company')
 
     cargoson_package_type = fields.Selection([
         ('EUR', 'EUR'),
@@ -38,7 +35,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         ('20DC', '20DC'),
         ('40DC', '40DC'),
         ('40HC', '40HC'),
-    ], string='Package type')
+    ], string='Package type', default='EUR')
     cargoson_package_qty = fields.Integer('Package quantity', default=1)
 
     cargoson_rate_results = fields.One2many('cargoson.rate.result', 'choose_delivery_carrier_id', 'Available rates')
@@ -91,6 +88,18 @@ class ChooseDeliveryCarrier(models.TransientModel):
 
     def button_confirm(self):
         res = super().button_confirm()
+
+        # update selected values on SaleOrder
+        vals = self.get_cargoson_options()
+        vals.update({
+            'cargoson_selected_carrier_name': self.cargoson_selected_carrier_name,
+            'cargoson_selected_carrier_id': self.cargoson_selected_carrier_id,
+            'cargoson_selected_service_id': self.cargoson_selected_service_id,
+            'cargoson_selected_price': self.cargoson_selected_price,
+        })
+        self.order_id.write(vals)
+
+        # no reason to keep the transient data around
         self.env['cargoson.rate.result'].search([
             '|',
             ('choose_delivery_carrier_id', '=', self.id),

@@ -18,8 +18,11 @@
         'security/ir.model.access.csv',
         'security/security.xml',
 
+        'data/cron.xml',
+
         'views/delivery_cargoson.xml',
         'views/choose_delivery_carrier_views.xml',
+        # 'views/cargoson_log_views.xml',
     ],
     'installable': True,
     'application': True,
