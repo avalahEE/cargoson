@@ -23,6 +23,7 @@
         'views/delivery_cargoson.xml',
         'views/choose_delivery_carrier_views.xml',
         # 'views/cargoson_log_views.xml',
+        'views/sale_order_views.xml',
     ],
     'installable': True,
     'application': True,

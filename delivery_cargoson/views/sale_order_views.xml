@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_order_form_inherit_cargoson" model="ir.ui.view">
+        <field name="name">sale.order.form.cargoson</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[last()]" position='after'>
+                <page
+                    string="Cargoson"
+                    name="delivery_cargoson"
+                    attrs="{'invisible': ['|', ('cargoson_selected_carrier_id', '=', 0), ('cargoson_selected_carrier_id', '=', False)]}">
+                    <group>
+                        <group name="cargoson_package" string="Package">
+                            <field name="cargoson_collection_address" readonly="1" />
+                            <field name="cargoson_delivery_address" readonly="1" />
+                            <field name="cargoson_collection_date" readonly="1" />
+                            <field name="cargoson_package_type" readonly="1" />
+                            <field name="cargoson_package_qty" readonly="1" />
+                            <field name="cargoson_selected_price" readonly="1" />
+                        </group>
+
+                        <group name="cargoson_carrier" string="Carrier">
+                            <field name="cargoson_selected_carrier_name" readonly="1" />
+                            <field name="cargoson_selected_carrier_id" readonly="1" />
+                            <field name="cargoson_selected_service_id" readonly="1" />
+                        </group>
+
+                        <table name="cargoson_options">
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <label for="cargoson_collection_prenotification" />
+                                    </td>
+                                    <td>
+                                        <field name="cargoson_collection_prenotification" readonly="1" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="cargoson_collection_with_tail_lift" />
+                                    </td>
+                                    <td>
+                                        <field name="cargoson_collection_with_tail_lift" readonly="1" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="cargoson_delivery_prenotification" />
+                                    </td>
+                                    <td>
+                                        <field name="cargoson_delivery_prenotification" readonly="1" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="cargoson_delivery_with_tail_lift" />
+                                    </td>
+                                    <td>
+                                        <field name="cargoson_delivery_with_tail_lift" readonly="1" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="cargoson_delivery_return_document" />
+                                    </td>
+                                    <td>
+                                        <field name="cargoson_delivery_return_document" readonly="1" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="cargoson_delivery_to_private_person" />
+                                    </td>
+                                    <td>
+                                        <field name="cargoson_delivery_to_private_person" readonly="1" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="cargoson_frigo" />
+                                    </td>
+                                    <td>
+                                        <field name="cargoson_frigo" readonly="1" />
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <label for="cargoson_adr" />
+                                    </td>
+                                    <td>
+                                        <field name="cargoson_adr" readonly="1" />
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
