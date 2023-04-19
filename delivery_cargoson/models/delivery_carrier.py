@@ -1,8 +1,11 @@
-from odoo import models, fields, _
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 from urllib.parse import urljoin
-from .schema import AvailablePrices, PriceRequestShipment
-from .schema.price_request_shipment import PriceRequestShipmentRows_AttributesItem, PriceRequestShipmentRows_AttributesItemPackage_Type
+from .schema import AvailablePrices, PriceRequestShipment, Order
+from .schema.price_request_shipment import (
+    PriceRequestShipmentRows_AttributesItem,
+    PriceRequestShipmentRows_AttributesItemPackage_Type
+)
 
 import json
 import math
@@ -63,7 +66,9 @@ class ProviderCargoson(models.Model):
         if not delivery_address.country_id:
             raise UserError(_('Selected delivery contact must have a country'))
 
-        package_type = self.env.context.get('cargoson_package_type')
+        cargoson_options = self.env.context.get('cargoson', dict())
+
+        package_type = cargoson_options.get('package_type')
         if not package_type:
             return {
                 'success': False,
@@ -72,7 +77,7 @@ class ProviderCargoson(models.Model):
                 'warning_message': _('Please select package type')
             }
 
-        package_qty = self.env.context.get('cargoson_package_qty', 0)
+        package_qty = cargoson_options.get('package_qty', 0)
         if package_qty < 1:
             return {
                 'success': False,
@@ -91,7 +96,7 @@ class ProviderCargoson(models.Model):
             description='Goods with {} package'.format(package_type)
         )
 
-        collection_date = self.env.context.get('cargoson_collection_date')
+        collection_date = cargoson_options.get('collection_date')
         if not collection_date:
             collection_date = fields.Date.today()
 
@@ -101,14 +106,14 @@ class ProviderCargoson(models.Model):
             collection_country=collection_address.country_id.code,
             delivery_postcode=delivery_address.zip,
             delivery_country=delivery_address.country_id.code,
-            collection_with_tail_lift=self.env.context.get('cargoson_collection_with_tail_lift', False),
-            collection_prenotification=self.env.context.get('cargoson_collection_prenotification', False),
-            delivery_with_tail_lift=self.env.context.get('cargoson_delivery_with_tail_lift', False),
-            delivery_prenotification=self.env.context.get('cargoson_delivery_prenotification', False),
-            delivery_return_document=self.env.context.get('cargoson_delivery_return_document', False),
-            delivery_to_private_person=self.env.context.get('cargoson_delivery_to_private_person', False),
-            frigo=self.env.context.get('cargoson_frigo', False),
-            adr=self.env.context.get('cargoson_adr', False),
+            collection_with_tail_lift=cargoson_options.get('collection_with_tail_lift', False),
+            collection_prenotification=cargoson_options.get('collection_prenotification', False),
+            delivery_with_tail_lift=cargoson_options.get('delivery_with_tail_lift', False),
+            delivery_prenotification=cargoson_options.get('delivery_prenotification', False),
+            delivery_return_document=cargoson_options.get('delivery_return_document', False),
+            delivery_to_private_person=cargoson_options.get('delivery_to_private_person', False),
+            frigo=cargoson_options.get('frigo', False),
+            adr=cargoson_options.get('adr', False),
             rows_attributes=[package]
         )
         result = self.cargoson_api_post('freightPrices/list', price_request.as_dict(), AvailablePrices)
@@ -129,17 +134,50 @@ class ProviderCargoson(models.Model):
         }
 
     def cargoson_send_shipping(self, pickings):
+        for picking in pickings:
+            self._cargoson_send_shipping(picking)
+
         res = []
-        for p in pickings:
-            res = res + [{'exact_price': p.carrier_id.fixed_price,
+        for picking in pickings:
+            res = res + [{'exact_price': picking.carrier_id.fixed_price,
                           'tracking_number': False}]
         return res
 
     def cargoson_get_tracking_link(self, picking):
+        logger.info('!!!! cargoson_get_tracking_link')
         return False
 
     def cargoson_cancel_shipment(self, pickings):
+        logger.info('!!!! cargoson_cancel_shipment')
         raise NotImplementedError()
+
+    def _cargoson_send_shipping(self, picking):
+        sale_order = picking.sale_id
+        if not sale_order:
+            raise UserError(_('Cannot send %s with this method - missing Sale Order reference', picking.name))
+
+        collection_address = sale_order.get_cargoson_collection_address()
+        delivery_address = sale_order.get_cargoson_delivery_address()
+        weight = self._cargoson_convert_weight(picking.shipping_weight)
+        logger.info('Cargoson: send shipment for: %s (weight=%s)', picking.name, weight)
+
+        # TODO
+        # order = Order(
+        #     collection_date=sale_order.cargoson_collection_date.isoformat(),
+        #     collection_postcode=collection_address.zip,
+        #     collection_country=collection_address.country_id.code,
+        #     delivery_postcode=delivery_address.zip,
+        #     delivery_country=delivery_address.country_id.code,
+        #     collection_with_tail_lift=sale_order.cargoson_collection_with_tail_lift,
+        #     collection_prenotification=sale_order.cargoson_collection_prenotification,
+        #     delivery_with_tail_lift=sale_order.cargoson_delivery_with_tail_lift,
+        #     delivery_prenotification=sale_order.cargoson_delivery_prenotification,
+        #     delivery_return_document=sale_order.cargoson_delivery_return_document,
+        #     delivery_to_private_person=sale_order.cargoson_delivery_to_private_person,
+        #     frigo=sale_order.cargoson_frigo,
+        #     # adr=sale_order.cargoson_adr,
+        #     rows_attributes=[]
+        # )
 
     def cargoson_api_get(self, path, params, schema_class=None):
         self.ensure_one()
@@ -207,7 +245,6 @@ class ProviderCargoson(models.Model):
 
         return headers
 
-    # noinspection PyProtectedMember
     def _cargoson_convert_weight(self, weight):
         weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
         return weight_uom_id._compute_quantity(weight, self.env.ref('uom.product_uom_kgm'), round=False)

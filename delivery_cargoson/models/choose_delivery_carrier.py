@@ -57,24 +57,24 @@ class ChooseDeliveryCarrier(models.TransientModel):
     def get_cargoson_options(self):
         self.ensure_one()
         return dict(
-            cargoson_collection_date=self.cargoson_collection_date,
-            cargoson_frigo=self.cargoson_frigo,
-            cargoson_adr=self.cargoson_adr,
-            cargoson_collection_prenotification=self.cargoson_collection_prenotification,
-            cargoson_collection_with_tail_lift=self.cargoson_collection_with_tail_lift,
-            cargoson_delivery_prenotification=self.cargoson_delivery_prenotification,
-            cargoson_delivery_with_tail_lift=self.cargoson_delivery_with_tail_lift,
-            cargoson_delivery_return_document=self.cargoson_delivery_return_document,
-            cargoson_delivery_to_private_person=self.cargoson_delivery_to_private_person,
-            cargoson_package_type=self.cargoson_package_type,
-            cargoson_package_qty=self.cargoson_package_qty,
+            collection_date=self.cargoson_collection_date,
+            frigo=self.cargoson_frigo,
+            adr=self.cargoson_adr,
+            collection_prenotification=self.cargoson_collection_prenotification,
+            collection_with_tail_lift=self.cargoson_collection_with_tail_lift,
+            delivery_prenotification=self.cargoson_delivery_prenotification,
+            delivery_with_tail_lift=self.cargoson_delivery_with_tail_lift,
+            delivery_return_document=self.cargoson_delivery_return_document,
+            delivery_to_private_person=self.cargoson_delivery_to_private_person,
+            package_type=self.cargoson_package_type,
+            package_qty=self.cargoson_package_qty,
         )
 
     def _get_shipment_rate(self):
         if self.delivery_type != 'cargoson' or not self.id:
             return super()._get_shipment_rate()
 
-        vals = self.with_context(**self.get_cargoson_options()).carrier_id.rate_shipment(self.order_id)
+        vals = self.with_context(cargoson=self.get_cargoson_options()).carrier_id.rate_shipment(self.order_id)
         if not vals.get('success'):
             return {'error_message': vals['error_message']}
 
@@ -105,17 +105,23 @@ class ChooseDeliveryCarrier(models.TransientModel):
         if not self.cargoson_selected_carrier_id:
             raise UserError(_('Please select a carrier first'))
 
-        res = super().button_confirm()
+        if self.order_id.cargoson_shipping_options_id:
+            self.order_id.cargoson_shipping_options_id.unlink()
 
-        # update selected values on SaleOrder
         vals = self.get_cargoson_options()
         vals.update({
-            'cargoson_selected_carrier_name': self.cargoson_selected_carrier_name,
-            'cargoson_selected_carrier_id': self.cargoson_selected_carrier_id,
-            'cargoson_selected_service_id': self.cargoson_selected_service_id,
-            'cargoson_selected_price': self.cargoson_selected_price,
+            'selected_carrier_name': self.cargoson_selected_carrier_name,
+            'selected_carrier_id': self.cargoson_selected_carrier_id,
+            'selected_service_id': self.cargoson_selected_service_id,
+            'selected_price': self.cargoson_selected_price,
         })
-        self.order_id.write(vals)
+
+        cargoson_options = self.sudo().env['cargoson.shipping.options'].create(vals)
+        self.order_id.write({
+            'cargoson_shipping_options_id': cargoson_options.id
+        })
+
+        res = super().button_confirm()
 
         # no reason to keep the transient data around
         self.env['cargoson.rate.result'].search([
