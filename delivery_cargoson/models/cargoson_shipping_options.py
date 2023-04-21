@@ -55,25 +55,3 @@ class CargosonShippingOptions(models.Model):
 
     # collection_address = fields.Many2one('res.partner', 'Collection address')
     # delivery_address = fields.Many2one('res.partner', 'Delivery address')
-
-    @api.model
-    def from_wizard_options(self, vals, sale_order_id=None, picking_id=None):
-        return {
-            'sale_order_id': sale_order_id,
-            'picking_id': picking_id,
-            'collection_date': None,
-            'frigo': None,
-            'adr': None,
-            'collection_prenotification': None,
-            'collection_with_tail_lift': None,
-            'delivery_prenotification': None,
-            'delivery_with_tail_lift': None,
-            'delivery_return_document': None,
-            'delivery_to_private_person': None,
-            'package_type': None,
-            'package_qty': None,
-            'selected_carrier_name': None,
-            'selected_carrier_id': None,
-            'selected_service_id': None,
-            'selected_price': None,
-        }

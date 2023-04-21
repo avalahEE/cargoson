@@ -9,9 +9,10 @@
                 <page
                     string="Cargoson"
                     name="delivery_cargoson"
-                    attrs="{'invisible': ['|', ('cargoson_selected_carrier_id', '=', 0), ('cargoson_selected_carrier_id', '=', False)]}">
+                    attrs="{'invisible': [('cargoson_shipping_options_id', '=', False)]}">
                     <group>
                         <group name="cargoson_package" string="Package">
+                            <field name="cargoson_shipping_options_id" invisible="1" />
                             <field name="cargoson_collection_address" readonly="1" />
                             <field name="cargoson_delivery_address" readonly="1" />
                             <field name="cargoson_collection_date" readonly="1" />

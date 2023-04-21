@@ -1,4 +1,5 @@
 from odoo import models, fields, _
+from odoo.exceptions import UserError
 
 import logging
 logger = logging.getLogger(__name__)
@@ -8,21 +9,37 @@ logger = logging.getLogger(__name__)
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
+    cargoson_shipping_options_id = fields.Many2one('cargoson.shipping.options')
+
     def send_to_shipper(self):
         self.ensure_one()
 
         if not self.carrier_id or self.carrier_id.delivery_type != 'cargoson':
             return super().send_to_shipper()
 
-        # TODO: populate cargoson options from sale_id if it exists, otherwise launch a wizard
+        # Cargoson shipping options configured - continue the regular Delivery Carrier flow
+        if self.cargoson_shipping_options_id:
+            return super().send_to_shipper()
+
+        logger.info('self.sale_id = %s', self.sale_id)
+        logger.info('self.sale_id.cargoson_shipping_options_id = %s', self.sale_id.cargoson_shipping_options_id)
+
+        if self.sale_id and self.sale_id.cargoson_shipping_options_id:
+            self.sale_id.cargoson_shipping_options_id.write({
+                'picking_id': self.id,
+            })
+            self.write({
+                'cargoson_shipping_options_id': self.sale_id.cargoson_shipping_options_id.id,
+            })
+        else:
+            # TODO: launch shipping wizard
+            raise UserError(_('Not implemented yet'))
 
         # If we have a previously configured shipment on sale.order - use the default flow
         logger.info('send to shipper: sale_id=%s', self.sale_id)
         super().send_to_shipper()
 
-        # for record in self:
-        #     # TODO: log additional data from cargoson into chatter
-        #     pass
+        # TODO: log additional data from cargoson into chatter
 
     def _pre_action_done_hook(self):
         if self.env.context.get('skip_cargoson_shipping_wizard'):

@@ -7,7 +7,7 @@ class CargosonAvailablePrice(models.TransientModel):
     _name = 'cargoson.rate.result'
     _description = 'Cargoson available prices list item'
 
-    choose_delivery_carrier_id = fields.Many2one('choose.delivery.carrier', required=True)
+    choose_delivery_carrier_id = fields.Many2one('choose.delivery.carrier', ondelete='cascade', required=True)
     currency_id = fields.Many2one('res.currency', related='choose_delivery_carrier_id.order_id.currency_id')
     company_id = fields.Many2one('res.company', related='choose_delivery_carrier_id.order_id.company_id')
 

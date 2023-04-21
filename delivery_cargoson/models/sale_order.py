@@ -40,13 +40,6 @@ class SaleOrder(models.Model):
             record.cargoson_collection_address = record.get_cargoson_collection_address()
             record.cargoson_delivery_address = record.get_cargoson_delivery_address()
 
-    @api.depends('order_line')
-    def _compute_delivery_state(self):
-        super()._compute_delivery_state()
-        for record in self:
-            if not record.delivery_set:
-                record._cargoson_reset_options()
-
     def get_cargoson_collection_address(self):
         self.ensure_one()
         if hasattr(self, 'warehouse_id'):
@@ -59,8 +52,14 @@ class SaleOrder(models.Model):
         return self.partner_shipping_id
 
     def _cargoson_reset_options(self):
+        ids = list()
         for record in self:
-            record.cargoson_shipping_options_id.unlink()
+            if record.cargoson_shipping_options_id:
+                ids.append(record.cargoson_shipping_options_id.id)
+            record.cargoson_shipping_options_id = None
+
+        logger.info('Removing Cargoson shipping options: %s', ids)
+        self.env['cargoson.shipping.options'].sudo().browse(ids).unlink()
 
     def _remove_delivery_line(self):
         super()._remove_delivery_line()

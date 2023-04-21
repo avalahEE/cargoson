@@ -32,7 +32,7 @@
                                 <label for="cargoson_collection_date" />
                             </td>
                             <td>
-                                <field name="cargoson_collection_date" />
+                                <field name="cargoson_collection_date" attrs="{'readonly': [('cargoson_selected_carrier_id', '!=', 0)]}" />
                             </td>
                         </tr>
                         <tr>
@@ -121,11 +121,12 @@
 
             <xpath expr="//form/footer" position="before">
                 <field name="cargoson_selected_carrier_id" invisible="1" />
+                <field name="cargoson_show_rates" invisible="1" />
                 <field
                     name="cargoson_rate_results"
                     readonly="1"
                     options="{'no_create': True, 'no_open': True}"
-                    attrs="{'invisible': [('delivery_type', '!=', 'cargoson')]}">
+                    attrs="{'invisible': ['|', ('delivery_type', '!=', 'cargoson'), ('cargoson_show_rates', '=', False)]}">
                     <tree string="Available prices">
                         <field name="carrier" />
                         <field name="price" widget="monetary" />

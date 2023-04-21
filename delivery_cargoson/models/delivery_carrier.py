@@ -66,7 +66,14 @@ class ProviderCargoson(models.Model):
         if not delivery_address.country_id:
             raise UserError(_('Selected delivery contact must have a country'))
 
-        cargoson_options = self.env.context.get('cargoson', dict())
+        cargoson_options = self.env.context.get('cargoson', None)
+        if not cargoson_options:
+            return {
+                'success': False,
+                'price': 0.0,
+                'error_message': False,
+                'warning_message': False
+            }
 
         package_type = cargoson_options.get('package_type')
         if not package_type:
@@ -160,6 +167,10 @@ class ProviderCargoson(models.Model):
         delivery_address = sale_order.get_cargoson_delivery_address()
         weight = self._cargoson_convert_weight(picking.shipping_weight)
         logger.info('Cargoson: send shipment for: %s (weight=%s)', picking.name, weight)
+
+        shipping_options = picking.cargoson_shipping_options_id
+        if not shipping_options:
+            raise UserError(_('Cannot send Delivery Order - no shipping options set'))
 
         # TODO
         # order = Order(
