@@ -52,6 +52,3 @@ class CargosonShippingOptions(models.Model):
     selected_carrier_id = fields.Integer('Carrier ID')
     selected_service_id = fields.Integer('Service ID')
     selected_price = fields.Monetary('Price')
-
-    # collection_address = fields.Many2one('res.partner', 'Collection address')
-    # delivery_address = fields.Many2one('res.partner', 'Delivery address')

@@ -24,7 +24,7 @@ class StockPicking(models.Model):
         logger.info('self.sale_id = %s', self.sale_id)
         logger.info('self.sale_id.cargoson_shipping_options_id = %s', self.sale_id.cargoson_shipping_options_id)
 
-        if self.sale_id and self.sale_id.cargoson_shipping_options_id:
+        if self.sale_id and self.sale_id.delivery_set and self.sale_id.cargoson_shipping_options_id:
             self.sale_id.cargoson_shipping_options_id.write({
                 'picking_id': self.id,
             })
@@ -70,3 +70,11 @@ class StockPicking(models.Model):
             'target': 'new',
             'context': dict(self.env.context, default_pick_ids=[(4, p.id) for p in self]),
         }
+
+    def get_cargoson_collection_address(self):
+        self.ensure_one()
+        return self.picking_type_id.warehouse_id.partner_id
+
+    def get_cargoson_delivery_address(self):
+        self.ensure_one()
+        return self.partner_id

@@ -6,6 +6,12 @@ from .schema.price_request_shipment import (
     PriceRequestShipmentRows_AttributesItem,
     PriceRequestShipmentRows_AttributesItemPackage_Type
 )
+from .schema.order import (
+    OrderRows_AttributesItem,
+    OrderRows_AttributesItemPackage_Type,
+    OrderOptions,
+    OrderDocuments_AttributesItem
+)
 
 import json
 import math
@@ -15,7 +21,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-# noinspection PyProtectedMember
+# noinspection PyProtectedMember,PyMethodMayBeStatic
 class ProviderCargoson(models.Model):
     _inherit = 'delivery.carrier'
 
@@ -56,15 +62,8 @@ class ProviderCargoson(models.Model):
                 'warning_message': False
             }
 
-        if not collection_address.zip:
-            raise UserError(_('Collection contact must have a ZIP code'))
-        if not collection_address.country_id:
-            raise UserError(_('Collection contact must have a country'))
-
-        if not delivery_address.zip:
-            raise UserError(_('Selected delivery contact must have a ZIP code'))
-        if not delivery_address.country_id:
-            raise UserError(_('Selected delivery contact must have a country'))
+        self._cargoson_validate_address(collection_address)
+        self._cargoson_validate_address(delivery_address)
 
         cargoson_options = self.env.context.get('cargoson', None)
         if not cargoson_options:
@@ -159,36 +158,104 @@ class ProviderCargoson(models.Model):
         raise NotImplementedError()
 
     def _cargoson_send_shipping(self, picking):
-        sale_order = picking.sale_id
-        if not sale_order:
-            raise UserError(_('Cannot send %s with this method - missing Sale Order reference', picking.name))
+        if not picking.cargoson_shipping_options_id:
+            return
 
-        collection_address = sale_order.get_cargoson_collection_address()
-        delivery_address = sale_order.get_cargoson_delivery_address()
+        collection_address = picking.get_cargoson_collection_address()
+        delivery_address = picking.get_cargoson_delivery_address()
+        self._cargoson_validate_address(collection_address)
+        self._cargoson_validate_address(delivery_address)
+
         weight = self._cargoson_convert_weight(picking.shipping_weight)
+        opts = picking.cargoson_shipping_options_id
+
         logger.info('Cargoson: send shipment for: %s (weight=%s)', picking.name, weight)
+        logger.info(opts)
 
-        shipping_options = picking.cargoson_shipping_options_id
-        if not shipping_options:
-            raise UserError(_('Cannot send Delivery Order - no shipping options set'))
+        package = OrderRows_AttributesItem(
+            weight=math.ceil(weight),
+            package_type=OrderRows_AttributesItemPackage_Type.from_dict(opts.package_type),
+            quantity=opts.package_qty,
+            description='Goods with {} package'.format(opts.package_type)
+        )
+        # TODO: add optional adr rows to package
 
-        # TODO
-        # order = Order(
-        #     collection_date=sale_order.cargoson_collection_date.isoformat(),
-        #     collection_postcode=collection_address.zip,
-        #     collection_country=collection_address.country_id.code,
-        #     delivery_postcode=delivery_address.zip,
-        #     delivery_country=delivery_address.country_id.code,
-        #     collection_with_tail_lift=sale_order.cargoson_collection_with_tail_lift,
-        #     collection_prenotification=sale_order.cargoson_collection_prenotification,
-        #     delivery_with_tail_lift=sale_order.cargoson_delivery_with_tail_lift,
-        #     delivery_prenotification=sale_order.cargoson_delivery_prenotification,
-        #     delivery_return_document=sale_order.cargoson_delivery_return_document,
-        #     delivery_to_private_person=sale_order.cargoson_delivery_to_private_person,
-        #     frigo=sale_order.cargoson_frigo,
-        #     # adr=sale_order.cargoson_adr,
-        #     rows_attributes=[]
-        # )
+        order_options = OrderOptions(direct_booking_service_id=opts.selected_service_id)
+        # order_attribs = OrderDocuments_AttributesItem() # TODO: attach cmr / waybill
+
+        order = Order(
+            customer_reference=picking.name,
+
+            collection_date=picking.scheduled_date.isoformat(),
+            collection_company_name=collection_address.display_name,
+            collection_address_row_1=collection_address.street,
+            collection_address_row_2=collection_address.street2 or None,
+            collection_city=collection_address.city,
+            collection_postcode=collection_address.zip,
+            collection_country=collection_address.country_id.code,
+            collection_contact_name=collection_address.name,
+            collection_contact_phone=collection_address.mobile or collection_address.phone,
+            collection_contact_email=collection_address.email or None,
+
+            delivery_company_name=delivery_address.display_name,
+            delivery_address_row_1=delivery_address.street,
+            delivery_address_row_2=delivery_address.street2 or None,
+            delivery_city=delivery_address.city,
+            delivery_postcode=delivery_address.zip,
+            delivery_country=delivery_address.country_id.code,
+            delivery_contact_name=delivery_address.name,
+            delivery_contact_phone=delivery_address.mobile or delivery_address.phone,
+            delivery_contact_email=delivery_address.email or None,
+
+            # documents_attributes=[],
+
+            # delivery options
+            collection_with_tail_lift=opts.collection_with_tail_lift,
+            collection_prenotification=opts.collection_prenotification,
+            delivery_with_tail_lift=opts.delivery_with_tail_lift,
+            delivery_prenotification=opts.delivery_prenotification,
+            delivery_return_document=opts.delivery_return_document,
+            delivery_to_private_person=opts.delivery_to_private_person,
+            frigo=opts.frigo,
+            options=order_options,
+
+            rows_attributes=[package]
+        )
+
+        logger.info('request = %s', order.as_dict())
+        result = self.cargoson_api_post('queries', order.as_dict(), None)  # FIXME: obtain result schema from vendor
+        logger.info('response = %s', result)
+
+        if (
+            not isinstance(result, dict) or
+            not bool(result.get('reference')) or
+            len(result.get('errors', list())) > 0 or
+            result.get('query_status') != 'created' or
+            result.get('booking_status') != 'created'
+        ):
+            # TODO: log error in cargoson.log
+            raise UserError(_('Failed to create direct booking for courier service "%s"', opts.selected_carrier_name))
+
+        # TODO: store these
+        tracking_url = result.get('tracking_url')
+        label_url = result.get('label_url')
+        cargoson_ref = result.get('reference')
+        # TODO: fetch pdf from label_url and store as attachment
+
+        booking_data = self.cargoson_api_get(f'bookings/{cargoson_ref}', [], None)  # FIXME: obtain result schema from vendor
+        logger.info('booking = %s', booking_data)
+
+        if not isinstance(booking_data, dict):
+            # TODO: log error in cargoson.log
+            raise UserError(_('Booking data unavailable for carrier %s (%s)', opts.selected_carrier_name, cargoson_ref))
+
+        if booking_data.get('latest_status') != 'booked':
+            # TODO: log error in cargoson.log
+            raise UserError(_(
+                'Booking shipping for carrier "%s" was not successful: "%s"',
+                opts.selected_carrier_name, result.get('carrier_response_message')))
+
+        raise UserError('OK')
 
     def cargoson_api_get(self, path, params, schema_class=None):
         self.ensure_one()
@@ -259,3 +326,12 @@ class ProviderCargoson(models.Model):
     def _cargoson_convert_weight(self, weight):
         weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
         return weight_uom_id._compute_quantity(weight, self.env.ref('uom.product_uom_kgm'), round=False)
+
+    def _cargoson_validate_address(self, partner_id):
+        if not partner_id.zip:
+            raise UserError(_('Contact "%s" must have a ZIP code', partner_id.name))
+        if not partner_id.country_id:
+            raise UserError(_('Contact "%s" must have a country', partner_id.name))
+        if not partner_id.phone and not partner_id.mobile:
+            raise UserError(_('Contact "%s" must have a phone number', partner_id.name))
+        return True
