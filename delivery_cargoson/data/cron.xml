@@ -24,5 +24,17 @@
             <field name="code">model.cron_sync_parcel_machine()</field>
             <field name="active" eval="True" />
         </record>
+
+        <record id="ir_cron_cargoson_queue_task" model="ir.cron">
+            <field name="name">Cargoson - Queue</field>
+            <field name="interval_number">1</field>
+            <field name="interval_type">minutes</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False" />
+            <field name="model_id" ref="model_cargoson_queue_task" />
+            <field name="state">code</field>
+            <field name="code">model.cron_execute_tasks()</field>
+            <field name="active" eval="True" />
+        </record>
     </data>
 </odoo>

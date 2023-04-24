@@ -41,13 +41,8 @@ class ProviderCargoson(models.Model):
         'Enabled parcel machine regions')
 
     # TODO
-    # cargoson_send_shipping - Send the package to the service provider - POST /queries
     # cargoson_get_tracking_link - Ask the tracking link to the service provider
     # cargoson_cancel_shipment - Cancel a shipment
-    #
-    # Some delivery carriers require a prefix to be sent in order to use custom
-    # packages (ie not official ones). This optional method will return it as a string.
-    # _cargoson_get_default_custom_package_code
 
     def cargoson_rate_shipment(self, order):
         collection_address = order.get_cargoson_collection_address()
@@ -223,7 +218,7 @@ class ProviderCargoson(models.Model):
         )
 
         logger.info('request = %s', order.as_dict())
-        result = self.cargoson_api_post('queries', order.as_dict(), None)  # FIXME: obtain result schema from vendor
+        result = self.cargoson_api_post('queries', order.as_dict())  # FIXME: obtain result schema from vendor
         logger.info('response = %s', result)
 
         if (
@@ -236,26 +231,45 @@ class ProviderCargoson(models.Model):
             # TODO: log error in cargoson.log
             raise UserError(_('Failed to create direct booking for courier service "%s"', opts.selected_carrier_name))
 
-        # TODO: store these
         tracking_url = result.get('tracking_url')
         label_url = result.get('label_url')
         cargoson_ref = result.get('reference')
-        # TODO: fetch pdf from label_url and store as attachment
 
-        booking_data = self.cargoson_api_get(f'bookings/{cargoson_ref}', [], None)  # FIXME: obtain result schema from vendor
-        logger.info('booking = %s', booking_data)
+        cargoson_shipping = self.env['cargoson.shipping'].sudo().create({
+            'stock_picking_id': picking.id,
+            'delivery_carrier_id': picking.carrier_id.id,
+            'reference': cargoson_ref,
+            'tracking_url': tracking_url,
+            'tracking_code': result.get('tracking_reference') or result.get('carrier_reference'),
+            'label_url': label_url,
+            'token': result.get('token'),
+            'status': 'pending',
+        })
 
-        if not isinstance(booking_data, dict):
-            # TODO: log error in cargoson.log
-            raise UserError(_('Booking data unavailable for carrier %s (%s)', opts.selected_carrier_name, cargoson_ref))
+        self.env['cargoson.queue.task'].sudo().create({
+            'name': 'Fetch booking data',
+            'res_id': cargoson_shipping.id,
+            'res_name': 'cargoson.shipping',
+            'method': 'update_booking_data',
+        })
 
-        if booking_data.get('latest_status') != 'booked':
-            # TODO: log error in cargoson.log
-            raise UserError(_(
-                'Booking shipping for carrier "%s" was not successful: "%s"',
-                opts.selected_carrier_name, result.get('carrier_response_message')))
+        # TODO: update booking data in async
+        # TODO: fetch pdf from label_url and store as attachment in async
 
-        raise UserError('OK')
+        # booking_data = self.cargoson_api_get(f'bookings/{cargoson_ref}', [])  # FIXME: obtain result schema from vendor
+        # logger.info('booking = %s', booking_data)
+        #
+        # if not isinstance(booking_data, dict):
+        #     # TODO: log error in cargoson.log
+        #     raise UserError(_('Booking data unavailable for carrier %s (%s)', opts.selected_carrier_name, cargoson_ref))
+        #
+        # if booking_data.get('latest_status') != 'booked':
+        #     # TODO: log error in cargoson.log
+        #     raise UserError(_(
+        #         'Booking shipping for carrier "%s" was not successful: "%s"',
+        #         opts.selected_carrier_name, result.get('carrier_response_message')))
+
+        raise UserError('OK')  # TODO: remove me
 
     def cargoson_api_get(self, path, params, schema_class=None):
         self.ensure_one()

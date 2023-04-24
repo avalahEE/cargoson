@@ -30,22 +30,22 @@ class CargosonShippingOptions(models.Model):
         help='Indicates whether the goods will be delivered to a private person instead of a company')
 
     package_type = fields.Selection([
-        ('EUR', 'EUR'),
-        ('CTN', 'CTN'),
-        ('FIN', 'FIN'),
-        ('HPL', 'HPL'),
-        ('QPL', 'QPL'),
-        ('LOAD', 'LOAD'),
-        ('PLD', 'PLD'),
-        ('PXL', 'PXL'),
-        ('PLL', 'PLL'),
-        ('TBE', 'TBE'),
-        ('CLL', 'CLL'),
-        ('RLL', 'RLL'),
-        ('20DC', '20DC'),
-        ('40DC', '40DC'),
-        ('40HC', '40HC'),
-    ], string='Package type')
+            ('EUR', 'EUR'),
+            ('CTN', 'CTN'),
+            ('FIN', 'FIN'),
+            ('HPL', 'HPL'),
+            ('QPL', 'QPL'),
+            ('LOAD', 'LOAD'),
+            ('PLD', 'PLD'),
+            ('PXL', 'PXL'),
+            ('PLL', 'PLL'),
+            ('TBE', 'TBE'),
+            ('CLL', 'CLL'),
+            ('RLL', 'RLL'),
+            ('20DC', '20DC'),
+            ('40DC', '40DC'),
+            ('40HC', '40HC'),
+        ], string='Package type')
     package_qty = fields.Integer('Package quantity', default=1)
 
     selected_carrier_name = fields.Char('Carrier name')

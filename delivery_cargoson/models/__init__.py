@@ -7,3 +7,5 @@ from . import cargoson_rate_result
 from . import cargoson_shipping_options
 from . import cargoson_parcel_machine
 from . import cargoson_sync
+from . import cargoson_shipping
+from . import cargoson_queue
