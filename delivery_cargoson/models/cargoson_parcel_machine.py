@@ -2,18 +2,11 @@ import datetime
 import time
 
 from odoo import fields, models, api
+from .cargoson_sync import get_cron_time_limit
 from .schema import ParcelMachines
 
 import logging
 logger = logging.getLogger(__name__)
-
-
-def get_cron_time_limit():
-    from odoo.tools import config
-    limit_time_real_cron = config['limit_time_real_cron']
-    if limit_time_real_cron <= 0:
-        limit_time_real_cron = 900  # default to odoo.sh default
-    return limit_time_real_cron
 
 
 class CargosonParcelMachine(models.Model):

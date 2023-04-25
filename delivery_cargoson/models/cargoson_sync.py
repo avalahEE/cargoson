@@ -3,6 +3,14 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def get_cron_time_limit():
+    from odoo.tools import config
+    limit_time_real_cron = config['limit_time_real_cron']
+    if limit_time_real_cron <= 0:
+        limit_time_real_cron = 900  # default to odoo.sh default
+    return limit_time_real_cron
+
+
 class CargosonSyncParcelMachine(models.Model):
     _name = 'cargoson.sync.parcel.machine'
     _description = 'Cargoson Parcel Machine update task'
