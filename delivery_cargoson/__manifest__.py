@@ -26,6 +26,7 @@
         'views/cargoson_log_views.xml',
         'views/cargoson_queue_task_views.xml',
         'views/sale_order_views.xml',
+        'views/stock_picking_views.xml',
     ],
     'installable': True,
     'application': True,

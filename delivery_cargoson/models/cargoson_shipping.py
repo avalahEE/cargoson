@@ -32,7 +32,7 @@ class CargosonShipping(models.Model):
             ('pending', 'Pending'),
             ('success', 'Success'),
             ('error', 'Error'),
-        ], string='Status', required=True)
+        ], string='Shipping Status', required=True)
 
     booking_data = fields.Text('Booking data')  # in json
 
@@ -113,6 +113,7 @@ class CargosonShipping(models.Model):
                 return TaskResult.RETRY
 
             self.label_pdf = base64.b64encode(response.content)
+            self.label_fetched = fields.Datetime.now()
             logger.info('Downloaded PDF data: %s bytes', len(self.label_pdf))
 
             log_message = _('Cargoson shipping label created: %s', self.reference)

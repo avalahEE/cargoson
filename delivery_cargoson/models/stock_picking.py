@@ -1,4 +1,4 @@
-from odoo import models, fields, _
+from odoo import models, fields, api, _
 from odoo.exceptions import UserError
 
 import logging
@@ -12,6 +12,45 @@ class StockPicking(models.Model):
     cargoson_shipping_options_id = fields.Many2one('cargoson.shipping.options')
     cargoson_shipping_id = fields.Many2one('cargoson.shipping')
 
+    cargoson_reference = fields.Char(related='cargoson_shipping_id.reference')
+    cargoson_tracking_url = fields.Text('Cargoson Tracking', related='cargoson_shipping_id.tracking_url')
+    cargoson_tracking_code = fields.Char(related='cargoson_shipping_id.tracking_code')
+    cargoson_label_url = fields.Text(related='cargoson_shipping_id.label_url')
+    cargoson_label_fetched = fields.Datetime(related='cargoson_shipping_id.label_fetched')
+    cargoson_label_pdf = fields.Binary(related='cargoson_shipping_id.label_pdf')
+    cargoson_status = fields.Selection(related='cargoson_shipping_id.status')
+
+    cargoson_collection_date = fields.Date(related='cargoson_shipping_options_id.collection_date')
+
+    cargoson_frigo = fields.Boolean(related='cargoson_shipping_options_id.frigo')
+    cargoson_adr = fields.Boolean(related='cargoson_shipping_options_id.adr')
+    cargoson_collection_prenotification = fields.Boolean(related='cargoson_shipping_options_id.collection_prenotification')
+    cargoson_collection_with_tail_lift = fields.Boolean(related='cargoson_shipping_options_id.collection_with_tail_lift')
+    cargoson_delivery_prenotification = fields.Boolean(related='cargoson_shipping_options_id.delivery_prenotification')
+    cargoson_delivery_with_tail_lift = fields.Boolean(related='cargoson_shipping_options_id.delivery_with_tail_lift')
+    cargoson_delivery_return_document = fields.Boolean(related='cargoson_shipping_options_id.delivery_return_document')
+    cargoson_delivery_to_private_person = fields.Boolean(
+        related='cargoson_shipping_options_id.delivery_to_private_person',
+        help='Indicates whether the goods will be delivered to a private person instead of a company')
+
+    cargoson_package_type = fields.Selection(related='cargoson_shipping_options_id.package_type')
+    cargoson_package_qty = fields.Integer(related='cargoson_shipping_options_id.package_qty')
+    cargoson_selected_carrier_id = fields.Integer(related='cargoson_shipping_options_id.selected_carrier_id')
+    cargoson_selected_carrier_name = fields.Char(related='cargoson_shipping_options_id.selected_carrier_name')
+    cargoson_selected_service_id = fields.Integer(related='cargoson_shipping_options_id.selected_service_id')
+    cargoson_selected_price = fields.Monetary(
+        related='cargoson_shipping_options_id.selected_price', currency_field='cargoson_currency_id')
+    cargoson_currency_id = fields.Many2one(related='cargoson_shipping_options_id.currency_id', readonly=True)
+
+    cargoson_collection_address = fields.Many2one('res.partner', 'Collection address', compute='_compute_addresses')
+    cargoson_delivery_address = fields.Many2one('res.partner', 'Delivery address', compute='_compute_addresses')
+
+    @api.depends('cargoson_selected_carrier_id')
+    def _compute_addresses(self):
+        for record in self:
+            record.cargoson_collection_address = record.get_cargoson_collection_address()
+            record.cargoson_delivery_address = record.get_cargoson_delivery_address()
+
     def send_to_shipper(self):
         self.ensure_one()
 
@@ -21,9 +60,6 @@ class StockPicking(models.Model):
         # Cargoson shipping options configured - continue the regular Delivery Carrier flow
         if self.cargoson_shipping_options_id:
             return super().send_to_shipper()
-
-        logger.info('self.sale_id = %s', self.sale_id)
-        logger.info('self.sale_id.cargoson_shipping_options_id = %s', self.sale_id.cargoson_shipping_options_id)
 
         if self.sale_id and self.sale_id.delivery_set and self.sale_id.cargoson_shipping_options_id:
             self.sale_id.cargoson_shipping_options_id.write({
@@ -37,7 +73,6 @@ class StockPicking(models.Model):
             raise UserError(_('Not implemented yet'))
 
         # If we have a previously configured shipment on sale.order - use the default flow
-        logger.info('send to shipper: sale_id=%s', self.sale_id)
         super().send_to_shipper()
 
         # TODO: log additional data from cargoson into chatter
