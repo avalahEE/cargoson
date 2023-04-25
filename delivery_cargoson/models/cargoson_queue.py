@@ -1,5 +1,8 @@
 from odoo import fields, models, api
 from enum import Enum
+from .cargoson_sync import get_cron_time_limit
+import time
+import json
 import logging
 logger = logging.getLogger(__name__)
 
@@ -45,5 +48,76 @@ class CargosonQueueTask(models.Model):
 
     @api.model
     def cron_execute_tasks(self):
-        # TODO: lock, execute, set state, unlock
-        logger.info('Executing queue tasks')
+        queued = self.env['cargoson.queue.task'].search([('state', '=', 'pending')])
+        if len(queued) == 0:
+            return
+
+        limit_time = get_cron_time_limit()
+        logger.info('Start processing queued tasks (limit_time_real_cron=%ss): %s', limit_time, len(queued))
+        start = time.time()
+
+        for record in queued:
+            # consume queue item
+            record.write(dict(state='in_progress'))
+            record.flush()
+
+            instance = record.validate()
+            if not instance:
+                record.write(dict(state='error'))
+                record.flush()
+                continue
+
+            params = dict()
+            if record.params_json:
+                try:
+                    decoded = json.loads(record.params_json)
+                    if isinstance(decoded, dict):
+                        params = decoded
+                except Exception:  # noqa
+                    pass
+            res = getattr(instance, record.method)(record, **params)
+            record.update_state(res)
+
+            if limit_time > 0 and time.time() - start > limit_time - 60:
+                logger.warning('Reached close to thread time limit (%ss), continuing next interval', limit_time)
+                break
+
+        logger.info('Queue processed in %ss', round(time.time() - start, 3))
+
+    def validate(self):
+        self.ensure_one()
+
+        if self.res_name not in self.env:
+            logger.warning('Task references a non-existing model: %s', self.res_name)
+            return None
+
+        instance = self.env[self.res_name].browse([self.res_id])
+        if not instance:
+            logger.warning(
+                'Task references a non-existing instance: %s(id=%s)',
+                self.res_name, self.res_id)
+            return None
+
+        if not hasattr(instance, self.method):
+            logger.warning(
+                'Task references a non-existing method: %s(id=%s).%s',
+                self.res_name, self.res_id, self.method)
+            return None
+
+        return instance
+
+    def update_state(self, state):
+        self.ensure_one()
+        if not isinstance(state, TaskResult):
+            return
+
+        vals = dict(num_tries=self.num_tries + 1, state='pending')
+        if state == TaskResult.OK:
+            vals['state'] = 'completed'
+        elif state == TaskResult.ERR:
+            vals['state'] = 'error'
+        elif state == TaskResult.RETRY:
+            vals['state'] = 'pending'
+
+        self.write(vals)
+        self.flush()

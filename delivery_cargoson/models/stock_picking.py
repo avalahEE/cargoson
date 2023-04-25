@@ -10,6 +10,7 @@ class StockPicking(models.Model):
     _inherit = 'stock.picking'
 
     cargoson_shipping_options_id = fields.Many2one('cargoson.shipping.options')
+    cargoson_shipping_id = fields.Many2one('cargoson.shipping')
 
     def send_to_shipper(self):
         self.ensure_one()
