@@ -245,14 +245,14 @@ class ProviderCargoson(models.Model):
         cargoson_shipping.update_booking_data()
 
         self.env['cargoson.queue.task'].sudo().create({
-            'name': 'Fetch booking data',
+            'name': f'Fetch booking data: {cargoson_ref}',
             'res_id': cargoson_shipping.id,
             'res_name': 'cargoson.shipping',
             'method': 'update_booking_data',
         })
 
         self.env['cargoson.queue.task'].sudo().create({
-            'name': 'Fetch label PDF',
+            'name': f'Fetch label PDF: {cargoson_ref}',
             'res_id': cargoson_shipping.id,
             'res_name': 'cargoson.shipping',
             'method': 'fetch_label',
@@ -293,9 +293,7 @@ class ProviderCargoson(models.Model):
             log_request = 'URL: {}\nHEADERS: {}\n\n{}\n'.format(url, self._cargoson_get_headers(), json_data)
             self.log_xml(log_request, path)
 
-            # logger.info('CARGOSON POST: %s', json.dumps(data, indent=4))
             response = requests.post(url, json_data, json=True, headers=self._cargoson_get_headers())
-
             log_response = 'URL: {}\n\n{}\n'.format(url, response.text)
             self.log_xml(log_response, path)
 
@@ -343,3 +341,25 @@ class ProviderCargoson(models.Model):
         if not partner_id.phone and not partner_id.mobile:
             raise UserError(_('Contact "%s" must have a phone number', partner_id.name))
         return True
+
+    def action_cargoson_queue(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'cargoson.queue.task',
+            'view_id': self.env.ref('delivery_cargoson.view_cargoson_queue_task_tree').id,
+            'view_mode': 'list',
+            'target': 'current',
+            'name': _('Cargoson Queue'),
+            'domain': [],
+        }
+
+    def action_cargoson_event_log(self):
+        return {
+            'type': 'ir.actions.act_window',
+            'res_model': 'cargoson.log',
+            'view_id': self.env.ref('delivery_cargoson.view_cargoson_log_tree').id,
+            'view_mode': 'list',
+            'target': 'current',
+            'name': _('Cargoson Event Log'),
+            'domain': [],
+        }

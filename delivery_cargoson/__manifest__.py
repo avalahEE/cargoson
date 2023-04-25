@@ -13,6 +13,7 @@
     'depends': [
         'delivery',
         'mail',
+        'sale_stock',
     ],
     'data': [
         'security/ir.model.access.csv',
@@ -22,7 +23,8 @@
 
         'views/delivery_cargoson.xml',
         'views/choose_delivery_carrier_views.xml',
-        # 'views/cargoson_log_views.xml',
+        'views/cargoson_log_views.xml',
+        'views/cargoson_queue_task_views.xml',
         'views/sale_order_views.xml',
     ],
     'installable': True,

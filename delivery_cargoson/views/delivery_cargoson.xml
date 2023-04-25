@@ -25,6 +25,27 @@
                     </group>
                 </page>
             </xpath>
+
+            <xpath expr="//button[@name='toggle_debug']" position="before">
+                <button
+                    name="action_cargoson_queue"
+                    attrs="{'invisible': [('delivery_type', '!=', 'cargoson')]}"
+                    class="oe_stat_button"
+                    type="object" icon="fa-exchange">
+                    <div class="o_stat_info o_field_widget">
+                        <span class="text-success">Queue</span>
+                    </div>
+                </button>
+                <button
+                    name="action_cargoson_event_log"
+                    attrs="{'invisible': [('delivery_type', '!=', 'cargoson')]}"
+                    class="oe_stat_button"
+                    type="object" icon="fa-history">
+                    <div class="o_stat_info o_field_widget">
+                        <span class="text-success">Event log</span>
+                    </div>
+                </button>
+            </xpath>
         </field>
     </record>
 
