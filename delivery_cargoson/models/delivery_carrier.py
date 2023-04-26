@@ -142,8 +142,19 @@ class ProviderCargoson(models.Model):
         return False
 
     def cargoson_cancel_shipment(self, pickings):
-        logger.info('!!!! cargoson_cancel_shipment')
-        raise NotImplementedError()
+        for picking in pickings:
+            if picking.cargoson_shipping_id:
+                cargoson_ref = picking.cargoson_shipping_id.reference
+                try:
+                    res = self.cargoson_api_delete(f'bookings/{cargoson_ref}')
+                    logger.info(res)
+                    picking.cargoson_shipping_id.sudo().unlink()
+                    picking.write({
+                        'carrier_tracking_ref': '',
+                        'carrier_price': 0.0
+                    })
+                except Exception as err:
+                    raise UserError(_('Could not cancel shipment %s: %s', cargoson_ref, err))
 
     def _cargoson_send_shipping(self, picking):
         if not picking.cargoson_shipping_options_id:
@@ -275,7 +286,7 @@ class ProviderCargoson(models.Model):
         self.ensure_one()
         url = self._cargoson_get_api_url(path)
         try:
-            log_request = 'URL: {}\nHEADERS: {}\n\n{}\n'.format(url, self._cargoson_get_headers(), json.dumps(params))
+            log_request = 'GET: {}\nHEADERS: {}\n\n{}\n'.format(url, self._cargoson_get_headers(), json.dumps(params))
             self.log_xml(log_request, path)
 
             response = requests.get(url, params=params, headers=self._cargoson_get_headers())
@@ -296,10 +307,29 @@ class ProviderCargoson(models.Model):
         url = self._cargoson_get_api_url(path)
         try:
             json_data = json.dumps(data)
-            log_request = 'URL: {}\nHEADERS: {}\n\n{}\n'.format(url, self._cargoson_get_headers(), json_data)
+            log_request = 'POST: {}\nHEADERS: {}\n\n{}\n'.format(url, self._cargoson_get_headers(), json_data)
             self.log_xml(log_request, path)
 
             response = requests.post(url, json_data, json=True, headers=self._cargoson_get_headers())
+            log_response = 'URL: {}\n\n{}\n'.format(url, response.text)
+            self.log_xml(log_response, path)
+
+            data = response.json()
+            if schema_class is None:
+                return data
+            return schema_class.from_dict(data)
+        except Exception as err:
+            logger.error(err)
+            self.log_xml('URL: {}\nERROR: {}\n\n{}\n'.format(url, err, traceback.format_exc()), path)
+
+    def cargoson_api_delete(self, path, schema_class=None):
+        self.ensure_one()
+        url = self._cargoson_get_api_url(path)
+        try:
+            log_request = 'DELETE: {}\nHEADERS: {}\n\n'.format(url, self._cargoson_get_headers())
+            self.log_xml(log_request, path)
+
+            response = requests.delete(url, json=True, headers=self._cargoson_get_headers())
             log_response = 'URL: {}\n\n{}\n'.format(url, response.text)
             self.log_xml(log_response, path)
 

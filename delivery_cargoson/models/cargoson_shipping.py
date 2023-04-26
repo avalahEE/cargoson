@@ -82,10 +82,11 @@ class CargosonShipping(models.Model):
         self.write(vals)
 
         if self.tracking_url and self.label_url and self.tracking_code:
-            logger.info('Booking data complete: %s', self.reference)
+            self.stock_picking_id.write(dict(carrier_tracking_ref=self.tracking_code))
             self.stock_picking_id.message_post(body=_(
                 'Delivery booking successful for shipment %s (%s)', self.tracking_code, self.reference))
             self.write(dict(status='success'))
+            logger.info('Booking data complete: %s', self.reference)
             return TaskResult.OK
 
         return TaskResult.RETRY
