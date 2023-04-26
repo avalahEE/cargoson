@@ -58,7 +58,7 @@ class CargosonShipping(models.Model):
 
         # FIXME: obtain result schema from vendor
         booking_data = Cargoson.cargoson_api_get(f'bookings/{self.reference}', [])
-        logger.info('booking = %s', booking_data)
+        # logger.info('booking = %s', booking_data)
 
         if not isinstance(booking_data, dict):
             # TODO: log error in cargoson.log
@@ -71,22 +71,15 @@ class CargosonShipping(models.Model):
                 'Booking shipping was not successful: "%s"', booking_data.get('carrier_response_message')))
             return TaskResult.RETRY
 
-        self.write({
-            'tracking_url': booking_data.get('tracking_url'),
-            'label_url': booking_data.get('label_url'),
-            'tracking_code': booking_data.get('tracking_reference') or booking_data.get('carrier_reference'),
-            'booking_data': json.dumps(booking_data),
-        })
-
-        if self.tracking_code:
-            self.stock_picking_id.message_post(body=_(
-                'Tracking Code has been updated: %s', self.tracking_code))
-        if self.tracking_url:
-            self.stock_picking_id.message_post(body=_(
-                'Tracking URL has been updated: %s', self.tracking_url))
-        if self.label_url:
-            self.stock_picking_id.message_post(body=_(
-                'Label URL has been updated: %s', self.label_url))
+        vals = dict()
+        self._update_parameter('tracking_url', vals, booking_data.get('tracking_url'), name='Tracking URL')
+        self._update_parameter('label_url', vals, booking_data.get('label_url'), name='Label URL')
+        self._update_parameter(
+            'tracking_code', vals,
+            booking_data.get('tracking_reference') or booking_data.get('carrier_reference'),
+            name='Tracking Code')
+        vals['booking_data'] = json.dumps(booking_data)
+        self.write(vals)
 
         if self.tracking_url and self.label_url and self.tracking_code:
             logger.info('Booking data complete: %s', self.reference)
@@ -134,3 +127,17 @@ class CargosonShipping(models.Model):
         except Exception as err:
             logger.info('Failed to fetch label: %s', err)
             return TaskResult.RETRY
+
+    def _update_parameter(self, key, vals, value, name=None):
+        if not value:
+            return
+
+        if not name:
+            name = key
+
+        if value and not getattr(self, key):
+            msg = _('%s has been updated: %s', name, value)
+            logger.info(msg)
+            if self.stock_picking_id:
+                self.stock_picking_id.message_post(body=msg)
+        vals[key] = value

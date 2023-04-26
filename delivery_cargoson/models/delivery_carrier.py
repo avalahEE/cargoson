@@ -158,7 +158,7 @@ class ProviderCargoson(models.Model):
         opts = picking.cargoson_shipping_options_id
 
         logger.info('Cargoson: send shipment for: %s (weight=%s)', picking.name, weight)
-        logger.info(opts)
+        # logger.info(opts)
 
         package = OrderRows_AttributesItem(
             weight=math.ceil(weight),
@@ -210,9 +210,9 @@ class ProviderCargoson(models.Model):
             rows_attributes=[package]
         )
 
-        logger.info('request = %s', order.as_dict())
+        # logger.info('request = %s', order.as_dict())
         result = self.cargoson_api_post('queries', order.as_dict())  # FIXME: obtain result schema from vendor
-        logger.info('response = %s', result)
+        # logger.info('response = %s', result)
 
         if (
             not isinstance(result, dict) or
@@ -240,6 +240,12 @@ class ProviderCargoson(models.Model):
             'status': 'pending',
         })
         picking.write(dict(cargoson_shipping_id=cargoson_shipping.id))
+        if tracking_url:
+            picking.message_post(body=_('Tracking URL has been updated: %s', tracking_url))
+        if tracking_number:
+            picking.message_post(body=_('Tracking Code has been updated: %s', tracking_number))
+        if label_url:
+            picking.message_post(body=_('Label URL has been updated: %s', label_url))
 
         task_update_booking = self.env['cargoson.queue.task'].sudo().create({
             'name': f'Fetch booking data: {cargoson_ref}',
