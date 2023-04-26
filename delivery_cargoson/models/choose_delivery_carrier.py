@@ -124,7 +124,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         CargosonAvailablePrice = self.env['cargoson.rate.result']
         prices = list()
         for item in available_prices.object.prices:
-            prices.append(CargosonAvailablePrice.from_cargoson(self.id, item))
+            prices.append(CargosonAvailablePrice.from_cargoson(item, delivery_wizard_id=self.id))
         CargosonAvailablePrice.create(prices)
         return {}
 

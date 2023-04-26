@@ -43,6 +43,12 @@ class ProviderCargoson(models.Model):
     def cargoson_rate_shipment(self, order):
         collection_address = order.get_cargoson_collection_address()
         delivery_address = order.get_cargoson_delivery_address()
+        return self._cargoson_rate_shipment(
+            order.name, collection_address, delivery_address, order._get_estimated_weight())
+
+    def _cargoson_rate_shipment(self, document_name, collection_address, delivery_address, weight):
+        weight = self._cargoson_convert_weight(weight)
+        logger.info('Cargoson: rate shipment for: %s (weight=%s)', document_name, weight)
 
         carrier = self._match_address(delivery_address)
         if not carrier:
@@ -82,9 +88,6 @@ class ProviderCargoson(models.Model):
                 'error_message': _('Package quantity must be greater than 0'),
                 'warning_message': False
             }
-
-        weight = self._cargoson_convert_weight(order._get_estimated_weight())
-        logger.info('Cargoson: rate shipment for: %s (weight=%s)', order.name, weight)
 
         package = PriceRequestShipmentRows_AttributesItem(
             weight=math.ceil(weight),

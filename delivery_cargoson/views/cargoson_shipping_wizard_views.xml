@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_cargoson_shipping_wizard" model="ir.ui.view">
+        <field name="name">cargoson.shipping.wizard.view.form</field>
+        <field name="model">cargoson.shipping.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <field name="picking_id" invisible="1" />
+                <table>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <label for="cargoson_collection_address" />
+                            </td>
+                            <td>
+                                <field name="cargoson_collection_address" readonly="1" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_delivery_address" />
+                            </td>
+                            <td>
+                                <field name="cargoson_delivery_address" readonly="1" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><br /></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_collection_date" />
+                            </td>
+                            <td>
+                                <field name="cargoson_collection_date" attrs="{'readonly': [('cargoson_selected_carrier_id', '!=', 0)]}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_package_type" />
+                            </td>
+                            <td>
+                                <field name="cargoson_package_type" />
+                            </td>
+                        </tr>
+                        <tr attrs="{'invisible': [('cargoson_package_type', '=', False)]}">
+                            <td>
+                                <label for="cargoson_package_qty" />
+                            </td>
+                            <td>
+                                <field name="cargoson_package_qty" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_collection_prenotification" />
+                            </td>
+                            <td>
+                                <field name="cargoson_collection_prenotification" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_collection_with_tail_lift" />
+                            </td>
+                            <td>
+                                <field name="cargoson_collection_with_tail_lift" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_delivery_prenotification" />
+                            </td>
+                            <td>
+                                <field name="cargoson_delivery_prenotification" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_delivery_with_tail_lift" />
+                            </td>
+                            <td>
+                                <field name="cargoson_delivery_with_tail_lift" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_delivery_return_document" />
+                            </td>
+                            <td>
+                                <field name="cargoson_delivery_return_document" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_delivery_to_private_person" />
+                            </td>
+                            <td>
+                                <field name="cargoson_delivery_to_private_person" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_frigo" />
+                            </td>
+                            <td>
+                                <field name="cargoson_frigo" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="cargoson_adr" />
+                            </td>
+                            <td>
+                                <field name="cargoson_adr" />
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <field name="cargoson_selected_carrier_id" invisible="1" />
+                <field name="cargoson_show_rates" invisible="1" />
+                <field
+                    name="cargoson_rate_results"
+                    readonly="1"
+                    options="{'no_create': True, 'no_open': True}"
+                    attrs="{'invisible': [('cargoson_show_rates', '=', False)]}">
+                    <tree string="Available prices">
+                        <field name="carrier" />
+                        <field name="price" widget="monetary" />
+                        <field name="service" />
+                        <button string="Select" name="select_carrier" type="object" />
+                    </tree>
+                </field>
+                <div
+                    class="o_row"
+                    attrs="{'invisible': [('cargoson_selected_carrier_id', '=', 0)]}">
+                    <label for="cargoson_selected_carrier_name" />
+                    <field name="cargoson_selected_carrier_name" readonly="1" />
+                </div>
+                <footer>
+                    <button
+                        name="action_get_rates"
+                        string="Get rates"
+                        attrs="{'invisible': [('cargoson_show_rates', '=', True)]}"
+                        data-hotkey="g"
+                        class="btn-primary"
+                        type="object" />
+                    <button
+                        name="action_add_shipping"
+                        string="Add"
+                        attrs="{'invisible': [('cargoson_show_rates', '=', False)]}"
+                        type="object"
+                        class="btn-primary"
+                        data-hotkey="q"/>
+                    <button string="Discard" class="btn-secondary" special="cancel" data-hotkey="z" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

@@ -69,32 +69,41 @@ class StockPicking(models.Model):
                 'cargoson_shipping_options_id': self.sale_id.cargoson_shipping_options_id.id,
             })
         else:
-            # TODO: launch shipping wizard
-            raise UserError(_('Not implemented yet'))
+            raise UserError(_(
+                'Cargoson is set as the carrier for transfer %s.\n\n'
+                'Please configure Cargoson parameters before validating.',
+                self.name
+            ))
 
         # If we have a previously configured shipment on sale.order - use the default flow
         super().send_to_shipper()
 
-        # TODO: log additional data from cargoson into chatter
+    # def _pre_action_done_hook(self):
+    #     if self.env.context.get('skip_cargoson_shipping_wizard'):
+    #         return True
+    #
+    #     res = super()._pre_action_done_hook()
+    #     if res is not True:
+    #         return res
+    #
+    #     if len(self) > 1:
+    #         raise UserError(_('Cargoson shipping cannot be applied to multiple transfers at once'))
+    #     # TODO: more complex user interface to handle multiple pickings at once
+    #
+    #     needs_input = self.browse()
+    #     for picking in self:
+    #         if (
+    #             picking.carrier_id and picking.carrier_id.delivery_type == 'cargoson'
+    #             and not picking.cargoson_shipping_options_id
+    #         ):
+    #             needs_input |= picking
+    #
+    #     if len(needs_input) > 0:
+    #         return needs_input.action_cargoson_shipping_wizard()
+    #     return True
 
-    def _pre_action_done_hook(self):
-        if self.env.context.get('skip_cargoson_shipping_wizard'):
-            return True
-
-        res = super()._pre_action_done_hook()
-        if res is not True:
-            return res
-
-        needs_input = self.browse()
-        for picking in self:
-            if picking.carrier_id and picking.carrier_id.delivery_type == 'cargoson' and not picking.sale_id:
-                needs_input |= picking
-
-        if len(needs_input) > 0:
-            return needs_input._action_generate_cargoson_shipping_wizard()
-        return True
-
-    def _action_generate_cargoson_shipping_wizard(self):
+    def action_cargoson_shipping_wizard(self):
+        self.ensure_one()
         view = self.env.ref('delivery_cargoson.view_cargoson_shipping_wizard')
         return {
             'name': _('Add a shipping method'),
@@ -104,7 +113,10 @@ class StockPicking(models.Model):
             'views': [(view.id, 'form')],
             'view_id': view.id,
             'target': 'new',
-            'context': dict(self.env.context, default_pick_ids=[(4, p.id) for p in self]),
+            'context': dict(
+                self.env.context,
+                default_picking_id=self.id,
+                default_carrier_id=self.carrier_id.id),
         }
 
     def get_cargoson_collection_address(self):
