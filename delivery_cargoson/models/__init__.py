@@ -2,10 +2,10 @@ from . import delivery_carrier
 from . import choose_delivery_carrier
 from . import sale_order
 from . import stock_picking
-from . import cargoson_log
 from . import cargoson_rate_result
-from . import cargoson_shipping_options
 from . import cargoson_parcel_machine
-from . import cargoson_sync
-from . import cargoson_shipping
 from . import cargoson_queue
+from . import cargoson_shipping
+from . import cargoson_shipping_options
+from . import cargoson_shipping_wizard
+from . import cargoson_sync

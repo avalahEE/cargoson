@@ -61,14 +61,15 @@ class CargosonShipping(models.Model):
         # logger.info('booking = %s', booking_data)
 
         if not isinstance(booking_data, dict):
-            # TODO: log error in cargoson.log
             logger.warning(_('Booking data unavailable. Cargoson reference: %s', self.reference))
             return TaskResult.RETRY
 
         if booking_data.get('latest_status') != 'booked':
-            # TODO: log error in cargoson.log
-            logger.warning(_(
-                'Booking shipping was not successful: "%s"', booking_data.get('carrier_response_message')))
+            msg = _('Booking shipping was not successful: "%s"', booking_data.get('carrier_response_message'))
+            logger.warning(msg)
+            self.stock_picking_id.message_post(body=msg)
+            if len(booking_data.get('errors', list())) > 0:
+                return TaskResult.ERR
             return TaskResult.RETRY
 
         vals = dict()

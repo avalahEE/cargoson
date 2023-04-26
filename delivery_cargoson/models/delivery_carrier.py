@@ -146,13 +146,17 @@ class ProviderCargoson(models.Model):
             if picking.cargoson_shipping_id:
                 cargoson_ref = picking.cargoson_shipping_id.reference
                 try:
-                    res = self.cargoson_api_delete(f'bookings/{cargoson_ref}')
-                    logger.info(res)
+                    if cargoson_ref:
+                        self.cargoson_api_delete(f'bookings/{cargoson_ref}')
+
                     picking.cargoson_shipping_id.sudo().unlink()
                     picking.write({
                         'carrier_tracking_ref': '',
                         'carrier_price': 0.0
                     })
+                    if picking.cargoson_shipping_options_id:
+                        picking.cargoson_shipping_options_id.sudo().unlink()
+
                 except Exception as err:
                     raise UserError(_('Could not cancel shipment %s: %s', cargoson_ref, err))
 
@@ -167,9 +171,7 @@ class ProviderCargoson(models.Model):
 
         weight = self._cargoson_convert_weight(picking.shipping_weight)
         opts = picking.cargoson_shipping_options_id
-
         logger.info('Cargoson: send shipment for: %s (weight=%s)', picking.name, weight)
-        # logger.info(opts)
 
         package = OrderRows_AttributesItem(
             weight=math.ceil(weight),
@@ -206,8 +208,6 @@ class ProviderCargoson(models.Model):
             delivery_contact_phone=delivery_address.mobile or delivery_address.phone,
             delivery_contact_email=delivery_address.email or None,
 
-            # documents_attributes=[],
-
             # delivery options
             collection_with_tail_lift=opts.collection_with_tail_lift,
             collection_prenotification=opts.collection_prenotification,
@@ -221,9 +221,7 @@ class ProviderCargoson(models.Model):
             rows_attributes=[package]
         )
 
-        # logger.info('request = %s', order.as_dict())
         result = self.cargoson_api_post('queries', order.as_dict())  # FIXME: obtain result schema from vendor
-        # logger.info('response = %s', result)
 
         if (
             not isinstance(result, dict) or
@@ -232,7 +230,6 @@ class ProviderCargoson(models.Model):
             result.get('query_status') != 'created' or
             result.get('booking_status') != 'created'
         ):
-            # TODO: log error in cargoson.log
             raise UserError(_('Failed to create direct booking for courier service "%s"', opts.selected_carrier_name))
 
         tracking_url = result.get('tracking_url')
@@ -389,13 +386,13 @@ class ProviderCargoson(models.Model):
             'domain': [],
         }
 
-    def action_cargoson_event_log(self):
-        return {
-            'type': 'ir.actions.act_window',
-            'res_model': 'cargoson.log',
-            'view_id': self.env.ref('delivery_cargoson.view_cargoson_log_tree').id,
-            'view_mode': 'list',
-            'target': 'current',
-            'name': _('Cargoson Event Log'),
-            'domain': [],
-        }
+    # def action_cargoson_event_log(self):
+    #     return {
+    #         'type': 'ir.actions.act_window',
+    #         'res_model': 'cargoson.log',
+    #         'view_id': self.env.ref('delivery_cargoson.view_cargoson_log_tree').id,
+    #         'view_mode': 'list',
+    #         'target': 'current',
+    #         'name': _('Cargoson Event Log'),
+    #         'domain': [],
+    #     }

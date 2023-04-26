@@ -4,7 +4,7 @@ import logging
 logger = logging.getLogger(__name__)
 
 
-# noinspection PyProtectedMember
+# noinspection PyProtectedMember,DuplicatedCode
 class ChooseDeliveryCarrier(models.TransientModel):
     _inherit = 'choose.delivery.carrier'
 
