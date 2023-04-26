@@ -67,22 +67,26 @@ class CargosonQueueTask(models.Model):
                 record.flush()
                 continue
 
-            params = dict()
-            if record.params_json:
-                try:
-                    decoded = json.loads(record.params_json)
-                    if isinstance(decoded, dict):
-                        params = decoded
-                except Exception:  # noqa
-                    pass
-            res = getattr(instance, record.method)(record, **params)
-            record.update_state(res)
+            record.execute(instance)
 
             if limit_time > 0 and time.time() - start > limit_time - 60:
                 logger.warning('Reached close to thread time limit (%ss), continuing next interval', limit_time)
                 break
 
         logger.info('Queue processed in %ss', round(time.time() - start, 3))
+
+    def execute(self, instance):
+        self.ensure_one()
+        params = dict()
+        if self.params_json:
+            try:
+                decoded = json.loads(self.params_json)
+                if isinstance(decoded, dict):
+                    params = decoded
+            except Exception:  # noqa
+                pass
+        res = getattr(instance, self.method)(self, **params)
+        self.update_state(res)
 
     def validate(self):
         self.ensure_one()

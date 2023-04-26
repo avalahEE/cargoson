@@ -1,5 +1,4 @@
 from odoo import fields, models, _
-from odoo.exceptions import UserError
 from .cargoson_queue import TaskResult
 import json
 import base64
@@ -79,8 +78,20 @@ class CargosonShipping(models.Model):
             'booking_data': json.dumps(booking_data),
         })
 
+        if self.tracking_code:
+            self.stock_picking_id.message_post(body=_(
+                'Tracking Code has been updated: %s', self.tracking_code))
+        if self.tracking_url:
+            self.stock_picking_id.message_post(body=_(
+                'Tracking URL has been updated: %s', self.tracking_url))
+        if self.label_url:
+            self.stock_picking_id.message_post(body=_(
+                'Label URL has been updated: %s', self.label_url))
+
         if self.tracking_url and self.label_url and self.tracking_code:
             logger.info('Booking data complete: %s', self.reference)
+            self.stock_picking_id.message_post(body=_(
+                'Delivery booking successful for shipment %s (%s)', self.tracking_code, self.reference))
             self.write(dict(status='success'))
             return TaskResult.OK
 

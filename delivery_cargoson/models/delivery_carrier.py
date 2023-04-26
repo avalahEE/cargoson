@@ -241,15 +241,15 @@ class ProviderCargoson(models.Model):
         })
         picking.write(dict(cargoson_shipping_id=cargoson_shipping.id))
 
-        # update booking data immediately
-        cargoson_shipping.update_booking_data()
-
-        self.env['cargoson.queue.task'].sudo().create({
+        task_update_booking = self.env['cargoson.queue.task'].sudo().create({
             'name': f'Fetch booking data: {cargoson_ref}',
             'res_id': cargoson_shipping.id,
             'res_name': 'cargoson.shipping',
             'method': 'update_booking_data',
         })
+
+        # try to update booking data immediately
+        task_update_booking.execute(cargoson_shipping)
 
         self.env['cargoson.queue.task'].sudo().create({
             'name': f'Fetch label PDF: {cargoson_ref}',

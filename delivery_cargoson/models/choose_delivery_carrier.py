@@ -145,6 +145,12 @@ class ChooseDeliveryCarrier(models.TransientModel):
         vals.update(dict(sale_order_id=self.order_id.id))
         cargoson_options = self.env['cargoson.shipping.options'].sudo().create(vals)
         self.order_id.write(dict(cargoson_shipping_options_id=cargoson_options.id))
+        self.order_id.message_post(body=_(
+            'Cargoson shipping added: by %s priced at %s %s',
+            cargoson_options.selected_carrier_name,
+            cargoson_options.selected_price,
+            cargoson_options.currency_id.symbol
+        ))
 
         # no reason to keep the transient data around
         self.env['cargoson.rate.result'].search([
