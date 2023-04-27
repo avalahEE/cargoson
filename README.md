@@ -9,7 +9,7 @@ You can upload and compare your existing pricelists and lead-times, request new 
 # Setup
 
 1. Install module.
-2. Configure shipping method
+2. Configure shipping method (API keys will be provided by Cargoson)
 3. Make sure that warehouse address data is fullfilled (address data, contact phone)
 4. Make sure that customer delivery address data is fullfilled (address data, contact phone)
 5. Shipment must have a weight
@@ -21,7 +21,7 @@ You can upload and compare your existing pricelists and lead-times, request new 
 3. On delivery, set done qty (used fo weight calculation)
 4. Validate Delivery
 
-# Using on Deliverys
+# Using on Deliveries
 
 1. Set delivered qty (used fo weight calculation)
 2. Set carrier under Additional Info tab, press set options, add
