@@ -265,15 +265,18 @@ class ProviderCargoson(models.Model):
             'method': 'update_booking_data',
         })
 
-        # try to update booking data immediately
-        task_update_booking.execute(cargoson_shipping)
-
-        self.env['cargoson.queue.task'].sudo().create({
+        task_fetch_label = self.env['cargoson.queue.task'].sudo().create({
             'name': f'Fetch label PDF: {cargoson_ref}',
             'res_id': cargoson_shipping.id,
             'res_name': 'cargoson.shipping',
             'method': 'fetch_label',
         })
+
+        # try to update booking data immediately
+        task_update_booking.execute(cargoson_shipping)
+
+        # try to update label immediately
+        task_fetch_label.execute(cargoson_shipping)
 
         return [{
             'exact_price': opts.selected_price,
