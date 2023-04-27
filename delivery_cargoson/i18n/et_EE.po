@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-27 06:24+0000\n"
-"PO-Revision-Date: 2023-04-27 06:24+0000\n"
+"POT-Creation-Date: 2023-04-27 08:13+0000\n"
+"PO-Revision-Date: 2023-04-27 08:13+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,21 +25,21 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__20dc
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__20dc
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__20dc
-msgid "20DC"
+msgid "20' Dry Container"
 msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__40dc
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__40dc
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__40dc
-msgid "40DC"
+msgid "40' Dry Container"
 msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__40hc
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__40hc
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__40hc
-msgid "40HC"
+msgid "40' High Cube"
 msgstr ""
 
 #. module: delivery_cargoson
@@ -110,13 +110,6 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__cll
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__cll
 msgid "CLL"
-msgstr ""
-
-#. module: delivery_cargoson
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__ctn
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__ctn
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__ctn
-msgid "CTN"
 msgstr ""
 
 #. module: delivery_cargoson
@@ -310,6 +303,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_sale_order__cargoson_selected_carrier_name
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_selected_carrier_name
 msgid "Carrier name"
+msgstr ""
+
+#. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__ctn
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__ctn
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__ctn
+msgid "Carton (package)"
 msgstr ""
 
 #. module: delivery_cargoson
@@ -519,7 +519,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__eur
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__eur
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__eur
-msgid "EUR"
+msgid "EUR pll (120x80cm)"
 msgstr ""
 
 #. module: delivery_cargoson
@@ -549,13 +549,20 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__fin
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__fin
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__fin
-msgid "FIN"
+msgid "FIN pll (120x100cm)"
 msgstr ""
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/delivery_carrier.py:0
 #, python-format
 msgid "Failed to create direct booking for courier service \"%s\""
+msgstr ""
+
+#. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__load
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__load
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__load
+msgid "Full load"
 msgstr ""
 
 #. module: delivery_cargoson
@@ -588,7 +595,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__hpl
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__hpl
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__hpl
-msgid "HPL"
+msgid "HPL (80x60cm)"
 msgstr ""
 
 #. module: delivery_cargoson
@@ -624,13 +631,6 @@ msgid ""
 msgstr ""
 
 #. module: delivery_cargoson
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__load
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__load
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__load
-msgid "LOAD"
-msgstr ""
-
-#. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping__label_pdf
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_label_pdf
 msgid "Label Pdf"
@@ -652,6 +652,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping__label_fetched
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_label_fetched
 msgid "Label saved at"
+msgstr ""
+
+#. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__pxl
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__pxl
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__pxl
+msgid "Large pallet"
 msgstr ""
 
 #. module: delivery_cargoson
@@ -731,27 +738,6 @@ msgid "Number of tries"
 msgstr ""
 
 #. module: delivery_cargoson
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__pld
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__pld
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__pld
-msgid "PLD"
-msgstr ""
-
-#. module: delivery_cargoson
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__pll
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__pll
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__pll
-msgid "PLL"
-msgstr ""
-
-#. module: delivery_cargoson
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__pxl
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__pxl
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__pxl
-msgid "PXL"
-msgstr ""
-
-#. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_order_form_inherit_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_picking_form_inherit_cargoson
 msgid "Package"
@@ -788,10 +774,24 @@ msgid "Package type is required"
 msgstr ""
 
 #. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__pll
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__pll
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__pll
+msgid "Pallet"
+msgstr ""
+
+#. module: delivery_cargoson
 #: model:ir.model.constraint,message:delivery_cargoson.constraint_cargoson_parcel_machine_unique_machine
 msgid ""
 "Parcel Machines must be unique for each Cargoson Shipping Method "
 "configuration"
+msgstr ""
+
+#. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__pld
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__pld
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__pld
+msgid "Part load"
 msgstr ""
 
 #. module: delivery_cargoson
@@ -835,14 +835,7 @@ msgstr "Teenusepakkuja"
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__qpl
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__qpl
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__qpl
-msgid "QPL"
-msgstr ""
-
-#. module: delivery_cargoson
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__rll
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__rll
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__rll
-msgid "RLL"
+msgid "QPL (60x40cm)"
 msgstr ""
 
 #. module: delivery_cargoson
@@ -859,6 +852,13 @@ msgstr ""
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_queue_task__res_id
 msgid "Resource ID"
+msgstr ""
+
+#. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__rll
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__rll
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__rll
+msgid "Roll"
 msgstr ""
 
 #. module: delivery_cargoson
@@ -974,13 +974,6 @@ msgid "Success"
 msgstr ""
 
 #. module: delivery_cargoson
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__tbe
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__tbe
-#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__tbe
-msgid "TBE"
-msgstr ""
-
-#. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__prune
 msgid "This record is OK to delete"
 msgstr ""
@@ -1012,6 +1005,13 @@ msgstr ""
 #: model:ir.model,name:delivery_cargoson.model_stock_picking
 msgid "Transfer"
 msgstr "Siirded"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__tbe
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__tbe
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__tbe
+msgid "Tube"
+msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_rate_result__type

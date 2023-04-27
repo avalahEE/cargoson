@@ -21,22 +21,22 @@ class ChooseDeliveryCarrier(models.TransientModel):
         help='Indicates whether the goods will be delivered to a private person instead of a company')
 
     cargoson_package_type = fields.Selection([
-        ('EUR', 'EUR'),
-        ('CTN', 'CTN'),
-        ('FIN', 'FIN'),
-        ('HPL', 'HPL'),
-        ('QPL', 'QPL'),
-        ('LOAD', 'LOAD'),
-        ('PLD', 'PLD'),
-        ('PXL', 'PXL'),
-        ('PLL', 'PLL'),
-        ('TBE', 'TBE'),
-        ('CLL', 'CLL'),
-        ('RLL', 'RLL'),
-        ('20DC', '20DC'),
-        ('40DC', '40DC'),
-        ('40HC', '40HC'),
-    ], string='Package type', default='EUR')
+            ('EUR', 'EUR pll (120x80cm)'),
+            ('CTN', 'Carton (package)'),
+            ('FIN', 'FIN pll (120x100cm)'),
+            ('HPL', 'HPL (80x60cm)'),
+            ('QPL', 'QPL (60x40cm)'),
+            ('LOAD', 'Full load'),
+            ('PLD', 'Part load'),
+            ('PXL', 'Large pallet'),
+            ('PLL', 'Pallet'),
+            ('TBE', 'Tube'),
+            ('CLL', 'CLL'),
+            ('RLL', 'Roll'),
+            ('20DC', '20\' Dry Container'),
+            ('40DC', '40\' Dry Container'),
+            ('40HC', '40\' High Cube'),
+        ], string='Package type', default='EUR')
     cargoson_package_qty = fields.Integer('Package quantity', default=1)
 
     cargoson_selected_carrier_name = fields.Char('Selected carrier')
