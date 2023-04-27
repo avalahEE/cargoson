@@ -26,21 +26,21 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__20dc
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__20dc
 msgid "20' Dry Container"
-msgstr ""
+msgstr "20' kuiv konteiner"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__40dc
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__40dc
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__40dc
 msgid "40' Dry Container"
-msgstr ""
+msgstr "40' kuiv konteiner"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__40hc
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__40hc
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__40hc
 msgid "40' High Cube"
-msgstr ""
+msgstr "40' kõrge konteiner"
 
 #. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_delivery_carrier_form_with_provider_cargoson
@@ -310,7 +310,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__ctn
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__ctn
 msgid "Carton (package)"
-msgstr ""
+msgstr "Karp (pakk)"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_rate_result__choose_delivery_carrier_id
@@ -520,7 +520,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__eur
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__eur
 msgid "EUR pll (120x80cm)"
-msgstr ""
+msgstr "EUR alus (120x80cm)"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_delivery_carrier__cargoson_parcel_machine_country_ids
@@ -550,7 +550,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__fin
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__fin
 msgid "FIN pll (120x100cm)"
-msgstr ""
+msgstr "FIN alus (120x100cm)"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/delivery_carrier.py:0
@@ -563,7 +563,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__load
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__load
 msgid "Full load"
-msgstr ""
+msgstr "Täiskoorem"
 
 #. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_cargoson_shipping_wizard
@@ -596,7 +596,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__hpl
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__hpl
 msgid "HPL (80x60cm)"
-msgstr ""
+msgstr "HPL (80x60cm)"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__id
@@ -659,7 +659,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__pxl
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__pxl
 msgid "Large pallet"
-msgstr ""
+msgstr "Lai alus"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine____last_update
@@ -778,7 +778,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__pll
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__pll
 msgid "Pallet"
-msgstr ""
+msgstr "Alus"
 
 #. module: delivery_cargoson
 #: model:ir.model.constraint,message:delivery_cargoson.constraint_cargoson_parcel_machine_unique_machine
@@ -792,7 +792,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__pld
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__pld
 msgid "Part load"
-msgstr ""
+msgstr "Osakoorem"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_queue_task__state__pending
@@ -836,7 +836,7 @@ msgstr "Teenusepakkuja"
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__qpl
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__qpl
 msgid "QPL (60x40cm)"
-msgstr ""
+msgstr "QPL (60x40cm)"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__reference
@@ -859,7 +859,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__rll
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__rll
 msgid "Roll"
-msgstr ""
+msgstr "Rull"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__sale_order_id
@@ -1011,7 +1011,7 @@ msgstr "Siirded"
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__tbe
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__tbe
 msgid "Tube"
-msgstr ""
+msgstr "Toru"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_rate_result__type
