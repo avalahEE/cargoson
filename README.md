@@ -10,8 +10,8 @@ You can upload and compare your existing pricelists and lead-times, request new 
 
 1. Install module.
 2. Configure shipping method (API keys will be provided by Cargoson)
-3. Make sure that warehouse address data is fullfilled (address data, contact phone)
-4. Make sure that customer delivery address data is fullfilled (address data, contact phone)
+3. Make sure that warehouse address data is fulfilled (address data, contact phone)
+4. Make sure that customer delivery address data is fulfilled (address data, contact phone)
 5. Shipment must have a weight
 
 # Using on Quotations
