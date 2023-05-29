@@ -49,6 +49,8 @@ class ProviderCargoson(models.Model):
     def _cargoson_rate_shipment(self, document_name, collection_address, delivery_address, weight):
         weight = self._cargoson_convert_weight(weight)
         logger.info('Cargoson: rate shipment for: %s (weight=%s)', document_name, weight)
+        if weight <= 0:
+            raise UserError(_('The combined weight of the shipment must be greater than zero.'))
 
         carrier = self._match_address(delivery_address)
         if not carrier:
@@ -314,7 +316,7 @@ class ProviderCargoson(models.Model):
             self.log_xml(log_request, path)
 
             response = requests.post(url, json_data, json=True, headers=self._cargoson_get_headers())
-            log_response = 'URL: {}\n\n{}\n'.format(url, response.text)
+            log_response = 'URL: {}\nSTATUS:{}\n\n{}\n'.format(url, response.status_code, response.text)
             self.log_xml(log_response, path)
 
             data = response.json()

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-27 08:13+0000\n"
-"PO-Revision-Date: 2023-04-27 08:13+0000\n"
+"POT-Creation-Date: 2023-05-29 10:15+0000\n"
+"PO-Revision-Date: 2023-05-29 10:15+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -19,7 +19,7 @@ msgstr ""
 #: code:addons/delivery_cargoson/models/cargoson_shipping.py:0
 #, python-format
 msgid "%s has been updated: %s"
-msgstr ""
+msgstr "%s on uuendatud: %s"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__20dc
@@ -45,12 +45,12 @@ msgstr "40' kõrge konteiner"
 #. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_delivery_carrier_form_with_provider_cargoson
 msgid "<span class=\"text-success\">Queue</span>"
-msgstr ""
+msgstr "<span class=\"text-success\">Järjekord</span>"
 
 #. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_cargoson_shipping_wizard
 msgid "Add"
-msgstr ""
+msgstr "Lisa"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/cargoson_rate_result.py:0
@@ -58,12 +58,12 @@ msgstr ""
 #: code:addons/delivery_cargoson/models/stock_picking.py:0
 #, python-format
 msgid "Add a shipping method"
-msgstr ""
+msgstr "Lisa tarnemeetod"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__address
 msgid "Address"
-msgstr ""
+msgstr "Aadress"
 
 #. module: delivery_cargoson
 #: model:res.groups,name:delivery_cargoson.group_cargoson_admin
@@ -80,13 +80,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_cargoson_rate_results
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_cargoson_shipping_wizard
 msgid "Available prices"
-msgstr ""
+msgstr "Saadaval hinnad"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__cargoson_rate_results
 #: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__cargoson_rate_results
 msgid "Available rates"
-msgstr ""
+msgstr "Saadaval hinnad"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping__booking_data
@@ -97,13 +97,13 @@ msgstr ""
 #: code:addons/delivery_cargoson/models/cargoson_shipping.py:0
 #, python-format
 msgid "Booking data unavailable. Cargoson reference: %s"
-msgstr ""
+msgstr "Tarne andmed pole saadaval. Cargosoni viide: %s"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/cargoson_shipping.py:0
 #, python-format
 msgid "Booking shipping was not successful: \"%s\""
-msgstr ""
+msgstr "Tarne registreerimine ebaõnnestus: \"%s\""
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__cll
@@ -119,7 +119,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_sale_order__cargoson_collection_prenotification
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_collection_prenotification
 msgid "Call the collection contact before loading"
-msgstr ""
+msgstr "Kontakteeru pealevõtmise kontaktiga"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__delivery_prenotification
@@ -128,7 +128,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_sale_order__cargoson_delivery_prenotification
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_delivery_prenotification
 msgid "Call the delivery contact before loading"
-msgstr ""
+msgstr "Kontakteeri mahalaadimise kontaktiga"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__delivery_carrier__delivery_type__cargoson
@@ -173,12 +173,12 @@ msgstr ""
 #: code:addons/delivery_cargoson/models/delivery_carrier.py:0
 #, python-format
 msgid "Cargoson API key not configured"
-msgstr ""
+msgstr "Cargosoni API võti pole konfigureeritud"
 
 #. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_delivery_carrier_form_with_provider_cargoson
 msgid "Cargoson Configuration"
-msgstr ""
+msgstr "Cargoson seaded"
 
 #. module: delivery_cargoson
 #: model:ir.model,name:delivery_cargoson.model_cargoson_sync_parcel_machine
@@ -462,7 +462,7 @@ msgstr ""
 #: code:addons/delivery_cargoson/models/cargoson_shipping.py:0
 #, python-format
 msgid "Delivery booking successful for shipment %s (%s)"
-msgstr ""
+msgstr "Tarne registreerimine õnnestus saadetisele %s (%s)"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__delivery_carrier_id
@@ -537,13 +537,13 @@ msgstr ""
 #: code:addons/delivery_cargoson/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: failed to query available prices from Cargoson"
-msgstr ""
+msgstr "Error: saadaval olevaid hindu ei õnnestunud pärida"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/delivery_carrier.py:0
 #, python-format
 msgid "Error: this delivery method is not available for this address."
-msgstr ""
+msgstr "Error: see tarnemeetod pole selle aadressi jaoks saadaval."
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__fin
@@ -568,19 +568,19 @@ msgstr "Täiskoorem"
 #. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_cargoson_shipping_wizard
 msgid "Get rates"
-msgstr ""
+msgstr "Küsi hindu"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/cargoson_shipping.py:0
 #, python-format
 msgid "Giving up on fetching label for: %s"
-msgstr ""
+msgstr "Annan alla paki sildi küsimisega saadetisele: %s"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/cargoson_shipping.py:0
 #, python-format
 msgid "Giving up on updating booking data for: %s"
-msgstr ""
+msgstr "Annan alla saadetise info küsimisega saadetisele: %s"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__frigo
@@ -589,14 +589,14 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_sale_order__cargoson_frigo
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_frigo
 msgid "Goods are temperature sensitive"
-msgstr ""
+msgstr "Kaup on temperatuuritundlik"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__hpl
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__hpl
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__hpl
 msgid "HPL (80x60cm)"
-msgstr "HPL (80x60cm)"
+msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__id
@@ -725,7 +725,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__name
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_queue_task__name
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,help:delivery_cargoson.field_cargoson_queue_task__num_tries
@@ -741,7 +741,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_order_form_inherit_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_picking_form_inherit_cargoson
 msgid "Package"
-msgstr ""
+msgstr "Saadetis"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__package_qty
@@ -750,13 +750,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_sale_order__cargoson_package_qty
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_package_qty
 msgid "Package quantity"
-msgstr ""
+msgstr "Saadetiste kogus"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/delivery_carrier.py:0
 #, python-format
 msgid "Package quantity must be greater than 0"
-msgstr ""
+msgstr "Saadetiste kogus peab olema suurem kui 0"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__package_type
@@ -765,13 +765,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_sale_order__cargoson_package_type
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_package_type
 msgid "Package type"
-msgstr ""
+msgstr "Saadetise tüüp"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/delivery_carrier.py:0
 #, python-format
 msgid "Package type is required"
-msgstr ""
+msgstr "Saadetise tüüp on nõutud"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__pll
@@ -809,13 +809,13 @@ msgstr ""
 #: code:addons/delivery_cargoson/models/choose_delivery_carrier.py:0
 #, python-format
 msgid "Please select a carrier first"
-msgstr ""
+msgstr "Palun vali teenusepakkuja"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/delivery_carrier.py:0
 #, python-format
 msgid "Please select package type"
-msgstr ""
+msgstr "Palun vali pakendi tüüp"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_rate_result__price
@@ -824,7 +824,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_sale_order__cargoson_selected_price
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_selected_price
 msgid "Price"
-msgstr ""
+msgstr "Hind"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_delivery_carrier__delivery_type
@@ -836,18 +836,18 @@ msgstr "Teenusepakkuja"
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__qpl
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__qpl
 msgid "QPL (60x40cm)"
-msgstr "QPL (60x40cm)"
+msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__reference
 msgid "Reference"
-msgstr ""
+msgstr "Viide"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_rate_result__reg_no
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard_rate_result__reg_no
 msgid "Registration number"
-msgstr ""
+msgstr "Registreerimisnumber"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_queue_task__res_id
@@ -864,7 +864,7 @@ msgstr "Rull"
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__sale_order_id
 msgid "Sale Order"
-msgstr ""
+msgstr "Müügitellimus"
 
 #. module: delivery_cargoson
 #: model:ir.model,name:delivery_cargoson.model_sale_order
@@ -875,43 +875,43 @@ msgstr "Müügitellimus"
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.choose_delivery_carrier_view_form_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_cargoson_shipping_wizard
 msgid "Select"
-msgstr ""
+msgstr "Vali"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/cargoson_shipping_wizard.py:0
 #, python-format
 msgid "Select a courier service"
-msgstr ""
+msgstr "Vali tarneteenus"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__cargoson_selected_carrier_name
 #: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__cargoson_selected_carrier_name
 msgid "Selected carrier"
-msgstr ""
+msgstr "Valitud tarnija"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__cargoson_selected_carrier_id
 #: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__cargoson_selected_carrier_id
 msgid "Selected carrier ID"
-msgstr ""
+msgstr "Valitud tarnija ID"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__cargoson_selected_price
 #: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__cargoson_selected_price
 msgid "Selected price"
-msgstr ""
+msgstr "Valitud hind"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__cargoson_selected_service_id
 #: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__cargoson_selected_service_id
 msgid "Selected service ID"
-msgstr ""
+msgstr "Valitud teenuse ID"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_rate_result__service
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard_rate_result__service
 msgid "Service"
-msgstr ""
+msgstr "Teenus"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_rate_result__service_id
@@ -920,17 +920,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_sale_order__cargoson_selected_service_id
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_selected_service_id
 msgid "Service ID"
-msgstr ""
+msgstr "Teenuse ID"
 
 #. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_picking_form_inherit_cargoson
 msgid "Set options"
-msgstr ""
+msgstr "Parameetrid"
 
 #. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_picking_form_inherit_cargoson
 msgid "Shipment"
-msgstr ""
+msgstr "Saadetis"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__adr
@@ -939,7 +939,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_sale_order__cargoson_adr
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_adr
 msgid "Shipment is hazardous (ADR)"
-msgstr ""
+msgstr "Saadetis on ohtlik (ADR)"
 
 #. module: delivery_cargoson
 #: model:ir.model,name:delivery_cargoson.model_delivery_carrier
@@ -950,7 +950,7 @@ msgstr "Tarneviisid"
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping__status
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_status
 msgid "Shipping Status"
-msgstr ""
+msgstr "Saadetise staatus"
 
 #. module: delivery_cargoson
 #: model:ir.model,name:delivery_cargoson.model_cargoson_shipping
@@ -973,6 +973,21 @@ msgstr ""
 msgid "Success"
 msgstr ""
 
+#. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/delivery_carrier.py:0
+#, python-format
+msgid "The combined weight of the shipment must be greater than zero."
+msgstr "Saadetise kogukaal peab olema suurem kui 0."
+
+#. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/cargoson_shipping_wizard.py:0
+#, python-format
+msgid ""
+"The combined weight of the shipment must be greater than zero. Are all the "
+"transfer lines marked as done?"
+msgstr ""
+"Saadetise kogukaal peab olema suurem kui 0. Kas kõik siirde read "
+"on tehtuks märgitud?"
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__prune
 msgid "This record is OK to delete"

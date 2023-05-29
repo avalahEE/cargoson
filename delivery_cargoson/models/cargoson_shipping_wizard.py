@@ -76,6 +76,11 @@ class CargosonShippingWizard(models.TransientModel):
         ))
 
     def action_get_rates(self):
+        if self.picking_id.shipping_weight <= 0:
+            raise UserError(_(
+                'The combined weight of the shipment must be greater than zero. '
+                'Are all the transfer lines marked as done?'))
+
         vals = self.with_context(cargoson=self.get_cargoson_options()).carrier_id._cargoson_rate_shipment(
             self.picking_id.name,
             self.picking_id.get_cargoson_collection_address(),
