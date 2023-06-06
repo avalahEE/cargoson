@@ -47,6 +47,47 @@ class CargosonQueueTask(models.Model):
         return super().create(vals_list)
 
     @api.model
+    def execute_instance_tasks(self, res_id: int, res_name: str, include_error=False):
+        tasks = self.env['cargoson.queue.task'].search([
+            ('res_id', '=', res_id),
+            ('res_name', '=', res_name),
+            ('state', '=', 'pending')
+        ])
+        logger.info('Start processing instance queued tasks (include_error=%s)', include_error)
+        if include_error:
+            tasks = tasks.filtered(lambda task: task.state in ['pending', 'error'])
+        if len(tasks) == 0:
+            return
+
+        limit_time = get_cron_time_limit()
+        logger.info('Processing instance queued tasks (limit_time_real_cron=%ss): %s', limit_time, len(tasks))
+        start = time.time()
+
+        task_results = []
+
+        for record in tasks:
+            # consume queue item
+            record.write(dict(state='in_progress'))
+            record.flush()
+
+            instance = record.validate()
+            if not instance:
+                record.write(dict(state='error'))
+                record.flush()
+                task_results.append({'id': record.id, 'name': record.name, 'result': TaskResult.ERR})
+                continue
+
+            record.execute(instance)
+            task_results.append({'id': record.id, 'name': record.name, 'result': TaskResult.OK})
+
+            if limit_time > 0 and time.time() - start > limit_time - 60:
+                logger.warning('Reached close to thread time limit (%ss), continuing next interval', limit_time)
+                break
+
+        logger.info('Queue processed in %ss and returning tasks: %s', round(time.time() - start, 3), task_results)
+        return task_results
+
+    @api.model
     def cron_execute_tasks(self):
         queued = self.env['cargoson.queue.task'].search([('state', '=', 'pending')])
         if len(queued) == 0:

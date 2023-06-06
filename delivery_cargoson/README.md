@@ -8,6 +8,8 @@ options for adding shipping in warehouse transfer phase.
 Changelog
 =========
 
+- 1.0.4
+    - Added manual Cargoson data update button on stock picking form.
 - 1.0.3
     - Disallow "Get prices" for orders that have shipping weight of zero
 - 1.0.2

@@ -1,6 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError
-
+from .cargoson_queue import TaskResult
 import logging
 logger = logging.getLogger(__name__)
 
@@ -11,6 +11,7 @@ class StockPicking(models.Model):
 
     cargoson_shipping_options_id = fields.Many2one('cargoson.shipping.options')
     cargoson_shipping_id = fields.Many2one('cargoson.shipping')
+    cargoson_shipping_state = fields.Selection(related='cargoson_shipping_id.status')
 
     cargoson_reference = fields.Char(related='cargoson_shipping_id.reference')
     cargoson_tracking_url = fields.Text('Cargoson Tracking', related='cargoson_shipping_id.tracking_url')
@@ -126,3 +127,21 @@ class StockPicking(models.Model):
     def get_cargoson_delivery_address(self):
         self.ensure_one()
         return self.partner_id
+
+    def action_cargoson_manual_update(self):
+        self.ensure_one()
+        task_model = self.env['cargoson.queue.task']
+        task_results = task_model.execute_instance_tasks(self.cargoson_shipping_id.id, 'cargoson.shipping')
+        logger.info("Task results: %s", task_results)
+
+        if task_results is None:
+            logger.info("No background tasks are pending for Stock Picking ID: %s", self.cargoson_shipping_id.id)
+            return
+
+        for task in task_results:
+            if task['result'] == TaskResult.OK:
+                logger.info("Task ID: %s, Name: %s, Result: Successfully processed", task['id'], task['name'])
+            elif task['result'] == TaskResult.ERR:
+                logger.info("Task ID: %s, Name: %s, Result: Error occurred during processing", task['id'], task['name'])
+            elif task['result'] == TaskResult.RETRY:
+                logger.info("Task ID: %s, Name: %s, Result: Task will be retried", task['id'], task['name'])
