@@ -5,25 +5,15 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
-"Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-29 10:15+0000\n"
-"PO-Revision-Date: 2023-05-29 10:15+0000\n"
-"Last-Translator: \n"
+"POT-Creation-Date: 2023-06-06 12:03+0000\n"
+"PO-Revision-Date: 2023-06-06 12:03+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
-"Language-Team: \n"
-"Language: et_EE\n"
-"MIME-Version: 1.0\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
-"Content-Type: text/plain; charset=UTF-8\n"
-"Content-Transfer-Encoding: 8bit\n"
-"Content-Transfer-Encoding: 8bit\n"
+"Content-Transfer-Encoding: \n"
 "Plural-Forms: \n"
-"Plural-Forms: \n"
-"X-Generator: Poedit 3.2.2\n"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/cargoson_shipping.py:0
@@ -64,6 +54,7 @@ msgstr "Lisa"
 
 #. module: delivery_cargoson
 #: code:addons/delivery_cargoson/models/cargoson_rate_result.py:0
+#: code:addons/delivery_cargoson/models/cargoson_rate_result.py:0
 #: code:addons/delivery_cargoson/models/stock_picking.py:0
 #, python-format
 msgid "Add a shipping method"
@@ -77,7 +68,7 @@ msgstr "Aadress"
 #. module: delivery_cargoson
 #: model:res.groups,name:delivery_cargoson.group_cargoson_admin
 msgid "Admin"
-msgstr "Admin"
+msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.model,name:delivery_cargoson.model_cargoson_queue_task
@@ -145,7 +136,7 @@ msgstr "Enne tarnet helistage kontaktile"
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_order_form_inherit_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_picking_form_inherit_cargoson
 msgid "Cargoson"
-msgstr "Cargoson"
+msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.actions.server,name:delivery_cargoson.ir_cron_cargoson_parcel_machine_sync_ir_actions_server
@@ -165,13 +156,13 @@ msgstr "Cargoson - järjekord"
 #: model:ir.actions.server,name:delivery_cargoson.ir_cron_cargoson_parcel_machines_sync_ir_actions_server
 #: model:ir.cron,cron_name:delivery_cargoson.ir_cron_cargoson_parcel_machines_sync
 #: model:ir.cron,name:delivery_cargoson.ir_cron_cargoson_parcel_machines_sync
-msgid "Cargoson - Sync parcel machines"
-msgstr "Cargoson - Pakiautomaatide sünkroniseerimine"
+msgid "Cargoson - Sync Parcel Machines"
+msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_delivery_carrier__cargoson_api_url
 msgid "Cargoson API URL"
-msgstr "Cargoson API URL"
+msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_delivery_carrier__cargoson_api_key
@@ -227,7 +218,7 @@ msgstr "Cargoson tarne viisard"
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_delivery_carrier__cargoson_test_api_url
 msgid "Cargoson Test API URL"
-msgstr "Cargoson Test API URL"
+msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_delivery_carrier__cargoson_test_api_key
@@ -502,6 +493,13 @@ msgid "Delivery should be performed with a tail-lift truck"
 msgstr "Tarne peaks toimuma sabatõstukiga"
 
 #. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__depth
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__depth
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__depth
+msgid "Depth"
+msgstr "Sügavus"
+
+#. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_cargoson_shipping_wizard
 msgid "Discard"
 msgstr "Loobu"
@@ -611,6 +609,13 @@ msgid "HPL (80x60cm)"
 msgstr ""
 
 #. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__height
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__height
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__height
+msgid "Height"
+msgstr "Kõrgus"
+
+#. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__id
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_queue_task__id
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_rate_result__id
@@ -638,9 +643,30 @@ msgstr "Töös"
 #: model:ir.model.fields,help:delivery_cargoson.field_sale_order__cargoson_delivery_to_private_person
 #: model:ir.model.fields,help:delivery_cargoson.field_stock_picking__cargoson_delivery_to_private_person
 msgid ""
-"Indicates whether the goods will be delivered to a private person instead of "
-"a company"
+"Indicates whether the goods will be delivered to a private person instead of"
+" a company"
 msgstr "Näitab, kas kaup toimetatakse ettevõtte asemel eraisikule"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__is_fixed_depth
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__is_fixed_depth
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__is_fixed_depth
+msgid "Is Fixed Depth"
+msgstr ""
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__is_fixed_height
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__is_fixed_height
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__is_fixed_height
+msgid "Is Fixed Height"
+msgstr ""
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__is_fixed_width
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__is_fixed_width
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__is_fixed_width
+msgid "Is Fixed Width"
+msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping__label_pdf
@@ -962,6 +988,7 @@ msgstr "Tarneviisid"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping__status
+#: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_shipping_state
 #: model:ir.model.fields,field_description:delivery_cargoson.field_stock_picking__cargoson_status
 msgid "Shipping Status"
 msgstr "Olek"
@@ -1000,8 +1027,8 @@ msgid ""
 "The combined weight of the shipment must be greater than zero. Are all the "
 "transfer lines marked as done?"
 msgstr ""
-"Saadetise kogukaal peab olema suurem kui 0. Kas kõik siirde read "
-"on tehtuks märgitud?"
+"Saadetise kogukaal peab olema suurem kui 0. Kas kõik siirde read on tehtuks "
+"märgitud?"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__prune
@@ -1056,9 +1083,21 @@ msgid "Unit"
 msgstr "Kogus"
 
 #. module: delivery_cargoson
+#: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_picking_form_inherit_cargoson
+msgid "Update Cargoson data"
+msgstr "Uuenda Cargosoni andmeid"
+
+#. module: delivery_cargoson
 #: model:res.groups,name:delivery_cargoson.group_cargoson_user
 msgid "User"
 msgstr "Kasutaja"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__width
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__width
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__width
+msgid "Width"
+msgstr "Laius"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__postcode

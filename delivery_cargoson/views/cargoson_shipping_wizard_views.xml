@@ -6,6 +6,9 @@
         <field name="arch" type="xml">
             <form>
                 <field name="picking_id" invisible="1" />
+                <field name="is_fixed_width" invisible="1"/>
+                <field name="is_fixed_height" invisible="1"/>
+                <field name="is_fixed_depth" invisible="1"/>
                 <table>
                     <tbody>
                         <tr>
@@ -49,6 +52,31 @@
                             </td>
                             <td>
                                 <field name="cargoson_package_qty" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="width" />
+                            </td>
+                            <td>
+                                <field name="width" attrs="{'readonly': [('is_fixed_width', '=', True)]}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="depth" />
+                            </td>
+                            <td>
+                                <field name="depth" attrs="{'readonly': [('is_fixed_depth', '=', True)]}"/>
+
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <label for="height" />
+                            </td>
+                            <td>
+                                <field name="height" attrs="{'readonly': [('is_fixed_height', '=', True)]}"/>
                             </td>
                         </tr>
                         <tr>

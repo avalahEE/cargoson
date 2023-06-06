@@ -8,9 +8,10 @@
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="cargoson_shipping_id" invisible="1"/>
                 <field name="cargoson_shipping_state" invisible="1"/>
-                <button name="action_cargoson_manual_update" type="object" 
-                        string="Update Cargoson data" 
-                        attrs="{'invisible': ['|', ('cargoson_shipping_id', '=', ''), ('cargoson_shipping_state', '=', 'success')]}"/>
+                <button name="action_cargoson_manual_update" type="object"
+                        string="Update Cargoson data"
+                        attrs="{'invisible': ['|', ('cargoson_shipping_id', '=', ''), ('cargoson_shipping_state', '=', 'success')]}"
+                        groups="delivery_cargoson.group_cargoson_user"/>
             </xpath>
 
             <xpath expr="//group[@name='carrier_data']/field[@name='carrier_id']" position="after">

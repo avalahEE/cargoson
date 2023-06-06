@@ -8,6 +8,8 @@ options for adding shipping in warehouse transfer phase.
 Changelog
 =========
 
+- 1.0.5
+    - Added height, depth, width fields for wizards.
 - 1.0.4
     - Added manual Cargoson data update button on stock picking form.
 - 1.0.3

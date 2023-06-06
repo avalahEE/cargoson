@@ -404,3 +404,13 @@ class ProviderCargoson(models.Model):
     #         'name': _('Cargoson Event Log'),
     #         'domain': [],
     #     }
+
+    PREDEFINED_PACKAGE_DIMENSIONS = {
+        'EUR': {'width': 1200, 'depth': 800},
+        'FIN': {'width': 1200, 'depth': 1000},
+        'HPL': {'width': 800, 'depth': 600},
+    }
+
+    @staticmethod
+    def get_package_dimensions(package_type):
+        return ProviderCargoson.PREDEFINED_PACKAGE_DIMENSIONS.get(package_type, {'width': 0, 'depth': 0})

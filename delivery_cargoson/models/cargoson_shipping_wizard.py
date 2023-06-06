@@ -1,5 +1,6 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
+from .delivery_carrier import ProviderCargoson
 import logging
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,14 @@ class CargosonShippingWizard(models.TransientModel):
     cargoson_show_rates = fields.Boolean('Show rates (technical field)')
     cargoson_rate_results = fields.One2many(
         'cargoson.shipping.wizard.rate.result', 'cargoson_shipping_wizard_id', 'Available rates')
+
+    width = fields.Float(compute="_onchange_cargoson_package_type", required=False)
+    height = fields.Float(required=False)
+    depth = fields.Float(compute="_onchange_cargoson_package_type", required=False)
+
+    is_fixed_width = fields.Boolean(compute='_compute_fixed_dimensions')
+    is_fixed_height = fields.Boolean(compute='_compute_fixed_dimensions')
+    is_fixed_depth = fields.Boolean(compute='_compute_fixed_dimensions')
 
     @api.depends('picking_id')
     def _compute_addresses(self):
@@ -159,3 +168,17 @@ class CargosonShippingWizard(models.TransientModel):
             'cargoson_selected_price': None,
             'cargoson_show_rates': False,
         })
+
+    @api.onchange('cargoson_package_type')
+    @api.depends('cargoson_package_type')
+    def _onchange_cargoson_package_type(self):
+        package_dimensions = ProviderCargoson.get_package_dimensions(self.cargoson_package_type)
+        self.width = package_dimensions.get('width', 0)
+        self.depth = package_dimensions.get('depth', 0)
+
+    @api.depends('cargoson_package_type')
+    def _compute_fixed_dimensions(self):
+        package_dimensions = ProviderCargoson.get_package_dimensions(self.cargoson_package_type)
+        self.is_fixed_width = package_dimensions.get('width', 0) != 0
+        self.is_fixed_height = False  # As height was not specified in predefined dimensions
+        self.is_fixed_depth = package_dimensions.get('depth', 0) != 0
