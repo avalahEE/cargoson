@@ -57,9 +57,9 @@ class CargosonShippingWizard(models.TransientModel):
     cargoson_rate_results = fields.One2many(
         'cargoson.shipping.wizard.rate.result', 'cargoson_shipping_wizard_id', 'Available rates')
 
-    width = fields.Float(compute="_onchange_cargoson_package_type", required=False)
-    height = fields.Float(required=False)
-    depth = fields.Float(compute="_onchange_cargoson_package_type", required=False)
+    cargoson_width = fields.Float(compute="_onchange_cargoson_package_type", required=False)
+    cargoson_height = fields.Float(required=False)
+    cargoson_depth = fields.Float(compute="_onchange_cargoson_package_type", required=False)
 
     is_fixed_width = fields.Boolean(compute='_compute_fixed_dimensions')
     is_fixed_height = fields.Boolean(compute='_compute_fixed_dimensions')
@@ -94,7 +94,10 @@ class CargosonShippingWizard(models.TransientModel):
             self.picking_id.name,
             self.picking_id.get_cargoson_collection_address(),
             self.picking_id.get_cargoson_delivery_address(),
-            self.picking_id.shipping_weight)
+            self.picking_id.shipping_weight,
+            width=self.cargoson_width,
+            height=self.cargoson_height,
+            depth=self.cargoson_depth)
 
         if vals.get('error_message'):
             raise UserError(vals.get('error_message'))
@@ -173,8 +176,8 @@ class CargosonShippingWizard(models.TransientModel):
     @api.depends('cargoson_package_type')
     def _onchange_cargoson_package_type(self):
         package_dimensions = ProviderCargoson.get_package_dimensions(self.cargoson_package_type)
-        self.width = package_dimensions.get('width', 0)
-        self.depth = package_dimensions.get('depth', 0)
+        self.cargoson_width = package_dimensions.get('width', 0)
+        self.cargoson_depth = package_dimensions.get('depth', 0)
 
     @api.depends('cargoson_package_type')
     def _compute_fixed_dimensions(self):

@@ -56,27 +56,27 @@
                         </tr>
                         <tr>
                             <td>
-                                <label for="width" />
+                                <label for="cargoson_width" />
                             </td>
                             <td>
-                                <field name="width" attrs="{'readonly': [('is_fixed_width', '=', True)]}"/>
+                                <field name="cargoson_width" attrs="{'readonly': [('is_fixed_width', '=', True)]}"/>
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <label for="depth" />
+                                <label for="cargoson_depth" />
                             </td>
                             <td>
-                                <field name="depth" attrs="{'readonly': [('is_fixed_depth', '=', True)]}"/>
+                                <field name="cargoson_depth" attrs="{'readonly': [('is_fixed_depth', '=', True)]}"/>
 
                             </td>
                         </tr>
                         <tr>
                             <td>
-                                <label for="height" />
+                                <label for="cargoson_height" />
                             </td>
                             <td>
-                                <field name="height" attrs="{'readonly': [('is_fixed_height', '=', True)]}"/>
+                                <field name="cargoson_height" attrs="{'readonly': [('is_fixed_height', '=', True)]}"/>
                             </td>
                         </tr>
                         <tr>

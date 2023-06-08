@@ -51,9 +51,9 @@ class ChooseDeliveryCarrier(models.TransientModel):
     cargoson_show_rates = fields.Boolean('Show rates (technical field)')
     cargoson_rate_results = fields.One2many('cargoson.rate.result', 'choose_delivery_carrier_id', 'Available rates')
 
-    width = fields.Float(compute="_onchange_cargoson_package_type", required=False)
-    height = fields.Float(required=False)
-    depth = fields.Float(compute="_onchange_cargoson_package_type", required=False)
+    cargoson_width = fields.Float(compute="_onchange_cargoson_package_type", required=False)
+    cargoson_height = fields.Float(required=False)
+    cargoson_depth = fields.Float(compute="_onchange_cargoson_package_type", required=False)
 
     is_fixed_width = fields.Boolean(compute='_compute_fixed_dimensions')
     is_fixed_height = fields.Boolean(compute='_compute_fixed_dimensions')
@@ -179,8 +179,8 @@ class ChooseDeliveryCarrier(models.TransientModel):
     @api.depends('cargoson_package_type')
     def _onchange_cargoson_package_type(self):
         package_dimensions = ProviderCargoson.get_package_dimensions(self.cargoson_package_type)
-        self.width = package_dimensions.get('width', 0)
-        self.depth = package_dimensions.get('depth', 0)
+        self.cargoson_width = package_dimensions.get('width', 0)
+        self.cargoson_depth = package_dimensions.get('depth', 0)
 
     @api.depends('cargoson_package_type')
     def _compute_fixed_dimensions(self):

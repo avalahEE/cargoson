@@ -46,9 +46,26 @@ class ProviderCargoson(models.Model):
         return self._cargoson_rate_shipment(
             order.name, collection_address, delivery_address, order._get_estimated_weight())
 
-    def _cargoson_rate_shipment(self, document_name, collection_address, delivery_address, weight):
+    def _cargoson_rate_shipment(self, document_name, collection_address, delivery_address, weight, width=0, height=0, depth=0 ):
         weight = self._cargoson_convert_weight(weight)
         logger.info('Cargoson: rate shipment for: %s (weight=%s)', document_name, weight)
+        logger.info('Cargoson package dimensions from shipping wizard: width: %s, height: %s, depth: %s', width, height, depth)
+
+        if (width, height, depth) == (0, 0, 0):
+            wizard = self.env['choose.delivery.carrier'].search([], limit=1)
+            width = wizard.cargoson_width
+            height = wizard.cargoson_height
+            depth = wizard.cargoson_depth
+
+        if height <= 0:
+            raise UserError(_('The height of the shipment must be greater than zero.'))
+
+        if width <= 0:
+            raise UserError(_('The width of the shipment must be greater than zero.'))
+
+        if depth <= 0:
+            raise UserError(_('The depth of the shipment must be greater than zero.'))
+
         if weight <= 0:
             raise UserError(_('The combined weight of the shipment must be greater than zero.'))
 
@@ -91,8 +108,14 @@ class ProviderCargoson(models.Model):
                 'warning_message': False
             }
 
+        logger.info('_cargoson_rate_shipment: Cargoson package %s dimensions: %s',
+                    document_name, {'width': width, 'height': height, 'depth': depth})
+
         package = PriceRequestShipmentRows_AttributesItem(
             weight=math.ceil(weight),
+            # width=math.ceil(width),
+            # length=math.ceil(depth),
+            # height=math.ceil(height),
             package_type=PriceRequestShipmentRows_AttributesItemPackage_Type.from_dict(package_type),
             quantity=package_qty,
             description='Goods with {} package'.format(package_type)
@@ -178,8 +201,16 @@ class ProviderCargoson(models.Model):
         opts = picking.cargoson_shipping_options_id
         logger.info('Cargoson: send shipment for: %s (weight=%s)', picking.name, weight)
 
+        wizard = self.env['choose.delivery.carrier'].search([], limit=1)
+        width = wizard.cargoson_width
+        height = wizard.cargoson_height
+        depth = wizard.cargoson_depth
+        logger.info('_cargoson_send_shipping: Cargoson package %s dimensions: %s', picking.name, {'width': width, 'height': height, 'depth': depth})
         package = OrderRows_AttributesItem(
             weight=math.ceil(weight),
+            # width=width,
+            # length=depth,
+            # height=height,
             package_type=OrderRows_AttributesItemPackage_Type.from_dict(opts.package_type),
             quantity=opts.package_qty,
             description='Goods with {} package'.format(opts.package_type)
@@ -312,12 +343,14 @@ class ProviderCargoson(models.Model):
         url = self._cargoson_get_api_url(path)
         try:
             json_data = json.dumps(data)
+            logger.info('json_data: %s', json_data)
             log_request = 'POST: {}\nHEADERS: {}\n\n{}\n'.format(url, self._cargoson_get_headers(), json_data)
             self.log_xml(log_request, path)
 
             response = requests.post(url, json_data, json=True, headers=self._cargoson_get_headers())
             log_response = 'URL: {}\nSTATUS:{}\n\n{}\n'.format(url, response.status_code, response.text)
             self.log_xml(log_response, path)
+            logger.info(log_response)
 
             data = response.json()
             if schema_class is None:
