@@ -57,9 +57,9 @@ class CargosonShippingWizard(models.TransientModel):
     cargoson_rate_results = fields.One2many(
         'cargoson.shipping.wizard.rate.result', 'cargoson_shipping_wizard_id', 'Available rates')
 
-    cargoson_width = fields.Float(compute="_onchange_cargoson_package_type", required=False)
-    cargoson_height = fields.Float(required=False)
-    cargoson_depth = fields.Float(compute="_onchange_cargoson_package_type", required=False)
+    cargoson_width = fields.Float(string="Width", compute="_onchange_cargoson_package_type", required=False)
+    cargoson_height = fields.Float(string="Height", required=False)
+    cargoson_depth = fields.Float(string="Depth", compute="_onchange_cargoson_package_type", required=False)
 
     is_fixed_width = fields.Boolean(compute='_compute_fixed_dimensions')
     is_fixed_height = fields.Boolean(compute='_compute_fixed_dimensions')

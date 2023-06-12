@@ -115,9 +115,9 @@ class ProviderCargoson(models.Model):
 
         package = PriceRequestShipmentRows_AttributesItem(
             weight=math.ceil(weight),
-            # width=math.ceil(width),
-            # length=math.ceil(depth),
-            # height=math.ceil(height),
+            width=math.ceil(width),
+            length=math.ceil(depth),
+            height=math.ceil(height),
             package_type=PriceRequestShipmentRows_AttributesItemPackage_Type.from_dict(package_type),
             quantity=package_qty,
             description='Goods with {} package'.format(package_type)
@@ -210,9 +210,9 @@ class ProviderCargoson(models.Model):
         logger.info('_cargoson_send_shipping: Cargoson package %s dimensions: %s', picking.name, {'width': width, 'height': height, 'depth': depth})
         package = OrderRows_AttributesItem(
             weight=math.ceil(weight),
-            # width=width,
-            # length=depth,
-            # height=height,
+            width=math.ceil(width),
+            length=math.ceil(depth),
+            height=math.ceil(height),
             package_type=OrderRows_AttributesItemPackage_Type.from_dict(opts.package_type),
             quantity=opts.package_qty,
             description='Goods with {} package'.format(opts.package_type)
@@ -271,6 +271,22 @@ class ProviderCargoson(models.Model):
             not self.cargoson_no_carrier
         ):
             raise UserError(_('Failed to create direct booking for courier service "%s"', opts.selected_carrier_name))
+
+        if result:
+            id = result.get('id')
+            if id:
+                cmr_url = self._cargoson_get_self_service_url('/bookings/%s/cmr' % id)
+                picking.message_post(body=_('CMR document: %s') % cmr_url)
+
+                waybill_url = self._cargoson_get_self_service_url('/bookings/%s/consignment_note' % id)
+                picking.message_post(body=_('e-Waybill: %s') % waybill_url)
+
+                customs_url = self._cargoson_get_self_service_url('/bookings/%s/declaration_summary.pdf' % id)
+                picking.message_post(body=_('Customs declaration: %s') % customs_url)
+
+                if opts.adr:
+                    dgd_url = self._cargoson_get_self_service_url('/bookings/%s/dgd' % id)
+                    picking.message_post(body=_('DGD document: %s') % dgd_url)
 
         tracking_url = result.get('tracking_url')
         label_url = result.get('label_url')
@@ -443,11 +459,20 @@ class ProviderCargoson(models.Model):
     #     }
 
     PREDEFINED_PACKAGE_DIMENSIONS = {
-        'EUR': {'width': 1200, 'depth': 800},
-        'FIN': {'width': 1200, 'depth': 1000},
-        'HPL': {'width': 800, 'depth': 600},
+        'EUR': {'width': 120, 'depth': 80},
+        'FIN': {'width': 120, 'depth': 100},
+        'HPL': {'width': 80, 'depth': 60},
     }
 
     @staticmethod
     def get_package_dimensions(package_type):
         return ProviderCargoson.PREDEFINED_PACKAGE_DIMENSIONS.get(package_type, {'width': 0, 'depth': 0})
+
+    def _cargoson_get_self_service_url(self, path):
+        base_url = self._cargoson_get_api_base_url()
+        if base_url.endswith('/api'):
+            base_url = base_url[:-3]
+        if not base_url.endswith('/'):
+            base_url += '/'
+        logger.info('_cargoson_get_self_service_url: %s', urljoin(base_url, path))
+        return urljoin(base_url, path)

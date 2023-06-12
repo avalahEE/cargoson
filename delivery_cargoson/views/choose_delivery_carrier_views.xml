@@ -9,6 +9,7 @@
                 <field name="is_fixed_width" invisible="1"/>
                 <field name="is_fixed_height" invisible="1"/>
                 <field name="is_fixed_depth" invisible="1"/>
+                <field name="cargoson_no_carrier" invisible="1" />
                 <table attrs="{'invisible': [('delivery_type', '!=', 'cargoson')]}">
                     <tbody>
                         <tr>
@@ -144,6 +145,13 @@
                         </tr>
                     </tbody>
                 </table>
+            </xpath>
+
+            <xpath expr="//field[@name='display_price']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('carrier_id','=', False), ('cargoson_no_carrier','=', True)]}</attribute>
+            </xpath>
+            <xpath expr="//button[@name='update_price']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', ('delivery_type','in', ('fixed', 'base_on_rule')), ('cargoson_no_carrier','=', True)]}</attribute>
             </xpath>
 
             <xpath expr="//form/footer" position="before">

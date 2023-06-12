@@ -3,7 +3,7 @@
     'name': 'Cargoson Shipping',
     'description': 'Send your packages through Cargoson',
     'category': 'Inventory/Delivery',
-    'version': '1.0.7',
+    'version': '1.0.8',
     'author': 'Avatud Lahendused',
     'website': 'https://www.avalah.ee',
     'license': 'Other proprietary',

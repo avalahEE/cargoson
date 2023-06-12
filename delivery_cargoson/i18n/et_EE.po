@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-06 12:03+0000\n"
-"PO-Revision-Date: 2023-06-06 12:03+0000\n"
+"POT-Creation-Date: 2023-06-12 13:34+0000\n"
+"PO-Revision-Date: 2023-06-12 13:34+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -113,6 +113,12 @@ msgid "CLL"
 msgstr ""
 
 #. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/delivery_carrier.py:0
+#, python-format
+msgid "CMR document: %s"
+msgstr "CMR dokument: %s"
+
+#. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__collection_prenotification
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__cargoson_collection_prenotification
 #: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__cargoson_collection_prenotification
@@ -214,6 +220,11 @@ msgstr "Cargoson tarne võimalused"
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard_rate_result__cargoson_shipping_wizard_id
 msgid "Cargoson Shipping Wizard"
 msgstr "Cargoson tarne viisard"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__cargoson_show_add_button
+msgid "Cargoson Show Add Button"
+msgstr ""
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_delivery_carrier__cargoson_test_api_url
@@ -443,6 +454,18 @@ msgid "Customer expects signed documents to be returned"
 msgstr "Klient ootab allkirjastatud dokumentide tagastamist"
 
 #. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/delivery_carrier.py:0
+#, python-format
+msgid "Customs declaration: %s"
+msgstr "Tolli deklaratsioon: %s"
+
+#. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/delivery_carrier.py:0
+#, python-format
+msgid "DGD document: %s"
+msgstr "DGD dokument: %s"
+
+#. module: delivery_cargoson
 #: model:ir.model,name:delivery_cargoson.model_choose_delivery_carrier
 msgid "Delivery Carrier Selection Wizard"
 msgstr "Tarne transpordiviisi valiku loomine"
@@ -493,9 +516,9 @@ msgid "Delivery should be performed with a tail-lift truck"
 msgstr "Tarne peaks toimuma sabatõstukiga"
 
 #. module: delivery_cargoson
-#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__depth
-#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__depth
-#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__depth
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__cargoson_depth
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__cargoson_depth
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__cargoson_depth
 msgid "Depth"
 msgstr "Sügavus"
 
@@ -609,9 +632,9 @@ msgid "HPL (80x60cm)"
 msgstr ""
 
 #. module: delivery_cargoson
-#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__height
-#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__height
-#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__height
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__cargoson_height
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__cargoson_height
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__cargoson_height
 msgid "Height"
 msgstr "Kõrgus"
 
@@ -764,6 +787,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_queue_task__name
 msgid "Name"
 msgstr "Nimi"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__cargoson_no_carrier
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__cargoson_no_carrier
+#: model:ir.model.fields,field_description:delivery_cargoson.field_delivery_carrier__cargoson_no_carrier
+msgid "No Carrier"
+msgstr "Ilma vedajata"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,help:delivery_cargoson.field_cargoson_queue_task__num_tries
@@ -1031,6 +1061,24 @@ msgstr ""
 "märgitud?"
 
 #. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/delivery_carrier.py:0
+#, python-format
+msgid "The depth of the shipment must be greater than zero."
+msgstr "Saadetise sügavus peab olema suurem kui 0."
+
+#. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/delivery_carrier.py:0
+#, python-format
+msgid "The height of the shipment must be greater than zero."
+msgstr "Saadetise kõrgus peab olema suurem kui 0."
+
+#. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/delivery_carrier.py:0
+#, python-format
+msgid "The width of the shipment must be greater than zero."
+msgstr "Saadetise laius peab olema suurem kui 0."
+
+#. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__prune
 msgid "This record is OK to delete"
 msgstr "Selle kirje kustutamine on OK"
@@ -1093,9 +1141,9 @@ msgid "User"
 msgstr "Kasutaja"
 
 #. module: delivery_cargoson
-#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__width
-#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__width
-#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__width
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__cargoson_width
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__cargoson_width
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__cargoson_width
 msgid "Width"
 msgstr "Laius"
 
@@ -1103,3 +1151,9 @@ msgstr "Laius"
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__postcode
 msgid "Zip"
 msgstr "Postiindeks"
+
+#. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/delivery_carrier.py:0
+#, python-format
+msgid "e-Waybill: %s"
+msgstr ""

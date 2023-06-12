@@ -54,9 +54,9 @@ class CargosonShippingOptions(models.Model):
     selected_service_id = fields.Integer('Service ID')
     selected_price = fields.Monetary('Price')
 
-    cargoson_width = fields.Float(compute="_onchange_cargoson_package_type", required=False)
-    cargoson_height = fields.Float(required=False)
-    cargoson_depth = fields.Float(compute="_onchange_cargoson_package_type", required=False)
+    cargoson_width = fields.Float(string="Width", compute="_onchange_cargoson_package_type", required=False)
+    cargoson_height = fields.Float(string="Height", required=False)
+    cargoson_depth = fields.Float(string="Depth", compute="_onchange_cargoson_package_type", required=False)
 
     is_fixed_width = fields.Boolean(compute='_compute_fixed_dimensions')
     is_fixed_height = fields.Boolean(compute='_compute_fixed_dimensions')

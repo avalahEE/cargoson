@@ -51,13 +51,15 @@ class ChooseDeliveryCarrier(models.TransientModel):
     cargoson_show_rates = fields.Boolean('Show rates (technical field)')
     cargoson_rate_results = fields.One2many('cargoson.rate.result', 'choose_delivery_carrier_id', 'Available rates')
 
-    cargoson_width = fields.Float(compute="_onchange_cargoson_package_type", required=False)
-    cargoson_height = fields.Float(required=False)
-    cargoson_depth = fields.Float(compute="_onchange_cargoson_package_type", required=False)
+    cargoson_width = fields.Float(string="Width", compute="_onchange_cargoson_package_type", required=False)
+    cargoson_height = fields.Float(string="Height", required=False)
+    cargoson_depth = fields.Float(string="Depth", compute="_onchange_cargoson_package_type", required=False)
 
     is_fixed_width = fields.Boolean(compute='_compute_fixed_dimensions')
     is_fixed_height = fields.Boolean(compute='_compute_fixed_dimensions')
     is_fixed_depth = fields.Boolean(compute='_compute_fixed_dimensions')
+
+    cargoson_no_carrier = fields.Boolean(related='carrier_id.cargoson_no_carrier')
 
     @api.onchange(
         'cargoson_collection_date',

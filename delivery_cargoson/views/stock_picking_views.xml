@@ -5,12 +5,13 @@
         <field name="model">stock.picking</field>
         <field name="inherit_id" ref="stock.view_picking_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//button[@name='action_toggle_is_locked']" position="after">
+            <xpath expr="//header" position="inside">
                 <field name="cargoson_shipping_id" invisible="1"/>
                 <field name="cargoson_shipping_state" invisible="1"/>
+                <field name="carrier_id" invisible="1"/>
                 <button name="action_cargoson_manual_update" type="object"
                         string="Update Cargoson data"
-                        attrs="{'invisible': ['|', ('cargoson_shipping_id', '=', ''), ('cargoson_shipping_state', '=', 'success')]}"
+                        attrs="{'invisible': ['|', '|',('carrier_id', '=', False), ('cargoson_shipping_id', '=', False), ('cargoson_shipping_state', '=', 'success')]}"
                         groups="delivery_cargoson.group_cargoson_user"/>
             </xpath>
 

@@ -57,20 +57,23 @@ class CargosonShipping(models.Model):
         Cargoson = self.delivery_carrier_id
 
         # FIXME: obtain result schema from vendor
-        booking_data = Cargoson.cargoson_api_get(f'bookings/{self.reference}', [])
+        booking_data = {}
+        if not self.delivery_carrier_id.cargoson_no_carrier:
+            booking_data = Cargoson.cargoson_api_get(f'bookings/{self.reference}', [])
+
         # logger.info('booking = %s', booking_data)
 
         if not isinstance(booking_data, dict):
             logger.warning(_('Booking data unavailable. Cargoson reference: %s', self.reference))
             return TaskResult.RETRY
-
-        if booking_data.get('latest_status') != 'booked':
-            msg = _('Booking shipping was not successful: "%s"', booking_data.get('carrier_response_message'))
-            logger.warning(msg)
-            self.stock_picking_id.message_post(body=msg)
-            if len(booking_data.get('errors', list())) > 0:
-                return TaskResult.ERR
-            return TaskResult.RETRY
+        if not self.delivery_carrier_id.cargoson_no_carrier:
+            if booking_data.get('latest_status') != 'booked':
+                msg = _('Booking shipping was not successful: "%s"', booking_data.get('carrier_response_message'))
+                logger.warning(msg)
+                self.stock_picking_id.message_post(body=msg)
+                if len(booking_data.get('errors', list())) > 0:
+                    return TaskResult.ERR
+                return TaskResult.RETRY
 
         vals = dict()
         self._update_parameter('tracking_url', vals, booking_data.get('tracking_url'), name='Tracking URL')

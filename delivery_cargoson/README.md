@@ -8,6 +8,12 @@ options for adding shipping in warehouse transfer phase.
 Changelog
 =========
 
+- 1.0.8
+    - Added a new method `_cargoson_get_self_service_url(self, path)` to the `ProviderCargoson` class, that creates a URL by  removing `/api` from the base URL and adding the provided path.
+    - Enhanced the `_cargoson_send_shipping` method to log the CMR document link, the Waybill document link, and the Customs declaration document link in the `stock.picking` object.
+    - Also added a DGD document link to the log if the ADR option in shipping options is true.
+    - All log messages are now translatable and Estonian translations have been added for the new messages.
+
 - 1.0.7
     - Changed "update cargoson data" button location.
 - 1.0.6
