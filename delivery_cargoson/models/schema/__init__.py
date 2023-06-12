@@ -4,3 +4,4 @@ from .get_booking_request_body import GetBookingRequestBody
 from .order import Order
 from .parcel_machines import ParcelMachines
 from .price_request_shipment import PriceRequestShipment
+from .update_booked_offer import UpdateBookedOffer

@@ -1,0 +1,17 @@
+{
+    "type": "object",
+    "example": {
+        "status": 200,
+        "data": "Offer price updated for Shipment {reference}"
+    },
+    "properties": {
+        "total_amount": {
+            "type": "number",
+            "description": "Updated total price of the shipment in a local currency units"
+        },
+        "total_weight": {
+            "type": "number",
+            "description": "Updated total weight of the shipment in kilograms"
+        }
+    }
+}

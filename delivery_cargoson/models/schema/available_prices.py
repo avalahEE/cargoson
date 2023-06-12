@@ -4,6 +4,23 @@ import enum
 
 
 # noinspection PyPep8Naming
+class AvailablePricesObjectPricesItemService_Type(enum.Enum):
+    """
+    Service type
+    """
+
+    NORMAL = 'normal'
+    PARCEL_MACHINE = 'parcel_machine'
+
+    def as_dict(self):
+        return self.value
+
+    @staticmethod
+    def from_dict(value):
+        return AvailablePricesObjectPricesItemService_Type(value)
+
+
+# noinspection PyPep8Naming
 class AvailablePricesObjectPricesItemType(enum.Enum):
     """
     The source of this price
@@ -173,8 +190,72 @@ class AvailablePricesObjectPricesItem(object):
     The source of this price
     """
 
+    __service_type: Optional[AvailablePricesObjectPricesItemService_Type] = None
+
+    def __get_service_type(self):
+        return self.__service_type
+
+    def __set_service_type(self, service_type):
+        if not (service_type.as_dict() if hasattr(service_type, "as_dict") else service_type in ['normal', 'parcel_machine'] or service_type is None):
+            raise Exception(f'Cannot set field AvailablePricesObjectPricesItemService_Type.service_type to {repr(service_type)}')
+
+        self.__service_type = service_type
+
+    service_type = property(__get_service_type, __set_service_type)
+    """
+    Service type
+    """
+
+    __estimated_collection_date: Optional[str] = None
+
+    def __get_estimated_collection_date(self):
+        return self.__estimated_collection_date
+
+    def __set_estimated_collection_date(self, estimated_collection_date):
+        if not (isinstance(estimated_collection_date, str) or estimated_collection_date is None):
+            raise Exception(f'Cannot set field "estimated_collection_date" (type str) to {repr(estimated_collection_date)}')
+
+        self.__estimated_collection_date = estimated_collection_date
+
+    estimated_collection_date = property(__get_estimated_collection_date, __set_estimated_collection_date)
+    """
+    Date of collection for shipment
+    """
+
+    __estimated_delivery_date: Optional[str] = None
+
+    def __get_estimated_delivery_date(self):
+        return self.__estimated_delivery_date
+
+    def __set_estimated_delivery_date(self, estimated_delivery_date):
+        if not (isinstance(estimated_delivery_date, str) or estimated_delivery_date is None):
+            raise Exception(f'Cannot set field "estimated_delivery_date" (type str) to {repr(estimated_delivery_date)}')
+
+        self.__estimated_delivery_date = estimated_delivery_date
+
+    estimated_delivery_date = property(__get_estimated_delivery_date, __set_estimated_delivery_date)
+    """
+    Date of delivery for shipment, if present
+    """
+
+    __transit_time: Optional[str] = None
+
+    def __get_transit_time(self):
+        return self.__transit_time
+
+    def __set_transit_time(self, transit_time):
+        if not (isinstance(transit_time, str) or transit_time is None):
+            raise Exception(f'Cannot set field "transit_time" (type str) to {repr(transit_time)}')
+
+        self.__transit_time = transit_time
+
+    transit_time = property(__get_transit_time, __set_transit_time)
+    """
+    Transit time
+    """
+
     # noinspection PyArgumentList
-    def __init__(self, carrier=None, id=None, reg_no=None, service=None, service_id=None, price=None, unit=None, type=None):
+    def __init__(self, carrier=None, id=None, reg_no=None, service=None, service_id=None, price=None, unit=None, type=None, service_type=None, estimated_collection_date=None, estimated_delivery_date=None, transit_time=None):
         self.__set_carrier(carrier)
         self.__set_id(id)
         self.__set_reg_no(reg_no)
@@ -183,6 +264,10 @@ class AvailablePricesObjectPricesItem(object):
         self.__set_price(price)
         self.__set_unit(unit)
         self.__set_type(type)
+        self.__set_service_type(service_type)
+        self.__set_estimated_collection_date(estimated_collection_date)
+        self.__set_estimated_delivery_date(estimated_delivery_date)
+        self.__set_transit_time(transit_time)
 
     @staticmethod
     def from_dict(d):
@@ -195,6 +280,10 @@ class AvailablePricesObjectPricesItem(object):
         v['price'] = d.get('price')
         v['unit'] = AvailablePricesObjectPricesItemUnit.from_dict(d.get('unit'))
         v['type'] = AvailablePricesObjectPricesItemType.from_dict(d.get('type'))
+        v['service_type'] = AvailablePricesObjectPricesItemService_Type.from_dict(d.get('service_type'))
+        v['estimated_collection_date'] = d.get('estimated_collection_date')
+        v['estimated_delivery_date'] = d.get('estimated_delivery_date')
+        v['transit_time'] = d.get('transit_time')
         return AvailablePricesObjectPricesItem(**v)
 
     def as_dict(self):
@@ -215,6 +304,14 @@ class AvailablePricesObjectPricesItem(object):
             res['unit'] = self.__unit.as_dict()
         if self.__type is not None:
             res['type'] = self.__type.as_dict()
+        if self.__service_type is not None:
+            res['service_type'] = self.__service_type.as_dict()
+        if self.__estimated_collection_date is not None:
+            res['estimated_collection_date'] = self.__estimated_collection_date
+        if self.__estimated_delivery_date is not None:
+            res['estimated_delivery_date'] = self.__estimated_delivery_date
+        if self.__transit_time is not None:
+            res['transit_time'] = self.__transit_time
         return res
 
 
