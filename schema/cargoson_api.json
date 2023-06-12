@@ -954,45 +954,88 @@
             "description": "Couldn't (fully) complete request due to some issue in the input data. You can find the error messages in the ```errors``` array.",
             "content": {}
           }
+        }
+      }
+    },
+    "/quotes/{reference}/update_booked_offer": {
+      "post": {
+        "summary": "Update an offer for a booked shpment",
+        "operationId": "updateQuote",
+        "description": "Allows carrier to make post booking price and weight corrections to shipments that customers have booked from them\n",
+        "tags": [
+          "Carrier API"
+        ],
+        "parameters": [
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/json",
+              "enum": [
+                "application/json"
+              ]
+            },
+            "required": true,
+            "description": "The API can read JSON messages. The value should be application/json"
+          },
+          {
+            "name": "Accept",
+            "in": "header",
+            "schema": {
+              "type": "string",
+              "default": "application/vnd.api.v1",
+              "enum": [
+                "application/vnd.api.v1"
+              ]
+            },
+            "description": "This header is for defining the API version. The value should be application/vnd.api.v1",
+            "required": true
+          },
+          {
+            "name": "reference",
+            "in": "path",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "Reference of the query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Offer price updated for Shipment {reference}\n"
+          },
+          "401": {
+            "description": "Unauthorized request",
+            "content": {}
+          },
+          "404": {
+            "description": "Shipment {reference} not found. There is no shipment with such reference booked from this carrier.\n",
+            "content": {}
+          },
+          "422": {
+            "description": "Shipment {reference} is not booked. Shipment is present but has not been booked yet.\nPrice amount must be a number. Price amount was sent in incorrect format, must be a number.\n",
+            "content": {}
+          }
         },
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Order"
+                "$ref": "#/components/schemas/UpdateBookedOffer"
               },
               "examples": {
-                "SampleShipment": {
+                "SampleRequest": {
                   "value": {
-                    "collection_date": "2023-08-29",
-                    "collection_country": "EE",
-                    "collection_postcode": "10619",
-                    "collection_address_row_1": "Kuldnoka 4",
-                    "collection_city": "Tallinn",
-                    "delivery_country": "FR",
-                    "delivery_postcode": "59000",
-                    "delivery_address_row_1": "23 Rue Gosselet",
-                    "delivery_city": "Lille",
-                    "rows_attributes": [
-                      {
-                        "quantity": 3,
-                        "package_type": "EUR",
-                        "weight": 1000,
-                        "description": "Goods on EUR pallet"
-                      },
-                      {
-                        "quantity": 2,
-                        "package_type": "FIN",
-                        "weight": 500,
-                        "description": "Goods on FIN pallet"
-                      }
-                    ]
+                    "total_amount": 19.95,
+                    "total_weight": 20.5
                   }
                 }
-              }
+              },
+              "required": true
             }
-          },
-          "required": true
+          }
         }
       }
     }
@@ -1977,6 +2020,31 @@
                         "price_list",
                         "online"
                       ]
+                    },
+                    "service_type": {
+                      "type": "string",
+                      "description": "Service type",
+                      "enum": [
+                        "normal",
+                        "parcel_machine"
+                      ]
+                    },
+                    "estimated_collection_date": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "yyyy-mm-dd",
+                      "description": "Date of collection for shipment"
+                    },
+                    "estimated_delivery_date": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "yyyy-mm-dd",
+                      "description": "Date of delivery for shipment, if present"
+                    },
+                    "transit_time": {
+                      "type": "string",
+                      "pattern": "0-9",
+                      "description": "Transit time"
                     }
                   }
                 }
@@ -2172,6 +2240,23 @@
                 }
               }
             }
+          }
+        }
+      },
+      "UpdateBookedOffer": {
+        "type": "object",
+        "example": {
+          "status": 200,
+          "data": "Offer price updated for Shipment {reference}"
+        },
+        "properties": {
+          "total_amount": {
+            "type": "number",
+            "description": "Updated total price of the shipment in a local currency units"
+          },
+          "total_weight": {
+            "type": "number",
+            "description": "Updated total weight of the shipment in kilograms"
           }
         }
       }

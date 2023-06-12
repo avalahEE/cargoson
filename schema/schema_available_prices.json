@@ -96,6 +96,31 @@
                                     "price_list",
                                     "online"
                                 ]
+                            },
+                            "service_type": {
+                                "type": "string",
+                                "description": "Service type",
+                                "enum": [
+                                    "normal",
+                                    "parcel_machine"
+                                ]
+                            },
+                            "estimated_collection_date": {
+                                "type": "string",
+                                "format": "date",
+                                "pattern": "yyyy-mm-dd",
+                                "description": "Date of collection for shipment"
+                            },
+                            "estimated_delivery_date": {
+                                "type": "string",
+                                "format": "date",
+                                "pattern": "yyyy-mm-dd",
+                                "description": "Date of delivery for shipment, if present"
+                            },
+                            "transit_time": {
+                                "type": "string",
+                                "pattern": "0-9",
+                                "description": "Transit time"
                             }
                         }
                     }
