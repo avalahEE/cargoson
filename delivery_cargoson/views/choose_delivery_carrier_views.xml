@@ -9,7 +9,6 @@
                 <field name="is_fixed_width" invisible="1"/>
                 <field name="is_fixed_height" invisible="1"/>
                 <field name="is_fixed_depth" invisible="1"/>
-
                 <table attrs="{'invisible': [('delivery_type', '!=', 'cargoson')]}">
                     <tbody>
                         <tr>
@@ -69,7 +68,6 @@
                             </td>
                             <td>
                                 <field name="cargoson_depth" attrs="{'readonly': [('is_fixed_depth', '=', True)]}"/>
-
                             </td>
                         </tr>
                         <tr>

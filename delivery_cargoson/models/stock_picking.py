@@ -55,7 +55,7 @@ class StockPicking(models.Model):
     def send_to_shipper(self):
         self.ensure_one()
 
-        if not self.carrier_id or self.carrier_id.delivery_type != 'cargoson':
+        if not self.carrier_id or self.carrier_id.delivery_type != 'cargoson' or self.carrier_id.cargoson_no_carrier:
             return super().send_to_shipper()
 
         # Cargoson shipping options configured - continue the regular Delivery Carrier flow

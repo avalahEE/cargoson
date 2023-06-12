@@ -34,6 +34,7 @@ class ProviderCargoson(models.Model):
     cargoson_test_api_url = fields.Char(
         string='Cargoson Test API URL', default='https://cargoson-staging.herokuapp.com/api')
     cargoson_test_api_key = fields.Char(string='Cargoson Test API key', default='NotConfigured')
+    cargoson_no_carrier = fields.Boolean(string='No Carrier', default=False)
 
     cargoson_parcel_machine_country_ids = fields.Many2many(
         'res.country',
@@ -41,18 +42,19 @@ class ProviderCargoson(models.Model):
         'Enabled parcel machine regions')
 
     def cargoson_rate_shipment(self, order):
+        logger.info('Cargoson: rate shipment for: %s', order.name)
         collection_address = order.get_cargoson_collection_address()
         delivery_address = order.get_cargoson_delivery_address()
         return self._cargoson_rate_shipment(
             order.name, collection_address, delivery_address, order._get_estimated_weight())
 
-    def _cargoson_rate_shipment(self, document_name, collection_address, delivery_address, weight, width=0, height=0, depth=0 ):
+    def _cargoson_rate_shipment(self, document_name, collection_address, delivery_address, weight, width=0, height=0, depth=0):
         weight = self._cargoson_convert_weight(weight)
         logger.info('Cargoson: rate shipment for: %s (weight=%s)', document_name, weight)
         logger.info('Cargoson package dimensions from shipping wizard: width: %s, height: %s, depth: %s', width, height, depth)
 
         if (width, height, depth) == (0, 0, 0):
-            wizard = self.env['choose.delivery.carrier'].search([], limit=1)
+            wizard = self.env['choose.delivery.carrier'].search([], order='id desc', limit=1)
             width = wizard.cargoson_width
             height = wizard.cargoson_height
             depth = wizard.cargoson_depth
@@ -190,7 +192,8 @@ class ProviderCargoson(models.Model):
 
     def _cargoson_send_shipping(self, picking):
         if not picking.cargoson_shipping_options_id:
-            return
+            logger.info('_cargoson_send_shipping: Cargoson shipping_options_id not available')
+            return [{'exact_price': 0, 'tracking_number': False}]
 
         collection_address = picking.get_cargoson_collection_address()
         delivery_address = picking.get_cargoson_delivery_address()
@@ -199,7 +202,6 @@ class ProviderCargoson(models.Model):
 
         weight = self._cargoson_convert_weight(picking.shipping_weight)
         opts = picking.cargoson_shipping_options_id
-        logger.info('Cargoson: send shipment for: %s (weight=%s)', picking.name, weight)
 
         wizard = self.env['choose.delivery.carrier'].search([], limit=1)
         width = wizard.cargoson_width
@@ -216,9 +218,10 @@ class ProviderCargoson(models.Model):
             description='Goods with {} package'.format(opts.package_type)
         )
         # TODO: add optional adr rows to package
-
-        order_options = OrderOptions(direct_booking_service_id=opts.selected_service_id)
-        # order_attribs = OrderDocuments_AttributesItem() # TODO: attach cmr / waybill
+        order_options = OrderOptions(direct_booking_service_id=None)
+        if not self.cargoson_no_carrier:
+            order_options = OrderOptions(direct_booking_service_id=opts.selected_service_id)
+            # order_attribs = OrderDocuments_AttributesItem() # TODO: attach cmr / waybill
 
         order = Order(
             customer_reference=picking.name,
@@ -264,7 +267,8 @@ class ProviderCargoson(models.Model):
             not bool(result.get('reference')) or
             len(result.get('errors', list())) > 0 or
             result.get('query_status') != 'created' or
-            result.get('booking_status') != 'created'
+            result.get('booking_status') != 'created' and
+            not self.cargoson_no_carrier
         ):
             raise UserError(_('Failed to create direct booking for courier service "%s"', opts.selected_carrier_name))
 
@@ -343,11 +347,11 @@ class ProviderCargoson(models.Model):
         url = self._cargoson_get_api_url(path)
         try:
             json_data = json.dumps(data)
-            logger.info('json_data: %s', json_data)
             log_request = 'POST: {}\nHEADERS: {}\n\n{}\n'.format(url, self._cargoson_get_headers(), json_data)
             self.log_xml(log_request, path)
 
             response = requests.post(url, json_data, json=True, headers=self._cargoson_get_headers())
+            logger.info('response for cargoson_api_post: %s', response.text)
             log_response = 'URL: {}\nSTATUS:{}\n\n{}\n'.format(url, response.status_code, response.text)
             self.log_xml(log_response, path)
             logger.info(log_response)

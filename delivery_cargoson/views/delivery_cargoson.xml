@@ -20,6 +20,7 @@
                             <field name="cargoson_test_api_key" attrs="{'required': [('delivery_type', '=', 'cargoson')]}"/>
                         </group>
                         <group>
+                            <field name="cargoson_no_carrier"/>
                             <field name="cargoson_parcel_machine_country_ids" attrs="{'required': [('delivery_type', '=', 'cargoson')]}" />
                         </group>
                     </group>

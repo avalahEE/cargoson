@@ -8,6 +8,8 @@ options for adding shipping in warehouse transfer phase.
 Changelog
 =========
 
+- 1.0.6
+    - Added no carrier options, so shipments can be completed without having to specify carrier.
 - 1.0.5
     - Added height, depth, width fields for wizards.
 - 1.0.4

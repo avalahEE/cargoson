@@ -65,6 +65,9 @@ class CargosonShippingWizard(models.TransientModel):
     is_fixed_height = fields.Boolean(compute='_compute_fixed_dimensions')
     is_fixed_depth = fields.Boolean(compute='_compute_fixed_dimensions')
 
+    cargoson_no_carrier = fields.Boolean(related="carrier_id.cargoson_no_carrier", readonly=True)
+    cargoson_show_add_button = fields.Boolean(compute="_compute_show_add_button")
+
     @api.depends('picking_id')
     def _compute_addresses(self):
         for record in self:
@@ -83,6 +86,7 @@ class CargosonShippingWizard(models.TransientModel):
             cargoson_options.selected_price,
             cargoson_options.currency_id.symbol
         ))
+        logger.info('Cargoson no carrier selected: %s', self.cargoson_no_carrier)
 
     def action_get_rates(self):
         if self.picking_id.shipping_weight <= 0:
@@ -185,3 +189,7 @@ class CargosonShippingWizard(models.TransientModel):
         self.is_fixed_width = package_dimensions.get('width', 0) != 0
         self.is_fixed_height = False  # As height was not specified in predefined dimensions
         self.is_fixed_depth = package_dimensions.get('depth', 0) != 0
+
+    @api.depends('cargoson_no_carrier')
+    def _compute_show_add_button(self):
+        self.cargoson_show_add_button = self.carrier_id.cargoson_no_carrier

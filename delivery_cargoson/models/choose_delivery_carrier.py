@@ -114,6 +114,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         logger.info('Cargoson rate wizard: %s', self.id)
 
         vals = self.with_context(cargoson=self.get_cargoson_options()).carrier_id.rate_shipment(self.order_id)
+        logger.info('Cargoson rate wizard VALS: %s', vals)
         if not vals.get('success'):
             return {'error_message': vals['error_message']}
 
@@ -141,7 +142,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
         if self.delivery_type != 'cargoson':
             return super().button_confirm()
 
-        if not self.cargoson_selected_carrier_id:
+        if not self.cargoson_selected_carrier_id and not self.carrier_id.cargoson_no_carrier:
             raise UserError(_('Please select a carrier first'))
 
         if self.order_id.cargoson_shipping_options_id:

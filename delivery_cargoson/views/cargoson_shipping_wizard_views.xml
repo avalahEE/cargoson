@@ -9,6 +9,7 @@
                 <field name="is_fixed_width" invisible="1"/>
                 <field name="is_fixed_height" invisible="1"/>
                 <field name="is_fixed_depth" invisible="1"/>
+                <field name="carrier_id" invisible="1"/>
                 <table>
                     <tbody>
                         <tr>
@@ -148,6 +149,8 @@
 
                 <field name="cargoson_selected_carrier_id" invisible="1" />
                 <field name="cargoson_show_rates" invisible="1" />
+                <field name="cargoson_no_carrier" invisible="1" />
+                <field name="cargoson_show_add_button" invisible="1" />
                 <field
                     name="cargoson_rate_results"
                     readonly="1"
@@ -170,14 +173,14 @@
                     <button
                         name="action_get_rates"
                         string="Get rates"
-                        attrs="{'invisible': [('cargoson_show_rates', '=', True)]}"
+                        attrs="{'invisible': ['|',('cargoson_show_rates', '=', True),('cargoson_no_carrier', '=', True)]}"
                         data-hotkey="g"
                         class="btn-primary"
                         type="object" />
                     <button
                         name="action_add_shipping"
                         string="Add"
-                        attrs="{'invisible': [('cargoson_show_rates', '=', False)]}"
+                        attrs="{'invisible': [('cargoson_show_rates', '=', False),('cargoson_show_add_button', '=', False)]}"
                         type="object"
                         class="btn-primary"
                         data-hotkey="q"/>
