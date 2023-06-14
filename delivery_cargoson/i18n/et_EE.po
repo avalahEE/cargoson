@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-12 13:34+0000\n"
-"PO-Revision-Date: 2023-06-12 13:34+0000\n"
+"POT-Creation-Date: 2023-06-14 08:37+0000\n"
+"PO-Revision-Date: 2023-06-14 08:37+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -577,6 +577,24 @@ msgstr "Tõrge: Cargosonist ei õnnestunud saada hindu"
 #, python-format
 msgid "Error: this delivery method is not available for this address."
 msgstr "Tõrge: see tarneviis ei ole selle aadressi jaoks saadaval."
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_rate_result__estimated_collection_date
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__estimated_collection_date
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__estimated_collection_date
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard_rate_result__estimated_collection_date
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__estimated_collection_date
+msgid "Estimated Collection Date"
+msgstr "Eeldatav korje aeg"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_rate_result__estimated_delivery_date
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__estimated_delivery_date
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__estimated_delivery_date
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard_rate_result__estimated_delivery_date
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__estimated_delivery_date
+msgid "Estimated Delivery Date"
+msgstr "Eeldatav kohaletoimetamise aeg"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__fin

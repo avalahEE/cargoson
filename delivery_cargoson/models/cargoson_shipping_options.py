@@ -62,6 +62,9 @@ class CargosonShippingOptions(models.Model):
     is_fixed_height = fields.Boolean(compute='_compute_fixed_dimensions')
     is_fixed_depth = fields.Boolean(compute='_compute_fixed_dimensions')
 
+    estimated_collection_date = fields.Char(string="Estimated Collection Date")
+    estimated_delivery_date = fields.Char(string="Estimated Delivery Date")
+
     @api.onchange('package_type')
     @api.depends('package_type')
     def _onchange_cargoson_package_type(self):

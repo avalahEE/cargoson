@@ -61,6 +61,9 @@ class ChooseDeliveryCarrier(models.TransientModel):
 
     cargoson_no_carrier = fields.Boolean(related='carrier_id.cargoson_no_carrier')
 
+    estimated_collection_date = fields.Char(string="Estimated Collection Date")
+    estimated_delivery_date = fields.Char(string="Estimated Delivery Date")
+
     @api.onchange(
         'cargoson_collection_date',
         'cargoson_frigo',
@@ -137,6 +140,11 @@ class ChooseDeliveryCarrier(models.TransientModel):
         prices = list()
         for item in available_prices.object.prices:
             prices.append(CargosonAvailablePrice.from_cargoson(item, delivery_wizard_id=self.id))
+            self.env['cargoson.shipping.options'].create({
+                'estimated_collection_date': item.estimated_collection_date,
+                'estimated_delivery_date': item.estimated_delivery_date,
+            })
+        # logger.info('AVAILABLE PRICES: ', prices)
         CargosonAvailablePrice.create(prices)
         return {}
 

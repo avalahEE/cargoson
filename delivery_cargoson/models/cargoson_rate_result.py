@@ -21,6 +21,8 @@ class CargosonAvailablePrice(models.TransientModel):
     price = fields.Monetary('Price')
     unit = fields.Char('Unit')
     type = fields.Char('Type')
+    estimated_collection_date = fields.Char(string="Estimated Collection Date")
+    estimated_delivery_date = fields.Char(string="Estimated Delivery Date")
 
     @api.model
     def from_cargoson(self, available_price, delivery_wizard_id=None):
@@ -34,6 +36,8 @@ class CargosonAvailablePrice(models.TransientModel):
             'price': float(available_price.price),
             'unit': available_price.unit.as_dict() if available_price.unit else None,
             'type': available_price.type.as_dict() if available_price.type else None,
+            'estimated_collection_date': available_price.estimated_collection_date,
+            'estimated_delivery_date': available_price.estimated_delivery_date,
         }
 
     def select_carrier(self):
@@ -74,6 +78,8 @@ class CargosonAvailablePriceShippingWizard(models.TransientModel):
     price = fields.Monetary('Price')
     unit = fields.Char('Unit')
     type = fields.Char('Type')
+    estimated_collection_date = fields.Char(string="Estimated Collection Date")
+    estimated_delivery_date = fields.Char(string="Estimated Delivery Date")
 
     @api.model
     def from_cargoson(self, available_price, shipping_wizard_id=None):
@@ -87,6 +93,8 @@ class CargosonAvailablePriceShippingWizard(models.TransientModel):
             'price': float(available_price.price),
             'unit': available_price.unit.as_dict() if available_price.unit else None,
             'type': available_price.type.as_dict() if available_price.type else None,
+            'estimated_collection_date': available_price.estimated_collection_date,
+            'estimated_delivery_date': available_price.estimated_delivery_date,
         }
 
     def select_carrier(self):

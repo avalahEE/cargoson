@@ -8,6 +8,10 @@ options for adding shipping in warehouse transfer phase.
 Changelog
 =========
 
+- 1.0.9
+    - Two new fields `estimated_collection_date` and `estimated_delivery_date` in Cargoson AvailablePrices schema.
+    - Displayed these new fields in wizards where the `get rates` function is called.
+    - Stored these new fields in the `cargoson.shipping.options`.
 - 1.0.8
     - Added a new method `_cargoson_get_self_service_url(self, path)` to the `ProviderCargoson` class, that creates a URL by  removing `/api` from the base URL and adding the provided path.
     - Enhanced the `_cargoson_send_shipping` method to log the CMR document link, the Waybill document link, and the Customs declaration document link in the `stock.picking` object.

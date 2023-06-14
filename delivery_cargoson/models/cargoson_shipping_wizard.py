@@ -68,6 +68,9 @@ class CargosonShippingWizard(models.TransientModel):
     cargoson_no_carrier = fields.Boolean(related="carrier_id.cargoson_no_carrier", readonly=True)
     cargoson_show_add_button = fields.Boolean(compute="_compute_show_add_button")
 
+    estimated_collection_date = fields.Char(string="Estimated Collection Date")
+    estimated_delivery_date = fields.Char(string="Estimated Delivery Date")
+
     @api.depends('picking_id')
     def _compute_addresses(self):
         for record in self:
@@ -117,6 +120,11 @@ class CargosonShippingWizard(models.TransientModel):
         prices = list()
         for item in available_prices.object.prices:
             prices.append(CargosonAvailablePriceShippingWizard.from_cargoson(item, shipping_wizard_id=self.id))
+            self.env['cargoson.shipping.options'].create({
+                'estimated_collection_date': item.estimated_collection_date,
+                'estimated_delivery_date': item.estimated_delivery_date,
+            })
+        # logger.info('AVAILABLE PRICES: ', prices)
         CargosonAvailablePriceShippingWizard.create(prices)
 
         return {

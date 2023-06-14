@@ -405,5 +405,3 @@ class AvailablePrices(object):
         if self.__object is not None:
             res['object'] = self.__object.as_dict()
         return res
-
-

@@ -9,3 +9,4 @@ access_admin_cargoson_queue_task,access_cargoson_queue_task,model_cargoson_queue
 access_cargoson_shipping,access_cargoson_shipping,model_cargoson_shipping,group_cargoson_user,1,1,1,1
 access_admin_cargoson_shipping,access_cargoson_shipping,model_cargoson_shipping,group_cargoson_admin,1,1,1,1
 access_cargoson_shipping_wizard,access_cargoson_shipping_wizard,model_cargoson_shipping_wizard,stock.group_stock_user,1,1,1,1
+access_cargoson_shipping_options_all,access.cargoson.shipping.options.all,model_cargoson_shipping_options,base.group_user,1,1,1,1

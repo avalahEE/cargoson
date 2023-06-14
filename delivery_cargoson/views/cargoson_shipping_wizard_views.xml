@@ -160,6 +160,8 @@
                         <field name="carrier" />
                         <field name="price" widget="monetary" />
                         <field name="service" />
+                        <field name="estimated_collection_date"/>
+                        <field name="estimated_delivery_date"/>
                         <button string="Select" name="select_carrier" type="object" />
                     </tree>
                 </field>
