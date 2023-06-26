@@ -71,6 +71,21 @@ class CargosonShippingWizard(models.TransientModel):
     estimated_collection_date = fields.Char(string="Estimated Collection Date")
     estimated_delivery_date = fields.Char(string="Estimated Delivery Date")
 
+    ADR_UN = fields.Char(string='ADR UN')
+    ADR_GROUP = fields.Selection([
+        ('I', 'high danger'),
+        ('II', 'medium danger'),
+        ('III', 'low danger'),
+    ], string='ADR Group')
+    ADR_CLASS = fields.Selection([
+        ('1', 'Explosives'),
+        ('2', 'Gases'),
+        ('3', 'Flammable liquids'),
+        ('4', 'Flammable solids'),
+    ], string='ADR Class')
+    ADR_NEQ = fields.Char(string='ADR NEQ')
+    ADR_DESCRIPTION = fields.Char(string='ADR Description')
+
     @api.depends('picking_id')
     def _compute_addresses(self):
         for record in self:
@@ -154,6 +169,14 @@ class CargosonShippingWizard(models.TransientModel):
             selected_carrier_id=self.cargoson_selected_carrier_id,
             selected_service_id=self.cargoson_selected_service_id,
             selected_price=self.cargoson_selected_price,
+            ADR_UN=self.ADR_UN,
+            ADR_GROUP=self.ADR_GROUP,
+            ADR_CLASS=self.ADR_CLASS,
+            ADR_NEQ=self.ADR_NEQ,
+            ADR_DESCRIPTION=self.ADR_DESCRIPTION,
+            cargoson_width=self.cargoson_width,
+            cargoson_height=self.cargoson_height,
+            cargoson_depth=self.cargoson_depth,
         )
 
     def _cargoson_clear_available_prices(self):

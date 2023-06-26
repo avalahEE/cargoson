@@ -8,6 +8,17 @@ options for adding shipping in warehouse transfer phase.
 Changelog
 =========
 
+- 1.1.0
+    ### Added
+    - Fields to Cargosoni wizard and `cargoson.shipping.options` models:
+    - ADR UN: text field (four-digit UN number for hazardous materials/articles).
+    - ADR Group: selection field (I - high danger, II - medium danger, III - low danger).
+    - ADR Class: selection field (1 - Explosives, 2 - Gases, 3 - Flammable liquids, 4 - Flammable solids).
+    - ADR NEQ: text field (weight/volume of dangerous goods in package excluding packaging material; or weight of unpackaged article of dangerous goods).
+    - ADR Description: text field (description of the dangerous goods).
+    - ADR fields are now visible when ADR option is activated.
+    ### Updated
+    - The `_cargoson_send_shipping` method in the `delivery.carrier` model has been updated to include ADR data with the booking. The `OrderRows_AttributesItem` object now has an `adr_rows_attributes` attribute (a list of `OrderRows_AttributesItemAdr_Rows_AttributesItem` instances).
 - 1.0.9
     - Two new fields `estimated_collection_date` and `estimated_delivery_date` in Cargoson AvailablePrices schema.
     - Displayed these new fields in wizards where the `get rates` function is called.
@@ -17,7 +28,6 @@ Changelog
     - Enhanced the `_cargoson_send_shipping` method to log the CMR document link, the Waybill document link, and the Customs declaration document link in the `stock.picking` object.
     - Also added a DGD document link to the log if the ADR option in shipping options is true.
     - All log messages are now translatable and Estonian translations have been added for the new messages.
-
 - 1.0.7
     - Changed "update cargoson data" button location.
 - 1.0.6

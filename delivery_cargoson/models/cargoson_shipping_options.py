@@ -65,6 +65,21 @@ class CargosonShippingOptions(models.Model):
     estimated_collection_date = fields.Char(string="Estimated Collection Date")
     estimated_delivery_date = fields.Char(string="Estimated Delivery Date")
 
+    ADR_UN = fields.Char(string='ADR UN')
+    ADR_GROUP = fields.Selection([
+        ('I', 'high danger'),
+        ('II', 'medium danger'),
+        ('III', 'low danger'),
+    ], string='ADR Group')
+    ADR_CLASS = fields.Selection([
+        ('1', 'Explosives'),
+        ('2', 'Gases'),
+        ('3', 'Flammable liquids'),
+        ('4', 'Flammable solids'),
+    ], string='ADR Class')
+    ADR_NEQ = fields.Char(string='ADR NEQ')
+    ADR_DESCRIPTION = fields.Char(string='ADR Description')
+
     @api.onchange('package_type')
     @api.depends('package_type')
     def _onchange_cargoson_package_type(self):

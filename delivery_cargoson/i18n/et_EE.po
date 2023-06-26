@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-14 08:37+0000\n"
-"PO-Revision-Date: 2023-06-14 08:37+0000\n"
+"POT-Creation-Date: 2023-06-26 07:50+0000\n"
+"PO-Revision-Date: 2023-06-26 07:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -46,6 +46,41 @@ msgstr "40' kõrge konteiner"
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_delivery_carrier_form_with_provider_cargoson
 msgid "<span class=\"text-success\">Queue</span>"
 msgstr "<span class=\"text-success\">Järjekord</span>"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__ADR_CLASS
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__ADR_CLASS
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__ADR_CLASS
+msgid "ADR Class"
+msgstr "ADR klassifikatsioon"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__ADR_DESCRIPTION
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__ADR_DESCRIPTION
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__ADR_DESCRIPTION
+msgid "ADR Description"
+msgstr "ADR kirjeldus"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__ADR_GROUP
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__ADR_GROUP
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__ADR_GROUP
+msgid "ADR Group"
+msgstr "ADR Grupp"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__ADR_NEQ
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__ADR_NEQ
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__ADR_NEQ
+msgid "ADR NEQ"
+msgstr "ADR NEQ(netokaal)"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_options__ADR_UN
+#: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_shipping_wizard__ADR_UN
+#: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__ADR_UN
+msgid "ADR UN"
+msgstr ""
 
 #. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_cargoson_shipping_wizard
@@ -523,6 +558,12 @@ msgid "Depth"
 msgstr "Sügavus"
 
 #. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/delivery_carrier.py:0
+#, python-format
+msgid "Depth must be greater than 0"
+msgstr "Sügavus peab olema suurem kui 0"
+
+#. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_cargoson_shipping_wizard
 msgid "Discard"
 msgstr "Loobu"
@@ -597,6 +638,13 @@ msgid "Estimated Delivery Date"
 msgstr "Eeldatav kohaletoimetamise aeg"
 
 #. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__ADR_CLASS__1
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__ADR_CLASS__1
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__ADR_CLASS__1
+msgid "Explosives"
+msgstr "Lõhkeained"
+
+#. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__fin
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__fin
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__fin
@@ -610,11 +658,32 @@ msgid "Failed to create direct booking for courier service \"%s\""
 msgstr "Kullerteenuse \"%s\" otseregistreeringu loomine ebaõnnestus"
 
 #. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__ADR_CLASS__3
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__ADR_CLASS__3
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__ADR_CLASS__3
+msgid "Flammable liquids"
+msgstr "Kergesti süttivad vedelikud"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__ADR_CLASS__4
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__ADR_CLASS__4
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__ADR_CLASS__4
+msgid "Flammable solids"
+msgstr "Kergesti süttivad tahked ained"
+
+#. module: delivery_cargoson
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__package_type__load
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__cargoson_package_type__load
 #: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__cargoson_package_type__load
 msgid "Full load"
 msgstr "Täiskoorem"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__ADR_CLASS__2
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__ADR_CLASS__2
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__ADR_CLASS__2
+msgid "Gases"
+msgstr "Gaasid"
 
 #. module: delivery_cargoson
 #: model_terms:ir.ui.view,arch_db:delivery_cargoson.view_cargoson_shipping_wizard
@@ -655,6 +724,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:delivery_cargoson.field_choose_delivery_carrier__cargoson_height
 msgid "Height"
 msgstr "Kõrgus"
+
+#. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/delivery_carrier.py:0
+#, python-format
+msgid "Height must be greater than 0"
+msgstr "Kõrgus peab olema suurem kui 0"
 
 #. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__id
@@ -1166,6 +1241,12 @@ msgid "Width"
 msgstr "Laius"
 
 #. module: delivery_cargoson
+#: code:addons/delivery_cargoson/models/delivery_carrier.py:0
+#, python-format
+msgid "Width must be greater than 0"
+msgstr "Laius peab olema suurem kui 0"
+
+#. module: delivery_cargoson
 #: model:ir.model.fields,field_description:delivery_cargoson.field_cargoson_parcel_machine__postcode
 msgid "Zip"
 msgstr "Postiindeks"
@@ -1175,3 +1256,24 @@ msgstr "Postiindeks"
 #, python-format
 msgid "e-Waybill: %s"
 msgstr ""
+
+#. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__ADR_GROUP__i
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__ADR_GROUP__i
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__ADR_GROUP__i
+msgid "high danger"
+msgstr "Kõrge oht"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__ADR_GROUP__iii
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__ADR_GROUP__iii
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__ADR_GROUP__iii
+msgid "low danger"
+msgstr "Madal oht"
+
+#. module: delivery_cargoson
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_options__ADR_GROUP__ii
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__cargoson_shipping_wizard__ADR_GROUP__ii
+#: model:ir.model.fields.selection,name:delivery_cargoson.selection__choose_delivery_carrier__ADR_GROUP__ii
+msgid "medium danger"
+msgstr "Keskmise ohtlikkusega"

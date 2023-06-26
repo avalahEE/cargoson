@@ -10,7 +10,8 @@ from .schema.order import (
     OrderRows_AttributesItem,
     OrderRows_AttributesItemPackage_Type,
     OrderOptions,
-    OrderDocuments_AttributesItem
+    OrderDocuments_AttributesItem,
+    OrderRows_AttributesItemAdr_Rows_AttributesItem
 )
 
 import json
@@ -203,10 +204,28 @@ class ProviderCargoson(models.Model):
         weight = self._cargoson_convert_weight(picking.shipping_weight)
         opts = picking.cargoson_shipping_options_id
 
-        wizard = self.env['choose.delivery.carrier'].search([], limit=1)
-        width = wizard.cargoson_width
-        height = wizard.cargoson_height
-        depth = wizard.cargoson_depth
+        width = opts.cargoson_width
+        height = opts.cargoson_height
+        depth = opts.cargoson_depth
+
+        if width <= 0:
+            raise UserError(_('Width must be greater than 0'))
+        if height <= 0:
+            raise UserError(_('Height must be greater than 0'))
+        if depth <= 0:
+            raise UserError(_('Depth must be greater than 0'))
+
+        adr_row_attrs = None
+        if opts.adr:
+            adr_row_attrs = OrderRows_AttributesItemAdr_Rows_AttributesItem(
+                adr_un=opts.ADR_UN,
+                adr_group=opts.ADR_GROUP,
+                adr_class=opts.ADR_CLASS,
+                adr_neq=opts.ADR_NEQ,
+                adr_description=opts.ADR_DESCRIPTION
+            )
+
+        logger.info('Wizard adr_row_attrs: %s', adr_row_attrs.as_dict() if isinstance(adr_row_attrs, OrderRows_AttributesItemAdr_Rows_AttributesItem) else [])
         logger.info('_cargoson_send_shipping: Cargoson package %s dimensions: %s', picking.name, {'width': width, 'height': height, 'depth': depth})
         package = OrderRows_AttributesItem(
             weight=math.ceil(weight),
@@ -215,7 +234,8 @@ class ProviderCargoson(models.Model):
             height=math.ceil(height),
             package_type=OrderRows_AttributesItemPackage_Type.from_dict(opts.package_type),
             quantity=opts.package_qty,
-            description='Goods with {} package'.format(opts.package_type)
+            description='Goods with {} package'.format(opts.package_type),
+            adr_rows_attributes=[adr_row_attrs] if isinstance(adr_row_attrs, OrderRows_AttributesItemAdr_Rows_AttributesItem) else []
         )
         # TODO: add optional adr rows to package
         order_options = OrderOptions(direct_booking_service_id=None)

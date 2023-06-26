@@ -143,6 +143,46 @@
                                 <field name="cargoson_adr" />
                             </td>
                         </tr>
+                        <tr attrs="{'invisible': [('cargoson_adr', '=', False)]}">
+                            <td>
+                                <label for="ADR_UN" />
+                            </td>
+                            <td>
+                                <field name="ADR_UN" />
+                            </td>
+                        </tr>
+                        <tr attrs="{'invisible': [('cargoson_adr', '=', False)]}">
+                            <td>
+                                <label for="ADR_GROUP" />
+                            </td>
+                            <td>
+                                <field name="ADR_GROUP" />
+                            </td>
+                        </tr>
+                        <tr attrs="{'invisible': [('cargoson_adr', '=', False)]}">
+                            <td>
+                                <label for="ADR_CLASS" />
+                            </td>
+                            <td>
+                                <field name="ADR_CLASS" />
+                            </td>
+                        </tr>
+                        <tr attrs="{'invisible': [('cargoson_adr', '=', False)]}">
+                            <td>
+                                <label for="ADR_NEQ" />
+                            </td>
+                            <td>
+                                <field name="ADR_NEQ" />
+                            </td>
+                        </tr>
+                        <tr attrs="{'invisible': [('cargoson_adr', '=', False)]}">
+                            <td>
+                                <label for="ADR_DESCRIPTION" />
+                            </td>
+                            <td>
+                                <field name="ADR_DESCRIPTION" />
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
             </xpath>
