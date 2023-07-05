@@ -52,13 +52,16 @@ class ProviderCargoson(models.Model):
     def _cargoson_rate_shipment(self, document_name, collection_address, delivery_address, weight, width=0, height=0, depth=0):
         weight = self._cargoson_convert_weight(weight)
         logger.info('Cargoson: rate shipment for: %s (weight=%s)', document_name, weight)
-        logger.info('Cargoson package dimensions from shipping wizard: width: %s, height: %s, depth: %s', width, height, depth)
+        if not (width, height, depth) == (0, 0, 0):
+            logger.info('_cargoson_rate_shipment: Cargoson package %s dimensions from shipping wizard: %s', document_name, {'width': width, 'height': height, 'depth': depth})
 
         if (width, height, depth) == (0, 0, 0):
             wizard = self.env['choose.delivery.carrier'].search([], order='id desc', limit=1)
             width = wizard.cargoson_width
             height = wizard.cargoson_height
             depth = wizard.cargoson_depth
+            logger.info('_cargoson_rate_shipment: Cargoson package %s dimensions: %s',
+                        document_name, {'width': width, 'height': height, 'depth': depth})
 
         if height <= 0:
             raise UserError(_('The height of the shipment must be greater than zero.'))
@@ -110,9 +113,6 @@ class ProviderCargoson(models.Model):
                 'error_message': _('Package quantity must be greater than 0'),
                 'warning_message': False
             }
-
-        logger.info('_cargoson_rate_shipment: Cargoson package %s dimensions: %s',
-                    document_name, {'width': width, 'height': height, 'depth': depth})
 
         package = PriceRequestShipmentRows_AttributesItem(
             weight=math.ceil(weight),
@@ -385,12 +385,12 @@ class ProviderCargoson(models.Model):
             json_data = json.dumps(data)
             log_request = 'POST: {}\nHEADERS: {}\n\n{}\n'.format(url, self._cargoson_get_headers(), json_data)
             self.log_xml(log_request, path)
+            logger.info('REQUEST: %s', log_request)
 
             response = requests.post(url, json_data, json=True, headers=self._cargoson_get_headers())
-            logger.info('response for cargoson_api_post: %s', response.text)
             log_response = 'URL: {}\nSTATUS:{}\n\n{}\n'.format(url, response.status_code, response.text)
             self.log_xml(log_response, path)
-            logger.info(log_response)
+            logger.info('RESPONSE: %s', log_response)
 
             data = response.json()
             if schema_class is None:
@@ -444,8 +444,10 @@ class ProviderCargoson(models.Model):
         return headers
 
     def _cargoson_convert_weight(self, weight):
+        weight_to_kg = weight / 1000
         weight_uom_id = self.env['product.template']._get_weight_uom_id_from_ir_config_parameter()
-        return weight_uom_id._compute_quantity(weight, self.env.ref('uom.product_uom_kgm'), round=False)
+        logger.info('_cargoson_conver_weight: WEIGHT UOM COMPUTED: %s', weight_uom_id._compute_quantity(weight_to_kg, self.env.ref('uom.product_uom_kgm'), round=False))
+        return weight_uom_id._compute_quantity(weight_to_kg, self.env.ref('uom.product_uom_kgm'), round=False)
 
     def _cargoson_validate_address(self, partner_id):
         if not partner_id.zip:

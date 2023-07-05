@@ -8,6 +8,8 @@ options for adding shipping in warehouse transfer phase.
 Changelog
 =========
 
+- 1.1.1
+    - [FIX] Fixed cargoson weight by converting it to kilograms when sending API request.
 - 1.1.0
     ### Added
     - Fields to Cargosoni wizard and `cargoson.shipping.options` models:
