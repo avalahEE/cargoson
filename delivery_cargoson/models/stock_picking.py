@@ -145,3 +145,15 @@ class StockPicking(models.Model):
                 logger.info("Task ID: %s, Name: %s, Result: Error occurred during processing", task['id'], task['name'])
             elif task['result'] == TaskResult.RETRY:
                 logger.info("Task ID: %s, Name: %s, Result: Task will be retried", task['id'], task['name'])
+
+    def _compute_shipping_weight(self):
+        for picking in self:
+            picking.shipping_weight = picking.weight
+
+    @api.depends('move_lines')
+    def _cal_weight(self):
+        for picking in self:
+            if not picking.sale_id:
+                picking.weight = sum(move.weight for move in picking.move_lines if move.state != 'cancel')
+            else:
+                picking.weight = picking.sale_id.cargoson_delivery_weight

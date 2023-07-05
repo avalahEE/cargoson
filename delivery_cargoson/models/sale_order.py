@@ -33,6 +33,8 @@ class SaleOrder(models.Model):
     cargoson_shipping_options_id = fields.Many2one('cargoson.shipping.options')
     cargoson_collection_address = fields.Many2one('res.partner', 'Collection address', compute='_compute_addresses')
     cargoson_delivery_address = fields.Many2one('res.partner', 'Delivery address', compute='_compute_addresses')
+    cargoson_delivery_weight = fields.Float(compute='_compute_delivery_weight', string="Cargoson Delivery Weight")
+    cargoson_updated_weight = fields.Float(string="Cargoson Updated Weight")
 
     @api.depends('cargoson_selected_carrier_id')
     def _compute_addresses(self):
@@ -64,3 +66,24 @@ class SaleOrder(models.Model):
     def _remove_delivery_line(self):
         super()._remove_delivery_line()
         self._cargoson_reset_options()
+
+    @api.depends('order_line.product_id.weight', 'order_line.product_uom_qty', 'cargoson_updated_weight')
+    def _compute_delivery_weight(self):
+        logger.info('Sale Order: _computing_delivery_weight')
+        for order in self:
+            total_delivery_weight = 0
+            for line in order.order_line:
+                if line.product_id.weight:
+                    total_delivery_weight += line.product_template_id.weight * line.product_uom_qty
+            if order.cargoson_updated_weight:
+                order.cargoson_delivery_weight = total_delivery_weight + order.cargoson_updated_weight
+            else:
+                order.cargoson_delivery_weight = total_delivery_weight
+
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        for record in self:
+            if record.cargoson_updated_weight and record.picking_ids:
+                for pick in record.picking_ids:
+                    pick.weight = record.cargoson_delivery_weight
+        return res

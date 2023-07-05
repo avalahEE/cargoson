@@ -8,6 +8,8 @@ options for adding shipping in warehouse transfer phase.
 Changelog
 =========
 
+- 1.1.2
+    - [ADD] Added manual weight adjustment option for wizards.
 - 1.1.1
     - [FIX] Fixed cargoson weight by converting it to kilograms when sending API request.
 - 1.1.0

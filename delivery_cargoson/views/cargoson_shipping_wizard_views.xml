@@ -57,6 +57,14 @@
                         </tr>
                         <tr>
                             <td>
+                                <label for="cargoson_weight" />
+                            </td>
+                            <td>
+                                <field name="cargoson_weight" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
                                 <label for="cargoson_width" />
                             </td>
                             <td>

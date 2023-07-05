@@ -54,6 +54,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
     cargoson_width = fields.Float(string="Width", compute="_onchange_cargoson_package_type", required=False)
     cargoson_height = fields.Float(string="Height", required=False)
     cargoson_depth = fields.Float(string="Depth", compute="_onchange_cargoson_package_type", required=False)
+    cargoson_weight = fields.Float(string="Weight", compute='_compute_cargoson_weight', inverse='_set_cargoson_weight', store=True)
 
     is_fixed_width = fields.Boolean(compute='_compute_fixed_dimensions')
     is_fixed_height = fields.Boolean(compute='_compute_fixed_dimensions')
@@ -133,6 +134,7 @@ class ChooseDeliveryCarrier(models.TransientModel):
             cargoson_width=self.cargoson_width,
             cargoson_height=self.cargoson_height,
             cargoson_depth=self.cargoson_depth,
+            cargoson_weight=self.cargoson_weight,
         )
 
     def _get_shipment_rate(self):
@@ -222,3 +224,23 @@ class ChooseDeliveryCarrier(models.TransientModel):
         self.is_fixed_width = package_dimensions.get('width', 0) != 0
         self.is_fixed_height = False  # As height was not specified in predefined dimensions
         self.is_fixed_depth = package_dimensions.get('depth', 0) != 0
+
+    def _include_history_cargoson_weight(self):
+        for record in self:
+            if record.cargoson_weight:
+                record.order_id.cargoson_updated_weight = 0
+                record.order_id.cargoson_updated_weight = record.cargoson_weight - record.order_id.cargoson_delivery_weight
+
+    @api.depends('order_id.cargoson_delivery_weight')
+    def _compute_cargoson_weight(self):
+        for record in self:
+            record.cargoson_weight = record.order_id.cargoson_delivery_weight
+
+    def _set_cargoson_weight(self):
+        for record in self:
+            if record.cargoson_weight:
+                self._include_history_cargoson_weight()
+                record.cargoson_weight = record.order_id.cargoson_delivery_weight
+                if record.order_id.picking_ids:
+                    for picking in record.order_id.picking_ids:
+                        picking.weight += record.order_id.cargoson_updated_weight

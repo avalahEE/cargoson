@@ -60,6 +60,7 @@ class CargosonShippingWizard(models.TransientModel):
     cargoson_width = fields.Float(string="Width", compute="_onchange_cargoson_package_type", required=False)
     cargoson_height = fields.Float(string="Height", required=False)
     cargoson_depth = fields.Float(string="Depth", compute="_onchange_cargoson_package_type", required=False)
+    cargoson_weight = fields.Float(string="Weight", compute='_compute_cargoson_weight', inverse='_set_cargoson_weight')
 
     is_fixed_width = fields.Boolean(compute='_compute_fixed_dimensions')
     is_fixed_height = fields.Boolean(compute='_compute_fixed_dimensions')
@@ -96,6 +97,7 @@ class CargosonShippingWizard(models.TransientModel):
         self.ensure_one()
         vals = self.get_cargoson_options()
         vals.update(dict(picking_id=self.picking_id.id))
+        self.picking_id.weight = self.cargoson_weight
         cargoson_options = self.env['cargoson.shipping.options'].sudo().create(vals)
         self.picking_id.write(dict(cargoson_shipping_options_id=cargoson_options.id))
         self.picking_id.message_post(body=_(
@@ -116,7 +118,7 @@ class CargosonShippingWizard(models.TransientModel):
             self.picking_id.name,
             self.picking_id.get_cargoson_collection_address(),
             self.picking_id.get_cargoson_delivery_address(),
-            self.picking_id.shipping_weight,
+            self.cargoson_weight,
             width=self.cargoson_width,
             height=self.cargoson_height,
             depth=self.cargoson_depth)
@@ -177,6 +179,7 @@ class CargosonShippingWizard(models.TransientModel):
             cargoson_width=self.cargoson_width,
             cargoson_height=self.cargoson_height,
             cargoson_depth=self.cargoson_depth,
+            cargoson_weight=self.cargoson_weight,
         )
 
     def _cargoson_clear_available_prices(self):
@@ -224,3 +227,16 @@ class CargosonShippingWizard(models.TransientModel):
     @api.depends('cargoson_no_carrier')
     def _compute_show_add_button(self):
         self.cargoson_show_add_button = self.carrier_id.cargoson_no_carrier
+
+    @api.depends('picking_id.weight')
+    def _compute_cargoson_weight(self):
+        for record in self:
+            if not record.picking_id.sale_id:
+                record.cargoson_weight = self.picking_id.weight
+            else:
+                record.cargoson_weight = record.picking_id.sale_id.cargoson_delivery_weight
+
+    def _set_cargoson_weight(self):
+        for record in self:
+            if record.cargoson_weight:
+                record.picking_id.shipping_weight = record.cargoson_weight
